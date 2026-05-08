@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Italiano — Lezione 1</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #fdf6ec;
+    --terracotta: #c0533a;
+    --gold: #d4a843;
+    --olive: #5a6e3c;
+    --ink: #2c2118;
+    --sand: #e8d9c0;
+    --mist: #f5ede0;
+    --shadow: rgba(44,33,24,0.15);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Decorative background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 40% at 10% 20%, rgba(192,83,58,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 50% at 90% 80%, rgba(212,168,67,0.08) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrapper { position: relative; z-index: 1; max-width: 800px; margin: 0 auto; padding: 24px 16px 60px; }
+
+  /* Header */
+  header { text-align: center; margin-bottom: 36px; }
+  .flag { font-size: 2.4rem; margin-bottom: 8px; }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 6vw, 3rem);
+    color: var(--terracotta);
+    line-height: 1.1;
+  }
+  header p { color: #8a7060; font-size: 0.95rem; margin-top: 6px; }
+
+  /* Tabs */
+  .tabs {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+  }
+  .tab-btn {
+    padding: 9px 22px;
+    border: 2px solid var(--sand);
+    background: white;
+    border-radius: 50px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #8a7060;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.03em;
+  }
+  .tab-btn:hover { border-color: var(--terracotta); color: var(--terracotta); }
+  .tab-btn.active {
+    background: var(--terracotta);
+    border-color: var(--terracotta);
+    color: white;
+    box-shadow: 0 4px 14px rgba(192,83,58,0.3);
+  }
+
+  /* ===================== FLASHCARDS ===================== */
+  #section-cards { display: block; }
+  #section-match, #section-quiz, #section-fill { display: none; }
+
+  .category-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.8rem;
+    font-style: italic;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    margin-top: 28px;
+  }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 14px;
+  }
+
+  .card {
+    background: white;
+    border-radius: 14px;
+    padding: 20px 16px;
+    cursor: pointer;
+    box-shadow: 0 2px 10px var(--shadow);
+    border: 1.5px solid var(--sand);
+    transition: transform 0.15s, box-shadow 0.15s;
+    position: relative;
+    min-height: 90px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    user-select: none;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px var(--shadow); }
+  .card .it { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--terracotta); }
+  .card .ru {
+    font-size: 0.85rem;
+    color: var(--olive);
+    margin-top: 6px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .card.flipped .ru { opacity: 1; }
+  .card .hint {
+    position: absolute;
+    top: 10px; right: 12px;
+    font-size: 0.7rem;
+    color: #c8b8a0;
+    font-style: italic;
+  }
+  .card.flipped .hint { display: none; }
+
+  /* ===================== MATCH GAME ===================== */
+  .game-header { text-align: center; margin-bottom: 24px; }
+  .game-header h2 { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--terracotta); }
+  .game-header p { color: #8a7060; font-size: 0.88rem; margin-top: 4px; }
+
+  .match-board {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .match-col { display: flex; flex-direction: column; gap: 8px; }
+  .match-item {
+    background: white;
+    border: 2px solid var(--sand);
+    border-radius: 10px;
+    padding: 12px 14px;
+    cursor: pointer;
+    font-size: 0.92rem;
+    text-align: center;
+    transition: all 0.2s;
+    min-height: 46px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .match-item.it-word { font-family: 'Playfair Display', serif; color: var(--terracotta); font-size: 1rem; }
+  .match-item.ru-word { color: var(--olive); }
+  .match-item:hover:not(.matched):not(.wrong) { border-color: var(--gold); background: var(--mist); }
+  .match-item.selected { border-color: var(--terracotta); background: rgba(192,83,58,0.08); }
+  .match-item.matched { border-color: var(--olive); background: rgba(90,110,60,0.1); color: var(--olive); opacity: 0.6; cursor: default; }
+  .match-item.wrong { border-color: #e05050; background: rgba(224,80,80,0.08); animation: shake 0.4s; }
+
+  @keyframes shake {
+    0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)}
+  }
+
+  .score-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    background: white; border-radius: 12px; padding: 12px 18px;
+    border: 1.5px solid var(--sand);
+    margin-bottom: 16px;
+  }
+  .score-num { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--terracotta); }
+  .score-label { font-size: 0.78rem; color: #8a7060; text-transform: uppercase; letter-spacing: 0.06em; }
+
+  .btn {
+    display: inline-block;
+    padding: 11px 28px;
+    background: var(--terracotta);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 14px rgba(192,83,58,0.25);
+  }
+  .btn:hover { background: #a8422b; transform: translateY(-1px); }
+  .btn.secondary {
+    background: white;
+    color: var(--terracotta);
+    border: 2px solid var(--terracotta);
+    box-shadow: none;
+  }
+  .btn-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+
+  /* ===================== QUIZ ===================== */
+  .quiz-progress {
+    height: 6px;
+    background: var(--sand);
+    border-radius: 99px;
+    margin-bottom: 28px;
+    overflow: hidden;
+  }
+  .quiz-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--terracotta), var(--gold));
+    border-radius: 99px;
+    transition: width 0.4s;
+  }
+
+  .quiz-card {
+    background: white;
+    border-radius: 18px;
+    padding: 36px 28px;
+    text-align: center;
+    box-shadow: 0 4px 20px var(--shadow);
+    border: 1.5px solid var(--sand);
+    margin-bottom: 20px;
+  }
+  .quiz-question-label {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #b0a090;
+    margin-bottom: 12px;
+  }
+  .quiz-question {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.5rem, 5vw, 2.2rem);
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .quiz-sub { font-size: 0.85rem; color: #8a7060; font-style: italic; }
+
+  .quiz-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 8px;
+  }
+  .quiz-option {
+    padding: 14px 12px;
+    background: white;
+    border: 2px solid var(--sand);
+    border-radius: 12px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Nunito', sans-serif;
+    color: var(--ink);
+  }
+  .quiz-option:hover:not(.correct):not(.wrong) { border-color: var(--gold); background: var(--mist); }
+  .quiz-option.correct { border-color: var(--olive); background: rgba(90,110,60,0.12); color: var(--olive); font-weight: 700; }
+  .quiz-option.wrong { border-color: #e05050; background: rgba(224,80,80,0.08); color: #c03030; }
+
+  .quiz-feedback {
+    text-align: center;
+    font-size: 0.9rem;
+    margin-top: 10px;
+    min-height: 24px;
+    font-weight: 600;
+    transition: all 0.3s;
+  }
+  .quiz-feedback.good { color: var(--olive); }
+  .quiz-feedback.bad { color: #c03030; }
+
+  .quiz-counter { font-size: 0.85rem; color: #8a7060; text-align: center; margin-bottom: 10px; }
+
+  /* ===================== FILL ===================== */
+  .fill-card {
+    background: white;
+    border-radius: 18px;
+    padding: 30px 24px;
+    box-shadow: 0 4px 20px var(--shadow);
+    border: 1.5px solid var(--sand);
+    margin-bottom: 20px;
+  }
+  .fill-prompt {
+    font-size: 0.82rem;
+    color: #8a7060;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+  }
+  .fill-situation {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    color: var(--ink);
+    line-height: 1.6;
+    margin-bottom: 20px;
+    font-style: italic;
+  }
+  .fill-input-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .fill-input {
+    flex: 1;
+    min-width: 180px;
+    padding: 11px 16px;
+    border: 2px solid var(--sand);
+    border-radius: 10px;
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s;
+    background: var(--mist);
+  }
+  .fill-input:focus { border-color: var(--terracotta); background: white; }
+  .fill-input.correct { border-color: var(--olive); background: rgba(90,110,60,0.08); }
+  .fill-input.wrong { border-color: #e05050; background: rgba(224,80,80,0.05); }
+  .fill-feedback { font-size: 0.88rem; margin-top: 12px; min-height: 20px; font-weight: 600; }
+  .fill-feedback.good { color: var(--olive); }
+  .fill-feedback.bad { color: #c03030; }
+
+  /* Result screen */
+  .result-screen {
+    text-align: center;
+    padding: 40px 20px;
+  }
+  .result-emoji { font-size: 3.5rem; margin-bottom: 12px; }
+  .result-title { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--terracotta); margin-bottom: 8px; }
+  .result-sub { color: #8a7060; margin-bottom: 24px; }
+  .result-score { font-family: 'Playfair Display', serif; font-size: 3rem; color: var(--gold); }
+
+  .hidden { display: none !important; }
+
+  /* Progress dots */
+  .progress-dots { display: flex; gap: 6px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--sand); transition: all 0.3s; }
+  .dot.done { background: var(--olive); }
+  .dot.active { background: var(--terracotta); transform: scale(1.3); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <div class="flag">🇮🇹</div>
+    <h1>Lezione 1</h1>
+    <p>Primi contatti — первые контакты</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showSection('cards')">📚 Карточки</button>
+    <button class="tab-btn" onclick="showSection('match')">🔗 Соединить</button>
+    <button class="tab-btn" onclick="showSection('quiz')">🎯 Тест</button>
+    <button class="tab-btn" onclick="showSection('fill')">✏️ Вписать</button>
+  </div>
+
+  <!-- FLASHCARDS -->
+  <div id="section-cards">
+    <div class="category-label">Приветствия и обращения</div>
+    <div class="cards-grid" id="grid-greetings"></div>
+    <div class="category-label">Знакомство</div>
+    <div class="cards-grid" id="grid-intro"></div>
+    <div class="category-label">Национальности</div>
+    <div class="cards-grid" id="grid-nations"></div>
+    <div class="category-label">Полезные слова и фразы</div>
+    <div class="cards-grid" id="grid-useful"></div>
+    <div class="category-label">Прощание</div>
+    <div class="cards-grid" id="grid-farewell"></div>
+    <p style="text-align:center;color:#b0a090;font-size:0.8rem;margin-top:20px;font-style:italic;">Нажмите на карточку, чтобы увидеть перевод</p>
+  </div>
+
+  <!-- MATCH -->
+  <div id="section-match">
+    <div class="game-header">
+      <h2>Соедини слова</h2>
+      <p>Выбери итальянское слово, затем его перевод</p>
+    </div>
+    <div class="score-bar">
+      <div><div class="score-num" id="match-score">0</div><div class="score-label">Совпадений</div></div>
+      <div><div class="score-num" id="match-total">0</div><div class="score-label">Всего пар</div></div>
+      <div><div class="score-num" id="match-errors">0</div><div class="score-label">Ошибок</div></div>
+    </div>
+    <div class="match-board">
+      <div class="match-col" id="match-left"></div>
+      <div class="match-col" id="match-right"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn" onclick="initMatch()">🔄 Новый раунд</button>
+    </div>
+    <div id="match-result" class="result-screen hidden">
+      <div class="result-emoji">🎉</div>
+      <div class="result-title">Отлично!</div>
+      <div class="result-sub">Все пары найдены!</div>
+      <div class="btn-row"><button class="btn" onclick="initMatch()">Ещё раз</button></div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="section-quiz">
+    <div class="game-header">
+      <h2>Тест с выбором</h2>
+      <p>Выбери правильный перевод</p>
+    </div>
+    <div class="quiz-progress"><div class="quiz-progress-fill" id="quiz-bar"></div></div>
+    <div class="progress-dots" id="quiz-dots"></div>
+    <div class="quiz-counter" id="quiz-counter"></div>
+    <div id="quiz-play">
+      <div class="quiz-card">
+        <div class="quiz-question-label" id="quiz-dir">Итальянский → Русский</div>
+        <div class="quiz-question" id="quiz-word">—</div>
+        <div class="quiz-sub" id="quiz-ctx"></div>
+      </div>
+      <div class="quiz-options" id="quiz-options"></div>
+      <div class="quiz-feedback" id="quiz-feedback"></div>
+      <div class="btn-row"><button class="btn secondary" id="quiz-next-btn" onclick="nextQuiz()" style="display:none">Дальше →</button></div>
+    </div>
+    <div id="quiz-result" class="result-screen hidden">
+      <div class="result-emoji" id="quiz-emoji">🏆</div>
+      <div class="result-title">Результат</div>
+      <div class="result-score" id="quiz-final-score"></div>
+      <div class="result-sub" id="quiz-final-sub"></div>
+      <div class="btn-row">
+        <button class="btn" onclick="initQuiz()">Заново</button>
+        <button class="btn secondary" onclick="initQuiz(true)">Только ошибки</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILL -->
+  <div id="section-fill">
+    <div class="game-header">
+      <h2>Вспомни по-итальянски</h2>
+      <p>Прочитай ситуацию и введи нужное слово или фразу</p>
+    </div>
+    <div class="quiz-progress"><div class="quiz-progress-fill" id="fill-bar"></div></div>
+    <div class="quiz-counter" id="fill-counter"></div>
+    <div id="fill-play">
+      <div class="fill-card">
+        <div class="fill-prompt">Как сказать по-итальянски?</div>
+        <div class="fill-situation" id="fill-situation"></div>
+        <div class="fill-input-row">
+          <input class="fill-input" id="fill-input" placeholder="Введите ответ..." onkeydown="if(event.key==='Enter')checkFill()">
+          <button class="btn" onclick="checkFill()">→</button>
+        </div>
+        <div class="fill-feedback" id="fill-feedback"></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn secondary" id="fill-skip" onclick="skipFill()">Пропустить</button>
+        <button class="btn secondary hidden" id="fill-next" onclick="nextFill()">Следующий →</button>
+      </div>
+    </div>
+    <div id="fill-result" class="result-screen hidden">
+      <div class="result-emoji" id="fill-emoji">🌟</div>
+      <div class="result-title">Готово!</div>
+      <div class="result-score" id="fill-final-score"></div>
+      <div class="result-sub" id="fill-final-sub"></div>
+      <div class="btn-row"><button class="btn" onclick="initFill()">Заново</button></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===================== VOCABULARY =====================
+const vocab = [
+  // GREETINGS
+  { it: "buongiorno", ru: "добрый день / доброе утро", cat: "greetings", ctx: "утреннее/дневное приветствие" },
+  { it: "buona sera", ru: "добрый вечер", cat: "greetings" },
+  { it: "ciao", ru: "привет / пока", cat: "greetings", ctx: "неформальное" },
+  { it: "arrivederci", ru: "до свидания", cat: "farewell" },
+  { it: "a domani!", ru: "до завтра!", cat: "farewell" },
+  { it: "a presto!", ru: "до скорого!", cat: "farewell" },
+  { it: "alla prossima (volta)!", ru: "до следующего раза!", cat: "farewell" },
+  { it: "arrivederLa", ru: "до свидания (вежливо)", cat: "farewell" },
+  // TITLES
+  { it: "signora", ru: "госпожа / мадам", cat: "greetings" },
+  { it: "signore", ru: "господин", cat: "greetings" },
+  { it: "dottore", ru: "доктор", cat: "greetings" },
+  { it: "professore", ru: "профессор", cat: "greetings" },
+  // INTRO
+  { it: "scusi", ru: "простите (вежл.)", cat: "intro", ctx: "обращение к незнакомому" },
+  { it: "come si chiama?", ru: "как вас зовут? (вежл.)", cat: "intro" },
+  { it: "come ti chiami?", ru: "как тебя зовут? (дружески)", cat: "intro" },
+  { it: "mi chiamo...", ru: "меня зовут...", cat: "intro" },
+  { it: "piacere", ru: "приятно познакомиться", cat: "intro" },
+  { it: "anch'io", ru: "я тоже", cat: "intro" },
+  { it: "fare conoscenza", ru: "познакомиться", cat: "intro" },
+  { it: "primo incontro", ru: "первая встреча", cat: "intro" },
+  // NATIONALITY
+  { it: "di dove sei?", ru: "откуда ты?", cat: "nations" },
+  { it: "di dov'è?", ru: "откуда вы? (вежл.)", cat: "nations" },
+  { it: "essere di...", ru: "быть из...", cat: "nations" },
+  { it: "italiano/a", ru: "итальянец / итальянка", cat: "nations" },
+  { it: "inglese", ru: "англичанин / англичанка", cat: "nations" },
+  { it: "irlandese", ru: "ирландец / ирландка", cat: "nations" },
+  { it: "tedesco/a", ru: "немец / немка", cat: "nations" },
+  { it: "austriaco/a", ru: "австриец / австрийка", cat: "nations" },
+  { it: "svizzero/a", ru: "швейцарец / швейцарка", cat: "nations" },
+  { it: "spagnolo/a", ru: "испанец / испанка", cat: "nations" },
+  { it: "portoghese", ru: "португалец / португалка", cat: "nations" },
+  { it: "francese", ru: "француз / француженка", cat: "nations" },
+  // USEFUL
+  { it: "sì", ru: "да", cat: "useful" },
+  { it: "no", ru: "нет", cat: "useful" },
+  { it: "e", ru: "и", cat: "useful" },
+  { it: "io", ru: "я", cat: "useful" },
+  { it: "tu", ru: "ты", cat: "useful" },
+  { it: "Lei", ru: "Вы (вежливое)", cat: "useful" },
+  { it: "essere", ru: "быть (глагол)", cat: "useful" },
+  { it: "chiamarsi", ru: "называться / зваться", cat: "useful" },
+  { it: "come si scrive?", ru: "как пишется?", cat: "useful" },
+  { it: "nome", ru: "имя", cat: "useful" },
+  { it: "cognome", ru: "фамилия", cat: "useful" },
+  { it: "numero", ru: "номер", cat: "useful" },
+  { it: "segreto", ru: "секрет", cat: "useful" },
+  { it: "perfetto", ru: "отлично / идеально", cat: "useful" },
+  { it: "che numero è?", ru: "какой это номер?", cat: "useful" },
+  { it: "alfabeto", ru: "алфавит", cat: "useful" },
+  { it: "lettera", ru: "буква / письмо", cat: "useful" },
+  { it: "straniero/a", ru: "иностранец / иностранка", cat: "useful" },
+  { it: "qual è il Suo numero di telefono?", ru: "какой ваш номер телефона?", cat: "useful" },
+  { it: "qual è il Suo indirizzo?", ru: "какой ваш адрес?", cat: "useful" },
+];
+
+const catMap = {
+  greetings: "grid-greetings",
+  intro: "grid-intro",
+  nations: "grid-nations",
+  useful: "grid-useful",
+  farewell: "grid-farewell"
+};
+
+// ===================== RENDER CARDS =====================
+function renderCards() {
+  Object.values(catMap).forEach(id => document.getElementById(id).innerHTML = '');
+  vocab.forEach(v => {
+    const el = document.createElement('div');
+    el.className = 'card';
+    el.innerHTML = `<span class="hint">нажми</span><div class="it">${v.it}</div><div class="ru">${v.ru}</div>`;
+    el.onclick = () => el.classList.toggle('flipped');
+    const grid = document.getElementById(catMap[v.cat]);
+    if (grid) grid.appendChild(el);
+  });
+}
+
+// ===================== SECTION SWITCH =====================
+function showSection(name) {
+  ['cards','match','quiz','fill'].forEach(s => {
+    document.getElementById('section-'+s).style.display = s===name ? 'block' : 'none';
+  });
+  document.querySelectorAll('.tab-btn').forEach((b,i) => {
+    b.classList.toggle('active', ['cards','match','quiz','fill'][i]===name);
+  });
+  if (name==='match') initMatch();
+  if (name==='quiz') initQuiz();
+  if (name==='fill') initFill();
+}
+
+// ===================== MATCH GAME =====================
+let matchSelected = null;
+let matchScore = 0;
+let matchErrors = 0;
+
+function shuffle(arr) { return [...arr].sort(()=>Math.random()-0.5); }
+
+function initMatch() {
+  const pool = shuffle(vocab).slice(0,8);
+  matchScore = 0; matchErrors = 0;
+  document.getElementById('match-score').textContent = 0;
+  document.getElementById('match-errors').textContent = 0;
+  document.getElementById('match-total').textContent = pool.length;
+  document.getElementById('match-result').classList.add('hidden');
+  matchSelected = null;
+
+  const leftEl = document.getElementById('match-left');
+  const rightEl = document.getElementById('match-right');
+  leftEl.innerHTML = ''; rightEl.innerHTML = '';
+
+  const shuffledIt = shuffle(pool);
+  const shuffledRu = shuffle(pool);
+
+  shuffledIt.forEach(v => {
+    const el = document.createElement('div');
+    el.className = 'match-item it-word';
+    el.textContent = v.it;
+    el.dataset.key = v.it;
+    el.dataset.side = 'it';
+    el.onclick = () => handleMatchClick(el);
+    leftEl.appendChild(el);
+  });
+  shuffledRu.forEach(v => {
+    const el = document.createElement('div');
+    el.className = 'match-item ru-word';
+    el.textContent = v.ru;
+    el.dataset.key = v.it;
+    el.dataset.side = 'ru';
+    el.onclick = () => handleMatchClick(el);
+    rightEl.appendChild(el);
+  });
+}
+
+function handleMatchClick(el) {
+  if (el.classList.contains('matched') || el.classList.contains('wrong')) return;
+
+  if (!matchSelected) {
+    document.querySelectorAll('.match-item').forEach(e => e.classList.remove('selected'));
+    el.classList.add('selected');
+    matchSelected = el;
+    return;
+  }
+
+  if (el === matchSelected) { el.classList.remove('selected'); matchSelected = null; return; }
+  if (el.dataset.side === matchSelected.dataset.side) {
+    document.querySelectorAll('.match-item').forEach(e => e.classList.remove('selected'));
+    el.classList.add('selected');
+    matchSelected = el;
+    return;
+  }
+
+  if (el.dataset.key === matchSelected.dataset.key) {
+    el.classList.add('matched'); matchSelected.classList.add('matched');
+    el.classList.remove('selected'); matchSelected.classList.remove('selected');
+    matchScore++;
+    document.getElementById('match-score').textContent = matchScore;
+    matchSelected = null;
+    if (matchScore === parseInt(document.getElementById('match-total').textContent)) {
+      setTimeout(() => document.getElementById('match-result').classList.remove('hidden'), 500);
+    }
+  } else {
+    el.classList.add('wrong'); matchSelected.classList.add('wrong');
+    matchErrors++;
+    document.getElementById('match-errors').textContent = matchErrors;
+    const a = el, b = matchSelected;
+    matchSelected = null;
+    setTimeout(() => { a.classList.remove('wrong','selected'); b.classList.remove('wrong','selected'); }, 700);
+  }
+}
+
+// ===================== QUIZ =====================
+let quizItems = [], quizIdx = 0, quizCorrect = 0, quizAnswered = false;
+let quizMistakes = [];
+
+function initQuiz(onlyErrors = false) {
+  document.getElementById('quiz-result').classList.add('hidden');
+  document.getElementById('quiz-play').classList.remove('hidden');
+  quizItems = shuffle(onlyErrors && quizMistakes.length ? quizMistakes : vocab);
+  quizMistakes = [];
+  quizIdx = 0; quizCorrect = 0;
+  renderDots();
+  showQuiz();
+}
+
+function renderDots() {
+  const el = document.getElementById('quiz-dots');
+  el.innerHTML = quizItems.map((_, i) => `<div class="dot ${i===0?'active':''}" id="dot-${i}"></div>`).join('');
+}
+
+function showQuiz() {
+  if (quizIdx >= quizItems.length) { endQuiz(); return; }
+  const v = quizItems[quizIdx];
+  quizAnswered = false;
+  const dir = Math.random() > 0.5;
+  document.getElementById('quiz-dir').textContent = dir ? 'Итальянский → Русский' : 'Русский → Итальянский';
+  document.getElementById('quiz-word').textContent = dir ? v.it : v.ru;
+  document.getElementById('quiz-ctx').textContent = v.ctx || '';
+  document.getElementById('quiz-feedback').textContent = '';
+  document.getElementById('quiz-feedback').className = 'quiz-feedback';
+  document.getElementById('quiz-next-btn').style.display = 'none';
+  document.getElementById('quiz-counter').textContent = `Вопрос ${quizIdx+1} из ${quizItems.length}`;
+  document.getElementById('quiz-bar').style.width = (quizIdx/quizItems.length*100)+'%';
+
+  // Update dots
+  document.querySelectorAll('.dot').forEach((d,i) => {
+    d.className = 'dot' + (i<quizIdx?' done':i===quizIdx?' active':'');
+  });
+
+  const wrong = shuffle(vocab.filter(x=>x.it!==v.it)).slice(0,3);
+  const opts = shuffle([v, ...wrong]);
+  const optEl = document.getElementById('quiz-options');
+  optEl.innerHTML = '';
+  opts.forEach(o => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-option';
+    btn.textContent = dir ? o.ru : o.it;
+    btn.onclick = () => {
+      if (quizAnswered) return;
+      quizAnswered = true;
+      const correct = o.it === v.it;
+      btn.classList.add(correct ? 'correct' : 'wrong');
+      if (!correct) {
+        quizMistakes.push(v);
+        optEl.querySelectorAll('button').forEach(b => { if(b.textContent === (dir?v.ru:v.it)) b.classList.add('correct'); });
+        document.getElementById('quiz-feedback').textContent = `Правильно: ${dir?v.ru:v.it}`;
+        document.getElementById('quiz-feedback').className = 'quiz-feedback bad';
+      } else {
+        quizCorrect++;
+        document.getElementById('quiz-feedback').textContent = '✓ Верно!';
+        document.getElementById('quiz-feedback').className = 'quiz-feedback good';
+      }
+      document.getElementById('quiz-next-btn').style.display = 'inline-block';
+    };
+    optEl.appendChild(btn);
+  });
+}
+
+function nextQuiz() { quizIdx++; showQuiz(); }
+
+function endQuiz() {
+  document.getElementById('quiz-play').classList.add('hidden');
+  document.getElementById('quiz-result').classList.remove('hidden');
+  const pct = Math.round(quizCorrect/quizItems.length*100);
+  document.getElementById('quiz-final-score').textContent = `${quizCorrect}/${quizItems.length}`;
+  document.getElementById('quiz-final-sub').textContent = `${pct}% правильных ответов`;
+  document.getElementById('quiz-emoji').textContent = pct>=80?'🏆':pct>=50?'👍':'📖';
+}
+
+// ===================== FILL =====================
+const fillTasks = [
+  { situation: "Вы встречаете коллегу утром. Вы говорите:", answer: "buongiorno", hint: "buongiorno" },
+  { situation: "Вечером вы здороваетесь с соседом:", answer: "buona sera", hint: "buona sera" },
+  { situation: "Вы хотите познакомиться с человеком. Вы говорите: «Простите, как вас зовут?» (вежливо):", answer: "come si chiama?", hint: "come si chiama?" },
+  { situation: "Вас спросили, как вас зовут. Вы отвечаете (я зовусь... — глагол):", answer: "mi chiamo", hint: "mi chiamo" },
+  { situation: "Познакомившись, вы говорите:", answer: "piacere", hint: "piacere" },
+  { situation: "Вы прощаетесь до следующего раза (вежливо):", answer: "arrivederci", hint: "arrivederci" },
+  { situation: "Вы прощаетесь с другом неформально:", answer: "ciao", hint: "ciao" },
+  { situation: "Вам говорят «piacere» — вы тоже, отвечаете:", answer: "anch'io", hint: "anch'io" },
+  { situation: "Спрашиваете: «Откуда вы?» (вежливо):", answer: "di dov'è?", hint: "di dov'è?" },
+  { situation: "Как сказать «немец»?", answer: "tedesco", hint: "tedesco" },
+  { situation: "Как сказать «француз»?", answer: "francese", hint: "francese" },
+  { situation: "Как сказать «испанец»?", answer: "spagnolo", hint: "spagnolo" },
+  { situation: "Как написать «фамилия» по-итальянски?", answer: "cognome", hint: "cognome" },
+  { situation: "Вы не поняли имя и спрашиваете: «Как пишется?»", answer: "come si scrive?", hint: "come si scrive?" },
+  { situation: "Как сказать «до завтра»?", answer: "a domani", hint: "a domani" },
+  { situation: "Как сказать «до скорого»?", answer: "a presto", hint: "a presto" },
+  { situation: "Вы говорите «отлично!» в ответ:", answer: "perfetto", hint: "perfetto" },
+];
+
+let fillIdx = 0, fillCorrect = 0, fillItems = [];
+
+function initFill() {
+  fillItems = shuffle(fillTasks);
+  fillIdx = 0; fillCorrect = 0;
+  document.getElementById('fill-result').classList.add('hidden');
+  document.getElementById('fill-play').classList.remove('hidden');
+  showFill();
+}
+
+function showFill() {
+  if (fillIdx >= fillItems.length) { endFill(); return; }
+  const t = fillItems[fillIdx];
+  document.getElementById('fill-situation').textContent = t.situation;
+  document.getElementById('fill-input').value = '';
+  document.getElementById('fill-input').className = 'fill-input';
+  document.getElementById('fill-feedback').textContent = '';
+  document.getElementById('fill-feedback').className = 'fill-feedback';
+  document.getElementById('fill-counter').textContent = `Задание ${fillIdx+1} из ${fillItems.length}`;
+  document.getElementById('fill-bar').style.width = (fillIdx/fillItems.length*100)+'%';
+  document.getElementById('fill-skip').classList.remove('hidden');
+  document.getElementById('fill-next').classList.add('hidden');
+  document.getElementById('fill-input').disabled = false;
+  setTimeout(() => document.getElementById('fill-input').focus(), 100);
+}
+
+function normalize(s) { return s.toLowerCase().trim().replace(/[!?\.]/g,''); }
+
+function checkFill() {
+  const t = fillItems[fillIdx];
+  const val = document.getElementById('fill-input').value;
+  if (!val.trim()) return;
+  const correct = normalize(val) === normalize(t.answer);
+  document.getElementById('fill-input').classList.add(correct ? 'correct' : 'wrong');
+  document.getElementById('fill-input').disabled = true;
+  if (correct) {
+    fillCorrect++;
+    document.getElementById('fill-feedback').textContent = '✓ Правильно!';
+    document.getElementById('fill-feedback').className = 'fill-feedback good';
+  } else {
+    document.getElementById('fill-feedback').textContent = `✗ Правильно: ${t.answer}`;
+    document.getElementById('fill-feedback').className = 'fill-feedback bad';
+  }
+  document.getElementById('fill-skip').classList.add('hidden');
+  document.getElementById('fill-next').classList.remove('hidden');
+}
+
+function skipFill() {
+  const t = fillItems[fillIdx];
+  document.getElementById('fill-feedback').textContent = `Правильный ответ: ${t.answer}`;
+  document.getElementById('fill-feedback').className = 'fill-feedback bad';
+  document.getElementById('fill-input').disabled = true;
+  document.getElementById('fill-skip').classList.add('hidden');
+  document.getElementById('fill-next').classList.remove('hidden');
+}
+
+function nextFill() { fillIdx++; showFill(); }
+
+function endFill() {
+  document.getElementById('fill-play').classList.add('hidden');
+  document.getElementById('fill-result').classList.remove('hidden');
+  const pct = Math.round(fillCorrect/fillItems.length*100);
+  document.getElementById('fill-final-score').textContent = `${fillCorrect}/${fillItems.length}`;
+  document.getElementById('fill-final-sub').textContent = `${pct}% правильных ответов`;
+  document.getElementById('fill-emoji').textContent = pct>=80?'🌟':pct>=50?'📝':'🇮🇹';
+}
+
+// ===================== INIT =====================
+renderCards();
+</script>
+</body>
+</html>
