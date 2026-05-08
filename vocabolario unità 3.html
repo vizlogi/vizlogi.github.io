@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Italiano — Lezione 3</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #fdf6ec;
+    --terracotta: #c0533a;
+    --gold: #d4a843;
+    --olive: #5a6e3c;
+    --ink: #2c2118;
+    --sand: #e8d9c0;
+    --mist: #f5ede0;
+    --shadow: rgba(44,33,24,0.15);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 40% at 10% 20%, rgba(192,83,58,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 50% at 90% 80%, rgba(212,168,67,0.08) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrapper { position: relative; z-index: 1; max-width: 800px; margin: 0 auto; padding: 24px 16px 60px; }
+
+  header { text-align: center; margin-bottom: 36px; }
+  .flag { font-size: 2.4rem; margin-bottom: 8px; }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 6vw, 3rem);
+    color: var(--terracotta);
+    line-height: 1.1;
+  }
+  header p { color: #8a7060; font-size: 0.95rem; margin-top: 6px; }
+
+  .tabs {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+  }
+  .tab-btn {
+    padding: 9px 18px;
+    border: 2px solid var(--sand);
+    background: white;
+    border-radius: 50px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.83rem;
+    font-weight: 700;
+    color: #8a7060;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.03em;
+  }
+  .tab-btn:hover { border-color: var(--terracotta); color: var(--terracotta); }
+  .tab-btn.active {
+    background: var(--terracotta);
+    border-color: var(--terracotta);
+    color: white;
+    box-shadow: 0 4px 14px rgba(192,83,58,0.3);
+  }
+
+  #section-cards { display: block; }
+  #section-match, #section-quiz, #section-fill, #section-menu { display: none; }
+
+  .category-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.8rem;
+    font-style: italic;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    margin-top: 28px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .category-label::after { content:''; flex:1; height:1px; background:var(--sand); }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 14px;
+  }
+
+  .card {
+    background: white;
+    border-radius: 14px;
+    padding: 20px 16px;
+    cursor: pointer;
+    box-shadow: 0 2px 10px var(--shadow);
+    border: 1.5px solid var(--sand);
+    transition: transform 0.15s, box-shadow 0.15s;
+    position: relative;
+    min-height: 90px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    user-select: none;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px var(--shadow); }
+  .card .it { font-family: 'Playfair Display', serif; font-size: 1.05rem; color: var(--terracotta); }
+  .card .ru {
+    font-size: 0.85rem;
+    color: var(--olive);
+    margin-top: 6px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .card.flipped .ru { opacity: 1; }
+  .card .hint {
+    position: absolute;
+    top: 10px; right: 12px;
+    font-size: 0.7rem;
+    color: #c8b8a0;
+    font-style: italic;
+  }
+  .card.flipped .hint { display: none; }
+
+  .game-header { text-align: center; margin-bottom: 24px; }
+  .game-header h2 { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--terracotta); }
+  .game-header p { color: #8a7060; font-size: 0.88rem; margin-top: 4px; }
+
+  .match-board {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .match-col { display: flex; flex-direction: column; gap: 8px; }
+  .match-item {
+    background: white;
+    border: 2px solid var(--sand);
+    border-radius: 10px;
+    padding: 12px 14px;
+    cursor: pointer;
+    font-size: 0.92rem;
+    text-align: center;
+    transition: all 0.2s;
+    min-height: 46px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .match-item.it-word { font-family: 'Playfair Display', serif; color: var(--terracotta); font-size: 1rem; }
+  .match-item.ru-word { color: var(--olive); }
+  .match-item:hover:not(.matched):not(.wrong) { border-color: var(--gold); background: var(--mist); }
+  .match-item.selected { border-color: var(--terracotta); background: rgba(192,83,58,0.08); }
+  .match-item.matched { border-color: var(--olive); background: rgba(90,110,60,0.1); color: var(--olive); opacity: 0.6; cursor: default; }
+  .match-item.wrong { border-color: #e05050; background: rgba(224,80,80,0.08); animation: shake 0.4s; }
+
+  @keyframes shake {
+    0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)}
+  }
+
+  .score-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    background: white; border-radius: 12px; padding: 12px 18px;
+    border: 1.5px solid var(--sand);
+    margin-bottom: 16px;
+  }
+  .score-num { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--terracotta); }
+  .score-label { font-size: 0.78rem; color: #8a7060; text-transform: uppercase; letter-spacing: 0.06em; }
+
+  .btn {
+    display: inline-block;
+    padding: 11px 28px;
+    background: var(--terracotta);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 14px rgba(192,83,58,0.25);
+  }
+  .btn:hover { background: #a8422b; transform: translateY(-1px); }
+  .btn.secondary {
+    background: white;
+    color: var(--terracotta);
+    border: 2px solid var(--terracotta);
+    box-shadow: none;
+  }
+  .btn-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+
+  .quiz-progress {
+    height: 6px;
+    background: var(--sand);
+    border-radius: 99px;
+    margin-bottom: 28px;
+    overflow: hidden;
+  }
+  .quiz-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--terracotta), var(--gold));
+    border-radius: 99px;
+    transition: width 0.4s;
+  }
+
+  .quiz-card {
+    background: white;
+    border-radius: 18px;
+    padding: 36px 28px;
+    text-align: center;
+    box-shadow: 0 4px 20px var(--shadow);
+    border: 1.5px solid var(--sand);
+    margin-bottom: 20px;
+  }
+  .quiz-question-label {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #b0a090;
+    margin-bottom: 12px;
+  }
+  .quiz-question {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.4rem, 4.5vw, 2rem);
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .quiz-sub { font-size: 0.85rem; color: #8a7060; font-style: italic; }
+
+  .quiz-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 8px;
+  }
+  .quiz-option {
+    padding: 14px 12px;
+    background: white;
+    border: 2px solid var(--sand);
+    border-radius: 12px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Nunito', sans-serif;
+    color: var(--ink);
+  }
+  .quiz-option:hover:not(.correct):not(.wrong) { border-color: var(--gold); background: var(--mist); }
+  .quiz-option.correct { border-color: var(--olive); background: rgba(90,110,60,0.12); color: var(--olive); font-weight: 700; }
+  .quiz-option.wrong { border-color: #e05050; background: rgba(224,80,80,0.08); color: #c03030; }
+
+  .quiz-feedback {
+    text-align: center;
+    font-size: 0.9rem;
+    margin-top: 10px;
+    min-height: 24px;
+    font-weight: 600;
+    transition: all 0.3s;
+  }
+  .quiz-feedback.good { color: var(--olive); }
+  .quiz-feedback.bad { color: #c03030; }
+
+  .quiz-counter { font-size: 0.85rem; color: #8a7060; text-align: center; margin-bottom: 10px; }
+
+  .fill-card {
+    background: white;
+    border-radius: 18px;
+    padding: 30px 24px;
+    box-shadow: 0 4px 20px var(--shadow);
+    border: 1.5px solid var(--sand);
+    margin-bottom: 20px;
+  }
+  .fill-prompt {
+    font-size: 0.82rem;
+    color: #8a7060;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+  }
+  .fill-situation {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    color: var(--ink);
+    line-height: 1.6;
+    margin-bottom: 20px;
+    font-style: italic;
+  }
+  .fill-input-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .fill-input {
+    flex: 1;
+    min-width: 180px;
+    padding: 11px 16px;
+    border: 2px solid var(--sand);
+    border-radius: 10px;
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s;
+    background: var(--mist);
+  }
+  .fill-input:focus { border-color: var(--terracotta); background: white; }
+  .fill-input.correct { border-color: var(--olive); background: rgba(90,110,60,0.08); }
+  .fill-input.wrong { border-color: #e05050; background: rgba(224,80,80,0.05); }
+  .fill-feedback { font-size: 0.88rem; margin-top: 12px; min-height: 20px; font-weight: 600; }
+  .fill-feedback.good { color: var(--olive); }
+  .fill-feedback.bad { color: #c03030; }
+
+  .result-screen {
+    text-align: center;
+    padding: 40px 20px;
+  }
+  .result-emoji { font-size: 3.5rem; margin-bottom: 12px; }
+  .result-title { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--terracotta); margin-bottom: 8px; }
+  .result-sub { color: #8a7060; margin-bottom: 24px; }
+  .result-score { font-family: 'Playfair Display', serif; font-size: 3rem; color: var(--gold); }
+
+  .hidden { display: none !important; }
+
+  .progress-dots { display: flex; gap: 6px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--sand); transition: all 0.3s; }
+  .dot.done { background: var(--olive); }
+  .dot.active { background: var(--terracotta); transform: scale(1.3); }
+
+  /* Menu game */
+  .menu-intro {
+    background: white;
+    border-radius: 14px;
+    padding: 18px 20px;
+    border: 1.5px solid var(--sand);
+    margin-bottom: 16px;
+    text-align: center;
+    color: #8a7060;
+    font-size: 0.92rem;
+    line-height: 1.5;
+  }
+  .menu-board {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+  .menu-zone {
+    background: white;
+    border: 2px dashed var(--sand);
+    border-radius: 14px;
+    padding: 14px 12px;
+    min-height: 130px;
+  }
+  .menu-zone h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    color: var(--gold);
+    text-align: center;
+    margin-bottom: 10px;
+    font-style: italic;
+  }
+  .menu-zone .slot { display: flex; flex-direction: column; gap: 6px; min-height: 60px; }
+  .menu-pool {
+    background: var(--mist);
+    border-radius: 14px;
+    padding: 14px;
+    border: 1.5px solid var(--sand);
+    margin-bottom: 14px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-height: 60px;
+  }
+  .menu-chip {
+    padding: 8px 14px;
+    background: white;
+    border: 2px solid var(--sand);
+    border-radius: 99px;
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    color: var(--terracotta);
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+  }
+  .menu-chip:hover { border-color: var(--gold); background: var(--mist); }
+  .menu-chip.placed-correct { border-color: var(--olive); background: rgba(90,110,60,0.1); color: var(--olive); }
+  .menu-chip.placed-wrong { border-color: #e05050; background: rgba(224,80,80,0.08); color: #c03030; animation: shake 0.4s; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <div class="flag">🍝</div>
+    <h1>Lezione 3</h1>
+    <p>Buon appetito! — еда, ресторан, бар</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showSection('cards')">📚 Карточки</button>
+    <button class="tab-btn" onclick="showSection('match')">🔗 Соединить</button>
+    <button class="tab-btn" onclick="showSection('menu')">🍽️ Меню</button>
+    <button class="tab-btn" onclick="showSection('quiz')">🎯 Тест</button>
+    <button class="tab-btn" onclick="showSection('fill')">✏️ Вписать</button>
+  </div>
+
+  <!-- FLASHCARDS -->
+  <div id="section-cards">
+    <div class="category-label">В ресторане — общие фразы</div>
+    <div class="cards-grid" id="grid-resto"></div>
+
+    <div class="category-label">Antipasti — закуски</div>
+    <div class="cards-grid" id="grid-antipasti"></div>
+
+    <div class="category-label">Primi piatti — первые блюда</div>
+    <div class="cards-grid" id="grid-primi"></div>
+
+    <div class="category-label">Secondi piatti — вторые блюда</div>
+    <div class="cards-grid" id="grid-secondi"></div>
+
+    <div class="category-label">Contorni — гарниры</div>
+    <div class="cards-grid" id="grid-contorni"></div>
+
+    <div class="category-label">Dolci — десерты</div>
+    <div class="cards-grid" id="grid-dolci"></div>
+
+    <div class="category-label">Frutta e verdura — фрукты и овощи</div>
+    <div class="cards-grid" id="grid-fruit"></div>
+
+    <div class="category-label">Bevande — напитки</div>
+    <div class="cards-grid" id="grid-drinks"></div>
+
+    <div class="category-label">На столе — приборы и посуда</div>
+    <div class="cards-grid" id="grid-table"></div>
+
+    <div class="category-label">Bar e colazione — бар и завтрак</div>
+    <div class="cards-grid" id="grid-bar"></div>
+
+    <div class="category-label">О ресторане — описание места</div>
+    <div class="cards-grid" id="grid-place"></div>
+
+    <div class="category-label">Полезные слова и выражения</div>
+    <div class="cards-grid" id="grid-useful"></div>
+
+    <p style="text-align:center;color:#b0a090;font-size:0.8rem;margin-top:20px;font-style:italic;">Нажмите на карточку, чтобы увидеть перевод</p>
+  </div>
+
+  <!-- MATCH -->
+  <div id="section-match">
+    <div class="game-header">
+      <h2>Соедини слова</h2>
+      <p>Выбери итальянское слово, затем его перевод</p>
+    </div>
+    <div class="score-bar">
+      <div><div class="score-num" id="match-score">0</div><div class="score-label">Совпадений</div></div>
+      <div><div class="score-num" id="match-total">0</div><div class="score-label">Всего пар</div></div>
+      <div><div class="score-num" id="match-errors">0</div><div class="score-label">Ошибок</div></div>
+    </div>
+    <div class="match-board">
+      <div class="match-col" id="match-left"></div>
+      <div class="match-col" id="match-right"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn" onclick="initMatch()">🔄 Новый раунд</button>
+    </div>
+    <div id="match-result" class="result-screen hidden">
+      <div class="result-emoji">🎉</div>
+      <div class="result-title">Bravissimo!</div>
+      <div class="result-sub">Все пары найдены!</div>
+      <div class="btn-row"><button class="btn" onclick="initMatch()">Ещё раз</button></div>
+    </div>
+  </div>
+
+  <!-- MENU GAME -->
+  <div id="section-menu">
+    <div class="game-header">
+      <h2>Составь меню</h2>
+      <p>Распредели блюда по разделам итальянского меню</p>
+    </div>
+    <div class="menu-intro">
+      Нажми на блюдо в банке внизу, затем на нужный раздел меню. Если ошибся — блюдо вернётся в банк.
+    </div>
+    <div class="score-bar">
+      <div><div class="score-num" id="menu-correct">0</div><div class="score-label">Верно</div></div>
+      <div><div class="score-num" id="menu-total">0</div><div class="score-label">Всего</div></div>
+      <div><div class="score-num" id="menu-errors">0</div><div class="score-label">Ошибок</div></div>
+    </div>
+    <div class="menu-board" id="menu-board"></div>
+    <div class="menu-pool" id="menu-pool"></div>
+    <div class="btn-row">
+      <button class="btn" onclick="initMenu()">🔄 Новый раунд</button>
+    </div>
+    <div id="menu-result" class="result-screen hidden">
+      <div class="result-emoji">🍽️</div>
+      <div class="result-title">Buon appetito!</div>
+      <div class="result-sub">Меню составлено!</div>
+      <div class="btn-row"><button class="btn" onclick="initMenu()">Ещё раз</button></div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="section-quiz">
+    <div class="game-header">
+      <h2>Тест с выбором</h2>
+      <p>Выбери правильный перевод</p>
+    </div>
+    <div class="quiz-progress"><div class="quiz-progress-fill" id="quiz-bar"></div></div>
+    <div class="progress-dots" id="quiz-dots"></div>
+    <div class="quiz-counter" id="quiz-counter"></div>
+    <div id="quiz-play">
+      <div class="quiz-card">
+        <div class="quiz-question-label" id="quiz-dir">Итальянский → Русский</div>
+        <div class="quiz-question" id="quiz-word">—</div>
+        <div class="quiz-sub" id="quiz-ctx"></div>
+      </div>
+      <div class="quiz-options" id="quiz-options"></div>
+      <div class="quiz-feedback" id="quiz-feedback"></div>
+      <div class="btn-row"><button class="btn secondary" id="quiz-next-btn" onclick="nextQuiz()" style="display:none">Дальше →</button></div>
+    </div>
+    <div id="quiz-result" class="result-screen hidden">
+      <div class="result-emoji" id="quiz-emoji">🏆</div>
+      <div class="result-title">Risultato</div>
+      <div class="result-score" id="quiz-final-score"></div>
+      <div class="result-sub" id="quiz-final-sub"></div>
+      <div class="btn-row">
+        <button class="btn" onclick="initQuiz()">Заново</button>
+        <button class="btn secondary" onclick="initQuiz(true)">Только ошибки</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILL -->
+  <div id="section-fill">
+    <div class="game-header">
+      <h2>Вспомни по-итальянски</h2>
+      <p>Прочитай ситуацию и введи нужное слово или фразу</p>
+    </div>
+    <div class="quiz-progress"><div class="quiz-progress-fill" id="fill-bar"></div></div>
+    <div class="quiz-counter" id="fill-counter"></div>
+    <div id="fill-play">
+      <div class="fill-card">
+        <div class="fill-prompt">Как сказать по-итальянски?</div>
+        <div class="fill-situation" id="fill-situation"></div>
+        <div class="fill-input-row">
+          <input class="fill-input" id="fill-input" placeholder="Введите ответ..." onkeydown="if(event.key==='Enter')checkFill()">
+          <button class="btn" onclick="checkFill()">→</button>
+        </div>
+        <div class="fill-feedback" id="fill-feedback"></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn secondary" id="fill-skip" onclick="skipFill()">Пропустить</button>
+        <button class="btn secondary hidden" id="fill-next" onclick="nextFill()">Следующий →</button>
+      </div>
+    </div>
+    <div id="fill-result" class="result-screen hidden">
+      <div class="result-emoji" id="fill-emoji">🌟</div>
+      <div class="result-title">Готово!</div>
+      <div class="result-score" id="fill-final-score"></div>
+      <div class="result-sub" id="fill-final-sub"></div>
+      <div class="btn-row"><button class="btn" onclick="initFill()">Заново</button></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===================== VOCABULARY =====================
+const vocab = [
+  // RESTO PHRASES
+  { it: "buon appetito", ru: "приятного аппетита", cat: "resto" },
+  { it: "ecco", ru: "вот / держите", cat: "resto" },
+  { it: "prendere", ru: "брать / заказать", cat: "resto" },
+  { it: "accomodarsi", ru: "располагаться / садиться", cat: "resto" },
+  { it: "menù", ru: "меню", cat: "resto" },
+  { it: "volere", ru: "хотеть", cat: "resto" },
+  { it: "ordinare", ru: "заказывать", cat: "resto" },
+  { it: "che cosa avete oggi?", ru: "что у вас есть сегодня?", cat: "resto" },
+  { it: "quali piatti conosci?", ru: "какие блюда ты знаешь?", cat: "resto" },
+  { it: "il conto, per favore", ru: "счёт, пожалуйста", cat: "resto" },
+  { it: "prezzo fisso", ru: "фиксированная цена", cat: "resto" },
+  { it: "è possibile prenotare un tavolo?", ru: "можно забронировать столик?", cat: "resto" },
+  { it: "a che nome?", ru: "на какое имя?", cat: "resto" },
+  { it: "tavolo riservato", ru: "забронированный столик", cat: "resto" },
+  { it: "prenotazione", ru: "бронирование", cat: "resto" },
+  { it: "servizio", ru: "обслуживание", cat: "resto" },
+
+  // ANTIPASTI
+  { it: "antipasto", ru: "закуска", cat: "antipasti" },
+  { it: "bruschetta", ru: "брускетта", cat: "antipasti" },
+  { it: "prosciutto", ru: "ветчина / прошутто", cat: "antipasti" },
+  { it: "formaggio", ru: "сыр", cat: "antipasti" },
+
+  // PRIMI
+  { it: "primo piatto", ru: "первое блюдо", cat: "primi" },
+  { it: "spaghetti", ru: "спагетти", cat: "primi" },
+  { it: "pasta", ru: "паста / макароны", cat: "primi" },
+  { it: "pasta fatta in casa", ru: "домашняя паста", cat: "primi" },
+  { it: "tortellini", ru: "тортеллини", cat: "primi" },
+  { it: "lasagne", ru: "лазанья", cat: "primi" },
+  { it: "risotto", ru: "ризотто", cat: "primi" },
+  { it: "riso", ru: "рис", cat: "primi" },
+  { it: "minestrone", ru: "минестроне (овощной суп)", cat: "primi" },
+  { it: "brodo", ru: "бульон", cat: "primi" },
+  { it: "alla parmigiana", ru: "по-пармски (с сыром)", cat: "primi" },
+
+  // SECONDI
+  { it: "secondo piatto", ru: "второе блюдо", cat: "secondi" },
+  { it: "carne", ru: "мясо", cat: "secondi" },
+  { it: "bistecca", ru: "бифштекс / стейк", cat: "secondi" },
+  { it: "pollo", ru: "курица", cat: "secondi" },
+  { it: "petto di pollo", ru: "куриная грудка", cat: "secondi" },
+  { it: "arrosto", ru: "жаркое / запечённое", cat: "secondi" },
+  { it: "cotoletta milanese", ru: "котлета по-милански", cat: "secondi" },
+  { it: "pesce", ru: "рыба", cat: "secondi" },
+  { it: "frittura", ru: "жареное (рыба/морепродукты)", cat: "secondi" },
+  { it: "gambero", ru: "креветка", cat: "secondi" },
+  { it: "vongola", ru: "ракушка / вонголе", cat: "secondi" },
+  { it: "frittata", ru: "омлет / фриттата", cat: "secondi" },
+
+  // CONTORNI
+  { it: "contorno", ru: "гарнир", cat: "contorni" },
+  { it: "patata", ru: "картошка", cat: "contorni" },
+  { it: "purè di patate", ru: "картофельное пюре", cat: "contorni" },
+  { it: "fritto", ru: "жареное", cat: "contorni" },
+  { it: "verdura", ru: "овощи", cat: "contorni" },
+  { it: "insalata", ru: "салат", cat: "contorni" },
+  { it: "spinaci", ru: "шпинат", cat: "contorni" },
+
+  // DOLCI
+  { it: "dolce", ru: "десерт / сладкое", cat: "dolci" },
+  { it: "tiramisù", ru: "тирамису", cat: "dolci" },
+  { it: "gelato", ru: "мороженое", cat: "dolci" },
+  { it: "panna cotta", ru: "панна-котта", cat: "dolci" },
+  { it: "macedonia", ru: "фруктовый салат", cat: "dolci" },
+  { it: "strudel", ru: "штрудель", cat: "dolci" },
+  { it: "crema", ru: "крем", cat: "dolci" },
+  { it: "marmellata", ru: "джем / варенье", cat: "dolci" },
+
+  // FRUIT & VEG
+  { it: "frutta", ru: "фрукты", cat: "fruit" },
+  { it: "fragola", ru: "клубника", cat: "fruit" },
+  { it: "pera", ru: "груша", cat: "fruit" },
+  { it: "peperone", ru: "болгарский перец", cat: "fruit" },
+  { it: "carota", ru: "морковь", cat: "fruit" },
+  { it: "zucchina", ru: "кабачок", cat: "fruit" },
+  { it: "melanzana", ru: "баклажан", cat: "fruit" },
+  { it: "pomodoro", ru: "помидор", cat: "fruit" },
+  { it: "fungo", ru: "гриб", cat: "fruit" },
+  { it: "cicoria", ru: "цикорий", cat: "fruit" },
+
+  // DRINKS
+  { it: "vino", ru: "вино", cat: "drinks" },
+  { it: "rosso", ru: "красное", cat: "drinks" },
+  { it: "acqua", ru: "вода", cat: "drinks" },
+  { it: "minerale", ru: "минеральная", cat: "drinks" },
+  { it: "naturale", ru: "негазированная", cat: "drinks" },
+  { it: "frizzante", ru: "газированная", cat: "drinks" },
+  { it: "bottiglia", ru: "бутылка", cat: "drinks" },
+  { it: "litro", ru: "литр", cat: "drinks" },
+  { it: "mezzo litro", ru: "пол-литра", cat: "drinks" },
+  { it: "birra", ru: "пиво", cat: "drinks" },
+  { it: "tè", ru: "чай", cat: "drinks" },
+  { it: "caffè", ru: "кофе / эспрессо", cat: "drinks" },
+  { it: "spremuta", ru: "свежевыжатый сок", cat: "drinks" },
+  { it: "bere", ru: "пить", cat: "drinks" },
+
+  // TABLE
+  { it: "che cosa manca sul tavolo?", ru: "чего не хватает на столе?", cat: "table" },
+  { it: "coltello", ru: "нож", cat: "table" },
+  { it: "forchetta", ru: "вилка", cat: "table" },
+  { it: "cucchiaio", ru: "ложка", cat: "table" },
+  { it: "cucchiaino", ru: "чайная ложка", cat: "table" },
+  { it: "bicchiere", ru: "стакан / бокал", cat: "table" },
+  { it: "tovagliolo", ru: "салфетка", cat: "table" },
+  { it: "pane", ru: "хлеб", cat: "table" },
+  { it: "olio", ru: "масло", cat: "table" },
+  { it: "aceto", ru: "уксус", cat: "table" },
+  { it: "sale", ru: "соль", cat: "table" },
+  { it: "pepe", ru: "перец", cat: "table" },
+
+  // BAR
+  { it: "bar", ru: "бар / кофейня", cat: "bar" },
+  { it: "cappuccino", ru: "капучино", cat: "bar" },
+  { it: "macchiato", ru: "макиато (с молоком)", cat: "bar" },
+  { it: "latte", ru: "молоко", cat: "bar" },
+  { it: "cornetto", ru: "круассан", cat: "bar" },
+  { it: "panino", ru: "сэндвич / булочка", cat: "bar" },
+  { it: "tramezzino", ru: "треугольный сэндвич", cat: "bar" },
+  { it: "toast", ru: "горячий бутерброд", cat: "bar" },
+  { it: "aperitivo", ru: "аперитив", cat: "bar" },
+  { it: "paste", ru: "выпечка / пирожные", cat: "bar" },
+  { it: "pizza", ru: "пицца", cat: "bar" },
+  { it: "mangiare", ru: "есть", cat: "bar" },
+  { it: "salato", ru: "солёный", cat: "bar" },
+  { it: "mattina", ru: "утро", cat: "bar" },
+  { it: "pomeriggio", ru: "после полудня", cat: "bar" },
+  { it: "sera", ru: "вечер", cat: "bar" },
+  { it: "cena", ru: "ужин", cat: "bar" },
+  { it: "mezzogiorno", ru: "полдень", cat: "bar" },
+
+  // PLACE
+  { it: "in che locale mangiano?", ru: "в каком заведении едят?", cat: "place" },
+  { it: "locale", ru: "заведение", cat: "place" },
+  { it: "cucina di mare", ru: "морская кухня", cat: "place" },
+  { it: "cucina vegetariana", ru: "вегетарианская кухня", cat: "place" },
+  { it: "piatti tipici regionali", ru: "типичные региональные блюда", cat: "place" },
+  { it: "piatti bio", ru: "органические блюда", cat: "place" },
+  { it: "ingredienti km0", ru: "местные продукты (км0)", cat: "place" },
+  { it: "vegano", ru: "веганский", cat: "place" },
+  { it: "specialità", ru: "фирменное блюдо", cat: "place" },
+  { it: "pugliese", ru: "из Апулии / апулийский", cat: "place" },
+  { it: "siciliana", ru: "сицилийская", cat: "place" },
+  { it: "aperto", ru: "открыто", cat: "place" },
+  { it: "chiuso", ru: "закрыто", cat: "place" },
+  { it: "chiusura", ru: "выходной / закрытие", cat: "place" },
+  { it: "fare una festa", ru: "устроить праздник", cat: "place" },
+  { it: "invito a cena", ru: "приглашение на ужин", cat: "place" },
+  { it: "sala banchetti", ru: "банкетный зал", cat: "place" },
+  { it: "veranda", ru: "веранда", cat: "place" },
+  { it: "all'aperto", ru: "на открытом воздухе", cat: "place" },
+  { it: "climatizzato", ru: "с кондиционером", cat: "place" },
+  { it: "lunedì", ru: "понедельник", cat: "place" },
+  { it: "martedì", ru: "вторник", cat: "place" },
+  { it: "sabato", ru: "суббота", cat: "place" },
+  { it: "domenica", ru: "воскресенье", cat: "place" },
+
+  // USEFUL
+  { it: "per favore", ru: "пожалуйста", cat: "useful" },
+  { it: "per cortesia", ru: "пожалуйста (вежл.)", cat: "useful" },
+  { it: "dica", ru: "слушаю вас (вежл.)", cat: "useful" },
+  { it: "desiderare", ru: "желать", cat: "useful" },
+  { it: "ancora", ru: "ещё", cat: "useful" },
+  { it: "ancora qualcosa", ru: "ещё что-нибудь", cat: "useful" },
+  { it: "un po' di...", ru: "немного...", cat: "useful" },
+  { it: "qualcos'altro", ru: "что-нибудь ещё", cat: "useful" },
+  { it: "mezzo", ru: "половина", cat: "useful" },
+  { it: "certo", ru: "конечно", cat: "useful" },
+  { it: "molto buono", ru: "очень вкусно", cat: "useful" },
+  { it: "un momento", ru: "минутку", cat: "useful" },
+  { it: "magari", ru: "хорошо бы / возможно", cat: "useful" },
+  { it: "d'accordo", ru: "договорились", cat: "useful" },
+  { it: "va bene", ru: "хорошо / ладно", cat: "useful" },
+  { it: "allora", ru: "тогда / итак", cat: "useful" },
+  { it: "oppure", ru: "или (же)", cat: "useful" },
+  { it: "preferire", ru: "предпочитать", cat: "useful" },
+  { it: "amare", ru: "любить", cat: "useful" },
+  { it: "cucinare", ru: "готовить", cat: "useful" },
+  { it: "anche", ru: "тоже / также", cat: "useful" },
+  { it: "bello", ru: "красивый / хороший", cat: "useful" },
+  { it: "leggermente", ru: "слегка / лёгко", cat: "useful" },
+  { it: "circa", ru: "примерно", cat: "useful" },
+  { it: "fino a...", ru: "до... (времени)", cat: "useful" },
+  { it: "alla fine", ru: "в конце", cat: "useful" },
+  { it: "tempo", ru: "время / погода", cat: "useful" },
+  { it: "scelta", ru: "выбор", cat: "useful" },
+  { it: "gradito", ru: "желательный / приятный", cat: "useful" },
+  { it: "cotto", ru: "приготовленный / варёный", cat: "useful" },
+  { it: "mozzarella", ru: "моцарелла", cat: "useful" },
+  { it: "stagione", ru: "сезон", cat: "useful" },
+  { it: "forno", ru: "печь / духовка", cat: "useful" },
+];
+
+const catMap = {
+  resto: "grid-resto",
+  antipasti: "grid-antipasti",
+  primi: "grid-primi",
+  secondi: "grid-secondi",
+  contorni: "grid-contorni",
+  dolci: "grid-dolci",
+  fruit: "grid-fruit",
+  drinks: "grid-drinks",
+  table: "grid-table",
+  bar: "grid-bar",
+  place: "grid-place",
+  useful: "grid-useful"
+};
+
+function renderCards() {
+  Object.values(catMap).forEach(id => document.getElementById(id).innerHTML = '');
+  vocab.forEach(v => {
+    const el = document.createElement('div');
+    el.className = 'card';
+    el.innerHTML = `<span class="hint">нажми</span><div class="it">${v.it}</div><div class="ru">${v.ru}</div>`;
+    el.onclick = () => el.classList.toggle('flipped');
+    const grid = document.getElementById(catMap[v.cat]);
+    if (grid) grid.appendChild(el);
+  });
+}
+
+function showSection(name) {
+  ['cards','match','menu','quiz','fill'].forEach(s => {
+    document.getElementById('section-'+s).style.display = s===name ? 'block' : 'none';
+  });
+  document.querySelectorAll('.tab-btn').forEach((b,i) => {
+    b.classList.toggle('active', ['cards','match','menu','quiz','fill'][i]===name);
+  });
+  if (name==='match') initMatch();
+  if (name==='menu') initMenu();
+  if (name==='quiz') initQuiz();
+  if (name==='fill') initFill();
+}
+
+// ===================== MATCH GAME =====================
+let matchSelected = null;
+let matchScore = 0;
+let matchErrors = 0;
+
+function shuffle(arr) { return [...arr].sort(()=>Math.random()-0.5); }
+
+function initMatch() {
+  const pool = shuffle(vocab).slice(0,8);
+  matchScore = 0; matchErrors = 0;
+  document.getElementById('match-score').textContent = 0;
+  document.getElementById('match-errors').textContent = 0;
+  document.getElementById('match-total').textContent = pool.length;
+  document.getElementById('match-result').classList.add('hidden');
+  matchSelected = null;
+
+  const leftEl = document.getElementById('match-left');
+  const rightEl = document.getElementById('match-right');
+  leftEl.innerHTML = ''; rightEl.innerHTML = '';
+
+  shuffle(pool).forEach(v => {
+    const el = document.createElement('div');
+    el.className = 'match-item it-word';
+    el.textContent = v.it;
+    el.dataset.key = v.it;
+    el.dataset.side = 'it';
+    el.onclick = () => handleMatchClick(el);
+    leftEl.appendChild(el);
+  });
+  shuffle(pool).forEach(v => {
+    const el = document.createElement('div');
+    el.className = 'match-item ru-word';
+    el.textContent = v.ru;
+    el.dataset.key = v.it;
+    el.dataset.side = 'ru';
+    el.onclick = () => handleMatchClick(el);
+    rightEl.appendChild(el);
+  });
+}
+
+function handleMatchClick(el) {
+  if (el.classList.contains('matched') || el.classList.contains('wrong')) return;
+
+  if (!matchSelected) {
+    document.querySelectorAll('.match-item').forEach(e => e.classList.remove('selected'));
+    el.classList.add('selected');
+    matchSelected = el;
+    return;
+  }
+
+  if (el === matchSelected) { el.classList.remove('selected'); matchSelected = null; return; }
+  if (el.dataset.side === matchSelected.dataset.side) {
+    document.querySelectorAll('.match-item').forEach(e => e.classList.remove('selected'));
+    el.classList.add('selected');
+    matchSelected = el;
+    return;
+  }
+
+  if (el.dataset.key === matchSelected.dataset.key) {
+    el.classList.add('matched'); matchSelected.classList.add('matched');
+    el.classList.remove('selected'); matchSelected.classList.remove('selected');
+    matchScore++;
+    document.getElementById('match-score').textContent = matchScore;
+    matchSelected = null;
+    if (matchScore === parseInt(document.getElementById('match-total').textContent)) {
+      setTimeout(() => document.getElementById('match-result').classList.remove('hidden'), 500);
+    }
+  } else {
+    el.classList.add('wrong'); matchSelected.classList.add('wrong');
+    matchErrors++;
+    document.getElementById('match-errors').textContent = matchErrors;
+    const a = el, b = matchSelected;
+    matchSelected = null;
+    setTimeout(() => { a.classList.remove('wrong','selected'); b.classList.remove('wrong','selected'); }, 700);
+  }
+}
+
+// ===================== MENU GAME =====================
+const menuCategories = [
+  { key: 'antipasti', label: 'Antipasti', emoji: '🥗' },
+  { key: 'primi', label: 'Primi', emoji: '🍝' },
+  { key: 'secondi', label: 'Secondi', emoji: '🥩' },
+  { key: 'contorni', label: 'Contorni', emoji: '🥔' },
+  { key: 'dolci', label: 'Dolci', emoji: '🍰' },
+  { key: 'drinks', label: 'Bevande', emoji: '🍷' },
+];
+
+let menuSelectedChip = null;
+let menuCorrect = 0;
+let menuErrors = 0;
+let menuTotal = 0;
+
+function initMenu() {
+  menuCorrect = 0; menuErrors = 0; menuSelectedChip = null;
+  document.getElementById('menu-result').classList.add('hidden');
+  document.getElementById('menu-correct').textContent = 0;
+  document.getElementById('menu-errors').textContent = 0;
+
+  // Build dishes pool — pick 2 from each category
+  const dishes = [];
+  menuCategories.forEach(c => {
+    const items = vocab.filter(v => v.cat === c.key);
+    shuffle(items).slice(0, 2).forEach(d => dishes.push({ it: d.it, ru: d.ru, cat: c.key }));
+  });
+  menuTotal = dishes.length;
+  document.getElementById('menu-total').textContent = menuTotal;
+
+  // Build board zones
+  const board = document.getElementById('menu-board');
+  board.innerHTML = '';
+  menuCategories.forEach(c => {
+    const zone = document.createElement('div');
+    zone.className = 'menu-zone';
+    zone.dataset.cat = c.key;
+    zone.innerHTML = `<h4>${c.emoji} ${c.label}</h4><div class="slot" id="slot-${c.key}"></div>`;
+    zone.onclick = () => placeChip(c.key, zone);
+    board.appendChild(zone);
+  });
+
+  // Build pool
+  const pool = document.getElementById('menu-pool');
+  pool.innerHTML = '';
+  shuffle(dishes).forEach(d => {
+    const chip = document.createElement('div');
+    chip.className = 'menu-chip';
+    chip.textContent = d.it;
+    chip.dataset.cat = d.cat;
+    chip.dataset.ru = d.ru;
+    chip.onclick = (e) => { e.stopPropagation(); selectChip(chip); };
+    pool.appendChild(chip);
+  });
+}
+
+function selectChip(chip) {
+  document.querySelectorAll('.menu-chip').forEach(c => c.style.transform = '');
+  if (menuSelectedChip === chip) { menuSelectedChip = null; return; }
+  chip.style.transform = 'scale(1.05)';
+  chip.style.borderColor = 'var(--terracotta)';
+  if (menuSelectedChip) menuSelectedChip.style.borderColor = '';
+  menuSelectedChip = chip;
+}
+
+function placeChip(zoneCat, zoneEl) {
+  if (!menuSelectedChip) return;
+  const chip = menuSelectedChip;
+  if (chip.dataset.cat === zoneCat) {
+    // correct
+    chip.classList.add('placed-correct');
+    chip.style.transform = '';
+    chip.style.borderColor = '';
+    chip.onclick = null;
+    document.getElementById('slot-' + zoneCat).appendChild(chip);
+    menuCorrect++;
+    document.getElementById('menu-correct').textContent = menuCorrect;
+    menuSelectedChip = null;
+    if (menuCorrect === menuTotal) {
+      setTimeout(() => document.getElementById('menu-result').classList.remove('hidden'), 500);
+    }
+  } else {
+    // wrong
+    chip.classList.add('placed-wrong');
+    menuErrors++;
+    document.getElementById('menu-errors').textContent = menuErrors;
+    setTimeout(() => {
+      chip.classList.remove('placed-wrong');
+      chip.style.transform = '';
+      chip.style.borderColor = '';
+    }, 700);
+    menuSelectedChip = null;
+  }
+}
+
+// ===================== QUIZ =====================
+let quizItems = [], quizIdx = 0, quizCorrect = 0, quizAnswered = false;
+let quizMistakes = [];
+
+function initQuiz(onlyErrors = false) {
+  document.getElementById('quiz-result').classList.add('hidden');
+  document.getElementById('quiz-play').classList.remove('hidden');
+  quizItems = shuffle(onlyErrors && quizMistakes.length ? quizMistakes : vocab).slice(0, onlyErrors ? quizMistakes.length : 15);
+  quizMistakes = [];
+  quizIdx = 0; quizCorrect = 0;
+  renderDots();
+  showQuiz();
+}
+
+function renderDots() {
+  const el = document.getElementById('quiz-dots');
+  el.innerHTML = quizItems.map((_, i) => `<div class="dot ${i===0?'active':''}" id="dot-${i}"></div>`).join('');
+}
+
+function showQuiz() {
+  if (quizIdx >= quizItems.length) { endQuiz(); return; }
+  const v = quizItems[quizIdx];
+  quizAnswered = false;
+  const dir = Math.random() > 0.5;
+  document.getElementById('quiz-dir').textContent = dir ? 'Итальянский → Русский' : 'Русский → Итальянский';
+  document.getElementById('quiz-word').textContent = dir ? v.it : v.ru;
+  document.getElementById('quiz-ctx').textContent = '';
+  document.getElementById('quiz-feedback').textContent = '';
+  document.getElementById('quiz-feedback').className = 'quiz-feedback';
+  document.getElementById('quiz-next-btn').style.display = 'none';
+  document.getElementById('quiz-counter').textContent = `Вопрос ${quizIdx+1} из ${quizItems.length}`;
+  document.getElementById('quiz-bar').style.width = (quizIdx/quizItems.length*100)+'%';
+
+  document.querySelectorAll('.dot').forEach((d,i) => {
+    d.className = 'dot' + (i<quizIdx?' done':i===quizIdx?' active':'');
+  });
+
+  const wrong = shuffle(vocab.filter(x=>x.it!==v.it)).slice(0,3);
+  const opts = shuffle([v, ...wrong]);
+  const optEl = document.getElementById('quiz-options');
+  optEl.innerHTML = '';
+  opts.forEach(o => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-option';
+    btn.textContent = dir ? o.ru : o.it;
+    btn.onclick = () => {
+      if (quizAnswered) return;
+      quizAnswered = true;
+      const correct = o.it === v.it;
+      btn.classList.add(correct ? 'correct' : 'wrong');
+      if (!correct) {
+        quizMistakes.push(v);
+        optEl.querySelectorAll('button').forEach(b => { if(b.textContent === (dir?v.ru:v.it)) b.classList.add('correct'); });
+        document.getElementById('quiz-feedback').textContent = `Правильно: ${dir?v.ru:v.it}`;
+        document.getElementById('quiz-feedback').className = 'quiz-feedback bad';
+      } else {
+        quizCorrect++;
+        document.getElementById('quiz-feedback').textContent = '✓ Bravo!';
+        document.getElementById('quiz-feedback').className = 'quiz-feedback good';
+      }
+      document.getElementById('quiz-next-btn').style.display = 'inline-block';
+    };
+    optEl.appendChild(btn);
+  });
+}
+
+function nextQuiz() { quizIdx++; showQuiz(); }
+
+function endQuiz() {
+  document.getElementById('quiz-play').classList.add('hidden');
+  document.getElementById('quiz-result').classList.remove('hidden');
+  const pct = Math.round(quizCorrect/quizItems.length*100);
+  document.getElementById('quiz-final-score').textContent = `${quizCorrect}/${quizItems.length}`;
+  document.getElementById('quiz-final-sub').textContent = `${pct}% правильных ответов`;
+  document.getElementById('quiz-emoji').textContent = pct>=80?'🏆':pct>=50?'👍':'📖';
+}
+
+// ===================== FILL =====================
+const fillTasks = [
+  { situation: "Вы хотите забронировать столик. Что спросите?", answer: "è possibile prenotare un tavolo?" },
+  { situation: "Вежливо попросить счёт:", answer: "il conto, per favore" },
+  { situation: "Официант спрашивает имя для брони:", answer: "a che nome?" },
+  { situation: "Пожелайте друзьям приятного аппетита:", answer: "buon appetito" },
+  { situation: "Вы хотите заказать первое блюдо. Как сказать «первое»?", answer: "primo piatto" },
+  { situation: "Вы хотите бутылку красного вина. «Бутылка»:", answer: "bottiglia" },
+  { situation: "Закажите газированную воду — какое прилагательное?", answer: "frizzante" },
+  { situation: "Какая на столе посуда для жидкости?", answer: "bicchiere" },
+  { situation: "Чем режут мясо?", answer: "coltello" },
+  { situation: "Чем едят суп?", answer: "cucchiaio" },
+  { situation: "Чем едят пасту?", answer: "forchetta" },
+  { situation: "Закажите чашку кофе с молоком (большую):", answer: "cappuccino" },
+  { situation: "Утренняя выпечка к кофе:", answer: "cornetto" },
+  { situation: "Самый известный итальянский десерт с маскарпоне:", answer: "tiramisù" },
+  { situation: "Холодный сладкий десерт летом:", answer: "gelato" },
+  { situation: "Закуска (общее название):", answer: "antipasto" },
+  { situation: "Куриная грудка по-итальянски:", answer: "petto di pollo" },
+  { situation: "Картофельное пюре:", answer: "purè di patate" },
+  { situation: "Сказать официанту «слушаю вас» (вежливо):", answer: "dica" },
+  { situation: "Согласиться: «договорились!»:", answer: "d'accordo" },
+  { situation: "Сказать «очень вкусно»:", answer: "molto buono" },
+  { situation: "Спросить «что-нибудь ещё?»:", answer: "qualcos'altro?" },
+  { situation: "Глагол «хотеть» в инфинитиве:", answer: "volere" },
+  { situation: "Глагол «предпочитать» в инфинитиве:", answer: "preferire" },
+  { situation: "Ресторан работает на открытом воздухе. Как это сказать?", answer: "all'aperto" },
+];
+
+let fillIdx = 0, fillCorrect = 0, fillItems = [];
+
+function initFill() {
+  fillItems = shuffle(fillTasks);
+  fillIdx = 0; fillCorrect = 0;
+  document.getElementById('fill-result').classList.add('hidden');
+  document.getElementById('fill-play').classList.remove('hidden');
+  showFill();
+}
+
+function showFill() {
+  if (fillIdx >= fillItems.length) { endFill(); return; }
+  const t = fillItems[fillIdx];
+  document.getElementById('fill-situation').textContent = t.situation;
+  document.getElementById('fill-input').value = '';
+  document.getElementById('fill-input').className = 'fill-input';
+  document.getElementById('fill-feedback').textContent = '';
+  document.getElementById('fill-feedback').className = 'fill-feedback';
+  document.getElementById('fill-counter').textContent = `Задание ${fillIdx+1} из ${fillItems.length}`;
+  document.getElementById('fill-bar').style.width = (fillIdx/fillItems.length*100)+'%';
+  document.getElementById('fill-skip').classList.remove('hidden');
+  document.getElementById('fill-next').classList.add('hidden');
+  document.getElementById('fill-input').disabled = false;
+  setTimeout(() => document.getElementById('fill-input').focus(), 100);
+}
+
+function normalize(s) { return s.toLowerCase().trim().replace(/[!?\.,]/g,''); }
+
+function checkFill() {
+  const t = fillItems[fillIdx];
+  const val = document.getElementById('fill-input').value;
+  if (!val.trim()) return;
+  const correct = normalize(val) === normalize(t.answer);
+  document.getElementById('fill-input').classList.add(correct ? 'correct' : 'wrong');
+  document.getElementById('fill-input').disabled = true;
+  if (correct) {
+    fillCorrect++;
+    document.getElementById('fill-feedback').textContent = '✓ Bravo!';
+    document.getElementById('fill-feedback').className = 'fill-feedback good';
+  } else {
+    document.getElementById('fill-feedback').textContent = `✗ Правильно: ${t.answer}`;
+    document.getElementById('fill-feedback').className = 'fill-feedback bad';
+  }
+  document.getElementById('fill-skip').classList.add('hidden');
+  document.getElementById('fill-next').classList.remove('hidden');
+}
+
+function skipFill() {
+  const t = fillItems[fillIdx];
+  document.getElementById('fill-feedback').textContent = `Правильный ответ: ${t.answer}`;
+  document.getElementById('fill-feedback').className = 'fill-feedback bad';
+  document.getElementById('fill-input').disabled = true;
+  document.getElementById('fill-skip').classList.add('hidden');
+  document.getElementById('fill-next').classList.remove('hidden');
+}
+
+function nextFill() { fillIdx++; showFill(); }
+
+function endFill() {
+  document.getElementById('fill-play').classList.add('hidden');
+  document.getElementById('fill-result').classList.remove('hidden');
+  const pct = Math.round(fillCorrect/fillItems.length*100);
+  document.getElementById('fill-final-score').textContent = `${fillCorrect}/${fillItems.length}`;
+  document.getElementById('fill-final-sub').textContent = `${pct}% правильных ответов`;
+  document.getElementById('fill-emoji').textContent = pct>=80?'🌟':pct>=50?'📝':'🍝';
+}
+
+// ===================== INIT =====================
+renderCards();
+</script>
+</body>
+</html>
