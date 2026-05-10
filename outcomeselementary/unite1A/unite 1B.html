@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Vocabulary — Places & Adjectives</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f0f4ff;
+    --blue: #2d5be3;
+    --navy: #1a2e6e;
+    --sky: #4a90d9;
+    --olive: #3a7a5a;
+    --ink: #1a2030;
+    --sand: #d0d8f0;
+    --mist: #e8eeff;
+    --shadow: rgba(26,46,110,0.12);
+    --gold: #c8992a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 40% at 10% 20%, rgba(45,91,227,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 50% at 90% 80%, rgba(74,144,217,0.08) 0%, transparent 60%);
+    pointer-events: none; z-index: 0;
+  }
+  .wrapper { position: relative; z-index: 1; max-width: 860px; margin: 0 auto; padding: 24px 16px 60px; }
+
+  header { text-align: center; margin-bottom: 36px; }
+  .flag { font-size: 2.4rem; margin-bottom: 8px; }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 5vw, 2.8rem);
+    color: var(--blue);
+    line-height: 1.1;
+  }
+  header p { color: #6070a0; font-size: 0.95rem; margin-top: 6px; }
+
+  .tabs {
+    display: flex; gap: 6px; justify-content: center; margin-bottom: 32px; flex-wrap: wrap;
+  }
+  .tab-btn {
+    padding: 9px 18px;
+    border: 2px solid var(--sand);
+    background: white;
+    border-radius: 50px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.83rem; font-weight: 700;
+    color: #6070a0; cursor: pointer; transition: all 0.2s;
+  }
+  .tab-btn:hover { border-color: var(--blue); color: var(--blue); }
+  .tab-btn.active {
+    background: var(--blue); border-color: var(--blue); color: white;
+    box-shadow: 0 4px 14px rgba(45,91,227,0.3);
+  }
+
+  #section-cards { display: block; }
+  #section-match, #section-quiz, #section-fill, #section-opposites { display: none; }
+
+  .category-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.8rem; font-style: italic;
+    color: var(--gold);
+    letter-spacing: 0.1em; text-transform: uppercase;
+    margin-bottom: 16px; margin-top: 28px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .category-label::after { content:''; flex:1; height:1px; background:var(--sand); }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 14px;
+  }
+
+  /* CARD — 3 sides: word → translation → example */
+  .card {
+    background: white;
+    border-radius: 16px;
+    padding: 0;
+    cursor: pointer;
+    box-shadow: 0 2px 12px var(--shadow);
+    border: 1.5px solid var(--sand);
+    transition: transform 0.15s, box-shadow 0.15s;
+    position: relative;
+    min-height: 110px;
+    user-select: none;
+    overflow: hidden;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 6px 22px var(--shadow); }
+
+  .card-face {
+    padding: 18px 16px;
+    display: flex; flex-direction: column; justify-content: center;
+    min-height: 110px;
+    transition: all 0.25s;
+  }
+
+  /* Side 0: word */
+  .card[data-side="0"] .face-word { display: flex; }
+  .card[data-side="0"] .face-trans { display: none; }
+  .card[data-side="0"] .face-ex { display: none; }
+
+  /* Side 1: translation */
+  .card[data-side="1"] .face-word { display: none; }
+  .card[data-side="1"] .face-trans { display: flex; }
+  .card[data-side="1"] .face-ex { display: none; }
+
+  /* Side 2: example */
+  .card[data-side="2"] .face-word { display: none; }
+  .card[data-side="2"] .face-trans { display: none; }
+  .card[data-side="2"] .face-ex { display: flex; }
+
+  .face-word, .face-trans, .face-ex {
+    flex-direction: column; gap: 4px;
+  }
+
+  .word-en {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem; color: var(--blue); font-weight: 700;
+  }
+  .word-pos {
+    font-size: 0.7rem; color: #8090c0; font-style: italic; margin-bottom: 2px;
+  }
+  .word-pron {
+    font-size: 0.75rem; color: #a0b0d0; font-family: monospace;
+  }
+  .word-def {
+    font-size: 0.78rem; color: #5060a0; margin-top: 4px; line-height: 1.4;
+  }
+  .word-trans-main {
+    font-size: 1.05rem; color: var(--olive); font-weight: 700;
+  }
+  .word-opp {
+    font-size: 0.78rem; color: #a0b0d0;
+    margin-top: 4px;
+  }
+  .word-opp span { color: var(--blue); }
+  .word-ex-text {
+    font-size: 0.82rem; color: #3a4060; font-style: italic; line-height: 1.5;
+  }
+  .word-ex-label {
+    font-size: 0.68rem; color: #a0b0c0; text-transform: uppercase;
+    letter-spacing: 0.08em; margin-bottom: 4px;
+  }
+
+  /* Tap indicator */
+  .card-tap {
+    position: absolute; bottom: 8px; right: 12px;
+    font-size: 0.65rem; color: #c0d0e0; font-style: italic;
+    pointer-events: none;
+  }
+  .card[data-side="2"] .card-tap { display: none; }
+
+  /* Step dots */
+  .card-dots {
+    position: absolute; top: 8px; right: 10px;
+    display: flex; gap: 4px;
+  }
+  .card-dot {
+    width: 6px; height: 6px; border-radius: 50%; background: var(--sand);
+  }
+  .card-dot.active { background: var(--blue); }
+  .card-dot.done { background: var(--olive); }
+
+  /* ===== MATCH ===== */
+  .game-header { text-align: center; margin-bottom: 24px; }
+  .game-header h2 { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--blue); }
+  .game-header p { color: #6070a0; font-size: 0.88rem; margin-top: 4px; }
+
+  .match-board { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+  .match-col { display: flex; flex-direction: column; gap: 8px; }
+  .match-item {
+    background: white; border: 2px solid var(--sand); border-radius: 10px;
+    padding: 12px 14px; cursor: pointer; font-size: 0.9rem; text-align: center;
+    transition: all 0.2s; min-height: 46px; display: flex; align-items: center; justify-content: center;
+  }
+  .match-item.en-word { font-family: 'Playfair Display', serif; color: var(--blue); font-size: 1rem; }
+  .match-item.ru-word { color: var(--olive); }
+  .match-item:hover:not(.matched):not(.wrong) { border-color: var(--gold); background: var(--mist); }
+  .match-item.selected { border-color: var(--blue); background: rgba(45,91,227,0.08); }
+  .match-item.matched { border-color: var(--olive); background: rgba(58,122,90,0.1); opacity: 0.6; cursor: default; }
+  .match-item.wrong { border-color: #e05050; background: rgba(224,80,80,0.08); animation: shake 0.4s; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+
+  .score-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    background: white; border-radius: 12px; padding: 12px 18px;
+    border: 1.5px solid var(--sand); margin-bottom: 16px;
+  }
+  .score-num { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--blue); }
+  .score-label { font-size: 0.78rem; color: #6070a0; text-transform: uppercase; letter-spacing: 0.06em; }
+
+  .btn {
+    display: inline-block; padding: 11px 28px;
+    background: var(--blue); color: white; border: none; border-radius: 50px;
+    font-family: 'Nunito', sans-serif; font-size: 0.9rem; font-weight: 700;
+    cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 14px rgba(45,91,227,0.25);
+  }
+  .btn:hover { background: #1e40b0; transform: translateY(-1px); }
+  .btn.secondary { background: white; color: var(--blue); border: 2px solid var(--blue); box-shadow: none; }
+  .btn-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+
+  /* ===== QUIZ ===== */
+  .quiz-progress { height: 6px; background: var(--sand); border-radius: 99px; margin-bottom: 28px; overflow: hidden; }
+  .quiz-progress-fill { height: 100%; background: linear-gradient(90deg, var(--blue), var(--sky)); border-radius: 99px; transition: width 0.4s; }
+  .quiz-card {
+    background: white; border-radius: 18px; padding: 32px 24px; text-align: center;
+    box-shadow: 0 4px 20px var(--shadow); border: 1.5px solid var(--sand); margin-bottom: 20px;
+  }
+  .quiz-question-label { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.1em; color: #a0b0d0; margin-bottom: 12px; }
+  .quiz-question { font-family: 'Playfair Display', serif; font-size: clamp(1.4rem, 4.5vw, 2rem); color: var(--ink); margin-bottom: 6px; }
+  .quiz-sub { font-size: 0.8rem; color: #6070a0; font-style: italic; }
+  .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; }
+  .quiz-option {
+    padding: 14px 12px; background: white; border: 2px solid var(--sand); border-radius: 12px;
+    font-size: 0.92rem; cursor: pointer; transition: all 0.2s; font-family: 'Nunito', sans-serif; color: var(--ink);
+  }
+  .quiz-option:hover:not(.correct):not(.wrong) { border-color: var(--gold); background: var(--mist); }
+  .quiz-option.correct { border-color: var(--olive); background: rgba(58,122,90,0.12); color: var(--olive); font-weight: 700; }
+  .quiz-option.wrong { border-color: #e05050; background: rgba(224,80,80,0.08); color: #c03030; }
+  .quiz-feedback { text-align: center; font-size: 0.9rem; margin-top: 10px; min-height: 24px; font-weight: 600; }
+  .quiz-feedback.good { color: var(--olive); }
+  .quiz-feedback.bad { color: #c03030; }
+  .quiz-counter { font-size: 0.85rem; color: #6070a0; text-align: center; margin-bottom: 10px; }
+  .progress-dots { display: flex; gap: 6px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--sand); transition: all 0.3s; }
+  .dot.done { background: var(--olive); }
+  .dot.active { background: var(--blue); transform: scale(1.3); }
+
+  /* ===== OPPOSITES ===== */
+  .opp-word { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--blue); text-align: center; padding: 18px; background: var(--mist); border-radius: 12px; margin-bottom: 14px; }
+  .opp-options { display: flex; flex-direction: column; gap: 8px; }
+  .opp-option {
+    padding: 12px 16px; border: 2px solid var(--sand); border-radius: 10px; background: white;
+    cursor: pointer; font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--ink);
+    transition: all 0.2s; text-align: center;
+  }
+  .opp-option:hover { border-color: var(--gold); background: var(--mist); }
+  .opp-option.correct { border-color: var(--olive); background: rgba(58,122,90,0.12); color: var(--olive); }
+  .opp-option.wrong { border-color: #e05050; background: rgba(224,80,80,0.08); color: #c03030; }
+
+  /* ===== FILL ===== */
+  .fill-card {
+    background: white; border-radius: 18px; padding: 28px 22px;
+    box-shadow: 0 4px 20px var(--shadow); border: 1.5px solid var(--sand); margin-bottom: 20px;
+  }
+  .fill-prompt { font-size: 0.8rem; color: #6070a0; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; }
+  .fill-situation { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--ink); line-height: 1.7; margin-bottom: 16px; }
+  .fill-situation .blank {
+    display: inline-block; min-width: 100px; border-bottom: 2px solid var(--blue);
+    color: transparent; background: var(--mist); border-radius: 4px; padding: 0 8px;
+  }
+  .fill-input-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .fill-input {
+    flex: 1; min-width: 160px; padding: 11px 16px;
+    border: 2px solid var(--sand); border-radius: 10px;
+    font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--ink);
+    outline: none; transition: border-color 0.2s; background: var(--mist);
+  }
+  .fill-input:focus { border-color: var(--blue); background: white; }
+  .fill-input.correct { border-color: var(--olive); background: rgba(58,122,90,0.08); }
+  .fill-input.wrong { border-color: #e05050; }
+  .fill-feedback { font-size: 0.88rem; margin-top: 10px; min-height: 20px; font-weight: 600; }
+  .fill-feedback.good { color: var(--olive); }
+  .fill-feedback.bad { color: #c03030; }
+
+  .result-screen { text-align: center; padding: 40px 20px; }
+  .result-emoji { font-size: 3.5rem; margin-bottom: 12px; }
+  .result-title { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--blue); margin-bottom: 8px; }
+  .result-sub { color: #6070a0; margin-bottom: 24px; }
+  .result-score { font-family: 'Playfair Display', serif; font-size: 3rem; color: var(--gold); }
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <div class="flag">🇬🇧</div>
+    <h1>English Vocabulary</h1>
+    <p>Places, nature & adjectives · Pre-Intermediate</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showSection('cards')">📚 Cards</button>
+    <button class="tab-btn" onclick="showSection('match')">🔗 Match</button>
+    <button class="tab-btn" onclick="showSection('opposites')">⚖️ Opposites</button>
+    <button class="tab-btn" onclick="showSection('quiz')">🎯 Quiz</button>
+    <button class="tab-btn" onclick="showSection('fill')">✏️ Fill in</button>
+  </div>
+
+  <!-- CARDS -->
+  <div id="section-cards">
+    <div class="category-label">Places in a city</div>
+    <div class="cards-grid" id="grid-places"></div>
+
+    <div class="category-label">Nature & landscape</div>
+    <div class="cards-grid" id="grid-nature"></div>
+
+    <div class="category-label">Adjectives — describing places</div>
+    <div class="cards-grid" id="grid-adj-place"></div>
+
+    <div class="category-label">Adjectives — general</div>
+    <div class="cards-grid" id="grid-adj-gen"></div>
+
+    <div class="category-label">Verbs & activities</div>
+    <div class="cards-grid" id="grid-verbs"></div>
+
+    <p style="text-align:center;color:#a0b0d0;font-size:0.8rem;margin-top:20px;font-style:italic;">Tap once → translation · Tap twice → example sentence</p>
+  </div>
+
+  <!-- MATCH -->
+  <div id="section-match">
+    <div class="game-header">
+      <h2>Match the words</h2>
+      <p>Select an English word, then its Russian translation</p>
+    </div>
+    <div class="score-bar">
+      <div><div class="score-num" id="match-score">0</div><div class="score-label">Matched</div></div>
+      <div><div class="score-num" id="match-total">0</div><div class="score-label">Total</div></div>
+      <div><div class="score-num" id="match-errors">0</div><div class="score-label">Errors</div></div>
+    </div>
+    <div class="match-board">
+      <div class="match-col" id="match-left"></div>
+      <div class="match-col" id="match-right"></div>
+    </div>
+    <div class="btn-row"><button class="btn" onclick="initMatch()">🔄 New round</button></div>
+    <div id="match-result" class="result-screen hidden">
+      <div class="result-emoji">🎉</div>
+      <div class="result-title">Well done!</div>
+      <div class="result-sub">All pairs found!</div>
+      <div class="btn-row"><button class="btn" onclick="initMatch()">Play again</button></div>
+    </div>
+  </div>
+
+  <!-- OPPOSITES -->
+  <div id="section-opposites">
+    <div class="game-header">
+      <h2>Find the opposite</h2>
+      <p>Choose the adjective with the opposite meaning</p>
+    </div>
+    <div class="score-bar">
+      <div><div class="score-num" id="opp-score">0</div><div class="score-label">Correct</div></div>
+      <div><div class="score-num" id="opp-current">1</div><div class="score-label">Of 10</div></div>
+      <div><div class="score-num" id="opp-errors">0</div><div class="score-label">Errors</div></div>
+    </div>
+    <div id="opp-play">
+      <div class="opp-word" id="opp-word">—</div>
+      <div class="opp-options" id="opp-options"></div>
+      <div class="quiz-feedback" id="opp-feedback"></div>
+      <div class="btn-row"><button class="btn secondary hidden" id="opp-next-btn" onclick="nextOpp()">Next →</button></div>
+    </div>
+    <div id="opp-result" class="result-screen hidden">
+      <div class="result-emoji" id="opp-emoji">🏆</div>
+      <div class="result-title">Result</div>
+      <div class="result-score" id="opp-final"></div>
+      <div class="result-sub" id="opp-sub"></div>
+      <div class="btn-row"><button class="btn" onclick="initOpposites()">Again</button></div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="section-quiz">
+    <div class="game-header">
+      <h2>Choose the correct translation</h2>
+      <p>EN → RU or RU → EN</p>
+    </div>
+    <div class="quiz-progress"><div class="quiz-progress-fill" id="quiz-bar"></div></div>
+    <div class="progress-dots" id="quiz-dots"></div>
+    <div class="quiz-counter" id="quiz-counter"></div>
+    <div id="quiz-play">
+      <div class="quiz-card">
+        <div class="quiz-question-label" id="quiz-dir">English → Russian</div>
+        <div class="quiz-question" id="quiz-word">—</div>
+        <div class="quiz-sub" id="quiz-ctx"></div>
+      </div>
+      <div class="quiz-options" id="quiz-options"></div>
+      <div class="quiz-feedback" id="quiz-feedback"></div>
+      <div class="btn-row"><button class="btn secondary" id="quiz-next-btn" onclick="nextQuiz()" style="display:none">Next →</button></div>
+    </div>
+    <div id="quiz-result" class="result-screen hidden">
+      <div class="result-emoji" id="quiz-emoji">🏆</div>
+      <div class="result-title">Result</div>
+      <div class="result-score" id="quiz-final-score"></div>
+      <div class="result-sub" id="quiz-final-sub"></div>
+      <div class="btn-row">
+        <button class="btn" onclick="initQuiz()">Again</button>
+        <button class="btn secondary" onclick="initQuiz(true)">Mistakes only</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILL -->
+  <div id="section-fill">
+    <div class="game-header">
+      <h2>Fill in the gap</h2>
+      <p>Complete the sentence with the correct word</p>
+    </div>
+    <div class="quiz-progress"><div class="quiz-progress-fill" id="fill-bar"></div></div>
+    <div class="quiz-counter" id="fill-counter"></div>
+    <div id="fill-play">
+      <div class="fill-card">
+        <div class="fill-prompt">Complete the sentence:</div>
+        <div class="fill-situation" id="fill-situation"></div>
+        <div class="fill-input-row">
+          <input class="fill-input" id="fill-input" placeholder="Type the missing word..." onkeydown="if(event.key==='Enter')checkFill()">
+          <button class="btn" onclick="checkFill()">→</button>
+        </div>
+        <div class="fill-feedback" id="fill-feedback"></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn secondary" id="fill-skip" onclick="skipFill()">Skip</button>
+        <button class="btn secondary hidden" id="fill-next" onclick="nextFill()">Next →</button>
+      </div>
+    </div>
+    <div id="fill-result" class="result-screen hidden">
+      <div class="result-emoji" id="fill-emoji">🌟</div>
+      <div class="result-title">Done!</div>
+      <div class="result-score" id="fill-final-score"></div>
+      <div class="result-sub" id="fill-final-sub"></div>
+      <div class="btn-row"><button class="btn" onclick="initFill()">Again</button></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===================== VOCABULARY =====================
+const vocab = [
+  // PLACES
+  {
+    en: "airport", pos: "noun", pron: "/ˈeə(r)pɔː(r)t/",
+    ru: "аэропорт",
+    def: "a place where planes take off and land",
+    ex: "We're flying from Heathrow airport tomorrow.",
+    cat: "places"
+  },
+  {
+    en: "bar", pos: "noun", pron: "/bɑːl/",
+    ru: "бар",
+    def: "a place where people can buy and drink beer, wine, etc.",
+    ex: "I'll meet you in the bar at 7.",
+    cat: "places"
+  },
+  {
+    en: "beach", pos: "noun", pron: "/biːtʃ/",
+    ru: "пляж",
+    def: "the land at the edge of the sea",
+    ex: "We spent the day on the beach.",
+    cat: "places"
+  },
+  {
+    en: "bridge", pos: "noun", pron: "/brɪdʒ/",
+    ru: "мост",
+    def: "a structure built over a river or road that allows people to cross",
+    ex: "We walked over the old stone bridge.",
+    cat: "places"
+  },
+  {
+    en: "building", pos: "noun", pron: "/ˈbɪldɪŋ/",
+    ru: "здание",
+    def: "a structure such as a house that has walls and a roof",
+    ex: "The cathedral is a beautiful building.",
+    cat: "places"
+  },
+  {
+    en: "cinema", pos: "noun", pron: "/ˈsɪnəmə/",
+    ru: "кинотеатр",
+    def: "a theatre where you can go and watch films",
+    ex: "We go to the cinema every Saturday.",
+    cat: "places"
+  },
+  {
+    en: "house", pos: "noun", pron: "/haʊs/",
+    ru: "дом",
+    def: "a building which a person or family lives in",
+    ex: "Come to my house after school.",
+    cat: "places"
+  },
+  {
+    en: "stadium", pos: "noun", pron: "/ˈsteɪdiəm/",
+    ru: "стадион",
+    def: "a large closed area where sports events are held",
+    ex: "We're going to the stadium to watch the match.",
+    cat: "places"
+  },
+  {
+    en: "supermarket", pos: "noun", pron: "/ˈsuːpəlmɑːlkɪt/",
+    ru: "супермаркет",
+    def: "a large shop which sells lots of different sorts of food",
+    ex: "I do my shopping once a week at the supermarket.",
+    cat: "places"
+  },
+  {
+    en: "town", pos: "noun", pron: "/taʊn/",
+    ru: "город (небольшой)",
+    def: "a place with buildings where people live; larger than a village, smaller than a city",
+    ex: "I live in a small town near Bratislava.",
+    cat: "places"
+  },
+  {
+    en: "university", pos: "noun", pron: "/juːnɪˈvɜː(r)sɪti/",
+    ru: "университет",
+    def: "a place where people can study after school, usually between 18 and 21",
+    ex: "She spent three years at Cambridge University.",
+    cat: "places"
+  },
+  {
+    en: "village", pos: "noun", pron: "/ˈvɪlɪdʒ/",
+    ru: "деревня / посёлок",
+    def: "a small town in the countryside",
+    ex: "She lives in a small village in the mountains.",
+    cat: "places"
+  },
+
+  // NATURE
+  {
+    en: "forest", pos: "noun", pron: "/ˈfɒrɪst/",
+    ru: "лес",
+    def: "a large area covered with trees, bushes and plants",
+    ex: "In the middle of the forest there is a small lake.",
+    cat: "nature"
+  },
+  {
+    en: "river", pos: "noun", pron: "/ˈrɪvə(r)/",
+    ru: "река",
+    def: "a long stream of water that runs through a country and goes into the sea",
+    ex: "The river goes through the city from east to west.",
+    cat: "nature"
+  },
+  {
+    en: "sea", pos: "noun", pron: "/siː/",
+    ru: "море",
+    def: "the large area of water that covers a lot of the earth",
+    ex: "A house near the sea.",
+    cat: "nature"
+  },
+  {
+    en: "tree", pos: "noun", pron: "/triː/",
+    ru: "дерево",
+    def: "a tall plant with a trunk and branches",
+    ex: "We planted a tree in our garden.",
+    cat: "nature"
+  },
+  {
+    en: "region", pos: "noun", pron: "/ˈriːdʒən/",
+    ru: "регион / область",
+    def: "a large area of land, usually without exact limits or borders",
+    ex: "This region of Italy is known for its cultural heritage.",
+    cat: "nature"
+  },
+  {
+    en: "night", pos: "noun", pron: "/naɪt/",
+    ru: "ночь",
+    def: "the time when it is dark, between the afternoon and the morning",
+    ex: "He works nights — during the night rather than during the day.",
+    cat: "nature"
+  },
+  {
+    en: "winter", pos: "noun", pron: "/ˈwɪntə(r)/",
+    ru: "зима",
+    def: "the time of year when it is cold, between autumn and spring",
+    ex: "Winters are very cold in Eastern Russia.",
+    cat: "nature"
+  },
+
+  // ADJ PLACES
+  {
+    en: "beautiful", pos: "adjective", pron: "/ˈbjuːtəf(ə)l/",
+    ru: "красивый",
+    def: "very nice to look at",
+    ex: "Florence is a beautiful city.",
+    cat: "adj-place",
+    opposite: "ugly"
+  },
+  {
+    en: "boring", pos: "adjective", pron: "/ˈbɔːrɪŋ/",
+    ru: "скучный",
+    def: "not interesting at all",
+    ex: "The film was so boring we left before the end.",
+    cat: "adj-place",
+    opposite: "interesting"
+  },
+  {
+    en: "cheap", pos: "adjective", pron: "/tʃiːp/",
+    ru: "дешёвый",
+    def: "does not cost very much money",
+    ex: "I only bought it because it was cheap.",
+    cat: "adj-place",
+    opposite: "expensive"
+  },
+  {
+    en: "expensive", pos: "adjective", pron: "/ɪkˈspensɪv/",
+    ru: "дорогой",
+    def: "costs a lot of money",
+    ex: "It was very expensive to take a taxi to the airport.",
+    cat: "adj-place",
+    opposite: "cheap"
+  },
+  {
+    en: "dirty", pos: "adjective", pron: "/ˈdɜː(r)ti/",
+    ru: "грязный",
+    def: "has dirt or dust on it and is not clean",
+    ex: "Don't get your clothes dirty!",
+    cat: "adj-place",
+    opposite: "clean"
+  },
+  {
+    en: "noisy", pos: "adjective", pron: "/ˈnɔɪzi/",
+    ru: "шумный",
+    def: "makes a lot of sound",
+    ex: "The traffic outside is very noisy.",
+    cat: "adj-place",
+    opposite: "quiet"
+  },
+  {
+    en: "modern", pos: "adjective", pron: "/ˈmɒdən/",
+    ru: "современный",
+    def: "designed and made using the most recent ideas and methods",
+    ex: "Modern technology makes communication much easier.",
+    cat: "adj-place"
+  },
+  {
+    en: "local", pos: "adjective", pron: "/ˈləʊk(ə)l/",
+    ru: "местный",
+    def: "happens or exists inside a small area close to where you are",
+    ex: "Did you try the local food when you were in Rome?",
+    cat: "adj-place"
+  },
+  {
+    en: "natural", pos: "adjective", pron: "/ˈnætʃərəl/",
+    ru: "природный / натуральный",
+    def: "exists in nature and is not made or caused by people",
+    ex: "She prefers natural ingredients in her skincare.",
+    cat: "adj-place"
+  },
+
+  // ADJ GENERAL
+  {
+    en: "bad", pos: "adjective", pron: "/bæd/",
+    ru: "плохой",
+    def: "not good and you do not like it",
+    ex: "I just got some bad news.",
+    cat: "adj-gen",
+    opposite: "good"
+  },
+  {
+    en: "cold", pos: "adjective", pron: "/kəʊld/",
+    ru: "холодный",
+    def: "the temperature is not very high",
+    ex: "It gets very cold in the winter here.",
+    cat: "adj-gen",
+    opposite: "hot"
+  },
+  {
+    en: "famous", pos: "adjective", pron: "/ˈfeɪməs/",
+    ru: "знаменитый",
+    def: "if lots of people know about someone or something",
+    ex: "Messi is the most famous footballer in the world.",
+    cat: "adj-gen"
+  },
+  {
+    en: "favourite", pos: "adjective", pron: "/ˈfeɪvərɪt/",
+    ru: "любимый",
+    def: "liked more than others",
+    ex: "Pizza is my favourite food.",
+    cat: "adj-gen"
+  },
+  {
+    en: "little", pos: "adjective", pron: "/ˈlɪt(ə)l/",
+    ru: "маленький",
+    def: "not very big",
+    ex: "It's an interesting little book.",
+    cat: "adj-gen",
+    opposite: "big"
+  },
+  {
+    en: "lovely", pos: "adjective", pron: "/ˈlʌvli/",
+    ru: "прекрасный / замечательный",
+    def: "pleasant or enjoyable",
+    ex: "We had a lovely time at the beach.",
+    cat: "adj-gen"
+  },
+  {
+    en: "main", pos: "adjective", pron: "/meɪn/",
+    ru: "главный / основной",
+    def: "the most important one in a group",
+    ex: "There is only one main road.",
+    cat: "adj-gen"
+  },
+  {
+    en: "small", pos: "adjective", pron: "/smɔːl/",
+    ru: "маленький",
+    def: "not very big",
+    ex: "The hotel was nice but the rooms were rather small.",
+    cat: "adj-gen",
+    opposite: "big"
+  },
+
+  // VERBS
+  {
+    en: "like", pos: "verb", pron: "/laɪk/",
+    ru: "нравиться / любить",
+    def: "you think it's good and it gives you pleasure",
+    ex: "I like playing computer games.",
+    cat: "verbs",
+    opposite: "hate"
+  },
+  {
+    en: "move (house)", pos: "verb", pron: "/muːv/",
+    ru: "переезжать",
+    def: "go and live in a different place",
+    ex: "We're moving house next week.",
+    cat: "verbs"
+  },
+  {
+    en: "relax", pos: "verb", pron: "/rɪˈlæks/",
+    ru: "расслабляться / отдыхать",
+    def: "do things you enjoy that do not need much effort",
+    ex: "Listening to music helps me relax.",
+    cat: "verbs"
+  },
+  {
+    en: "walk", pos: "verb", pron: "/wɔːk/",
+    ru: "идти пешком / ходить",
+    def: "go somewhere putting one foot in front of the other",
+    ex: "It's too far to walk — let's get the bus.",
+    cat: "verbs"
+  },
+  {
+    en: "swimming", pos: "noun/verb", pron: "/ˈswɪmɪŋ/",
+    ru: "плавание",
+    def: "the activity of moving in the water using your arms and legs",
+    ex: "I love swimming. We go swimming every Saturday.",
+    cat: "verbs"
+  },
+  {
+    en: "shopping", pos: "noun", pron: "/ˈʃɒpɪŋ/",
+    ru: "шопинг / покупки",
+    def: "the activity of going to shops to buy things",
+    ex: "We went shopping this morning.",
+    cat: "verbs"
+  },
+  {
+    en: "culture", pos: "noun", pron: "/ˈkʌltʃər/",
+    ru: "культура",
+    def: "the way of life, customs and beliefs of a particular group of people",
+    ex: "Food is an important part of Italian culture.",
+    cat: "verbs"
+  },
+  {
+    en: "tourist", pos: "noun", pron: "/ˈtʊərɪst/",
+    ru: "турист",
+    def: "someone who visits a place for pleasure and interest",
+    ex: "The city is full of tourists in the summer.",
+    cat: "verbs"
+  },
+  {
+    en: "course", pos: "noun", pron: "/kɔːs/",
+    ru: "курс (обучения)",
+    def: "a series of lessons or lectures on a particular subject",
+    ex: "I'm taking a French course online.",
+    cat: "verbs"
+  },
+  {
+    en: "rubbish", pos: "noun", pron: "/ˈrʌbɪʃ/",
+    ru: "мусор",
+    def: "waste material or things that are no longer wanted",
+    ex: "Please take out the rubbish.",
+    cat: "verbs"
+  },
+  {
+    en: "kid", pos: "noun", pron: "/kɪd/",
+    ru: "ребёнок (разг.)",
+    def: "an informal word for a child",
+    ex: "They've got two kids.",
+    cat: "verbs"
+  },
+  {
+    en: "people", pos: "noun (plural)", pron: "/ˈpiːp(ə)l/",
+    ru: "люди",
+    def: "men, women, and children; singular is person",
+    ex: "I met some interesting people in Poland.",
+    cat: "verbs"
+  },
+];
+
+const catMap = {
+  places: "grid-places",
+  nature: "grid-nature",
+  "adj-place": "grid-adj-place",
+  "adj-gen": "grid-adj-gen",
+  verbs: "grid-verbs"
+};
+
+// ===================== RENDER CARDS (3 sides) =====================
+function renderCards() {
+  Object.values(catMap).forEach(id => document.getElementById(id).innerHTML = '');
+  vocab.forEach(v => {
+    const el = document.createElement('div');
+    el.className = 'card';
+    el.dataset.side = '0';
+
+    const oppHtml = v.opposite ? `<div class="word-opp">Opposite: <span>${v.opposite}</span></div>` : '';
+
+    el.innerHTML = `
+      <div class="card-dots">
+        <div class="card-dot active"></div>
+        <div class="card-dot"></div>
+        <div class="card-dot"></div>
+      </div>
+      <div class="card-face">
+        <div class="face-word">
+          <div class="word-pos">${v.pos} &nbsp; <span class="word-pron">${v.pron}</span></div>
+          <div class="word-en">${v.en}</div>
+          <div class="word-def">${v.def}</div>
+        </div>
+        <div class="face-trans">
+          <div class="word-pos">${v.pos}</div>
+          <div class="word-en">${v.en}</div>
+          <div class="word-trans-main">${v.ru}</div>
+          ${oppHtml}
+        </div>
+        <div class="face-ex">
+          <div class="word-ex-label">Example from textbook</div>
+          <div class="word-ex-text">"${v.ex}"</div>
+        </div>
+      </div>
+      <div class="card-tap">tap →</div>
+    `;
+
+    el.onclick = () => {
+      const cur = parseInt(el.dataset.side);
+      const next = (cur + 1) % 3;
+      el.dataset.side = next;
+      // update dots
+      const dots = el.querySelectorAll('.card-dot');
+      dots.forEach((d, i) => {
+        d.className = 'card-dot' + (i < next ? ' done' : i === next ? ' active' : '');
+      });
+    };
+
+    const grid = document.getElementById(catMap[v.cat]);
+    if (grid) grid.appendChild(el);
+  });
+}
+
+function showSection(name) {
+  ['cards','match','opposites','quiz','fill'].forEach(s => {
+    document.getElementById('section-'+s).style.display = s===name ? 'block' : 'none';
+  });
+  document.querySelectorAll('.tab-btn').forEach((b,i) => {
+    b.classList.toggle('active', ['cards','match','opposites','quiz','fill'][i]===name);
+  });
+  if (name==='match') initMatch();
+  if (name==='opposites') initOpposites();
+  if (name==='quiz') initQuiz();
+  if (name==='fill') initFill();
+}
+
+function shuffle(arr) { return [...arr].sort(()=>Math.random()-0.5); }
+
+// ===================== MATCH =====================
+let matchSelected = null, matchScore = 0, matchErrors = 0;
+
+function initMatch() {
+  const pool = shuffle(vocab).slice(0,8);
+  matchScore = 0; matchErrors = 0;
+  document.getElementById('match-score').textContent = 0;
+  document.getElementById('match-errors').textContent = 0;
+  document.getElementById('match-total').textContent = pool.length;
+  document.getElementById('match-result').classList.add('hidden');
+  matchSelected = null;
+
+  const leftEl = document.getElementById('match-left');
+  const rightEl = document.getElementById('match-right');
+  leftEl.innerHTML = ''; rightEl.innerHTML = '';
+
+  shuffle(pool).forEach(v => {
+    const el = document.createElement('div');
+    el.className = 'match-item en-word';
+    el.textContent = v.en; el.dataset.key = v.en; el.dataset.side = 'en';
+    el.onclick = () => handleMatchClick(el);
+    leftEl.appendChild(el);
+  });
+  shuffle(pool).forEach(v => {
+    const el = document.createElement('div');
+    el.className = 'match-item ru-word';
+    el.textContent = v.ru; el.dataset.key = v.en; el.dataset.side = 'ru';
+    el.onclick = () => handleMatchClick(el);
+    rightEl.appendChild(el);
+  });
+}
+
+function handleMatchClick(el) {
+  if (el.classList.contains('matched') || el.classList.contains('wrong')) return;
+  if (!matchSelected) {
+    document.querySelectorAll('.match-item').forEach(e => e.classList.remove('selected'));
+    el.classList.add('selected'); matchSelected = el; return;
+  }
+  if (el === matchSelected) { el.classList.remove('selected'); matchSelected = null; return; }
+  if (el.dataset.side === matchSelected.dataset.side) {
+    document.querySelectorAll('.match-item').forEach(e => e.classList.remove('selected'));
+    el.classList.add('selected'); matchSelected = el; return;
+  }
+  if (el.dataset.key === matchSelected.dataset.key) {
+    el.classList.add('matched'); matchSelected.classList.add('matched');
+    el.classList.remove('selected'); matchSelected.classList.remove('selected');
+    matchScore++;
+    document.getElementById('match-score').textContent = matchScore;
+    matchSelected = null;
+    if (matchScore === parseInt(document.getElementById('match-total').textContent)) {
+      setTimeout(() => document.getElementById('match-result').classList.remove('hidden'), 500);
+    }
+  } else {
+    el.classList.add('wrong'); matchSelected.classList.add('wrong');
+    matchErrors++;
+    document.getElementById('match-errors').textContent = matchErrors;
+    const a = el, b = matchSelected; matchSelected = null;
+    setTimeout(() => { a.classList.remove('wrong','selected'); b.classList.remove('wrong','selected'); }, 700);
+  }
+}
+
+// ===================== OPPOSITES =====================
+const oppPairs = [
+  { word: "cheap", opposite: "expensive", others: ["dirty", "boring", "small"] },
+  { word: "expensive", opposite: "cheap", others: ["noisy", "beautiful", "cold"] },
+  { word: "dirty", opposite: "clean", others: ["boring", "small", "cheap"] },
+  { word: "boring", opposite: "interesting", others: ["dirty", "cold", "small"] },
+  { word: "bad", opposite: "good", others: ["noisy", "expensive", "cold"] },
+  { word: "cold", opposite: "hot", others: ["dirty", "boring", "small"] },
+  { word: "noisy", opposite: "quiet", others: ["cheap", "bad", "dirty"] },
+  { word: "small", opposite: "big", others: ["boring", "cold", "bad"] },
+  { word: "like", opposite: "hate", others: ["relax", "move", "walk"] },
+  { word: "little", opposite: "big", others: ["noisy", "dirty", "bad"] },
+];
+
+let oppItems = [], oppIdx = 0, oppCorrect = 0, oppErrors = 0, oppAnswered = false;
+
+function initOpposites() {
+  oppItems = shuffle(oppPairs).slice(0,10);
+  oppIdx = 0; oppCorrect = 0; oppErrors = 0;
+  document.getElementById('opp-result').classList.add('hidden');
+  document.getElementById('opp-play').classList.remove('hidden');
+  showOpp();
+}
+
+function showOpp() {
+  if (oppIdx >= oppItems.length) { endOpp(); return; }
+  const item = oppItems[oppIdx];
+  oppAnswered = false;
+  document.getElementById('opp-word').textContent = item.word;
+  document.getElementById('opp-current').textContent = oppIdx + 1;
+  document.getElementById('opp-score').textContent = oppCorrect;
+  document.getElementById('opp-errors').textContent = oppErrors;
+  document.getElementById('opp-feedback').textContent = '';
+  document.getElementById('opp-next-btn').classList.add('hidden');
+  const opts = shuffle([item.opposite, ...item.others]);
+  const optEl = document.getElementById('opp-options');
+  optEl.innerHTML = '';
+  opts.forEach(o => {
+    const btn = document.createElement('button');
+    btn.className = 'opp-option'; btn.textContent = o;
+    btn.onclick = () => {
+      if (oppAnswered) return; oppAnswered = true;
+      if (o === item.opposite) {
+        btn.classList.add('correct'); oppCorrect++;
+        document.getElementById('opp-feedback').textContent = '✓ Correct!';
+        document.getElementById('opp-feedback').className = 'quiz-feedback good';
+      } else {
+        btn.classList.add('wrong'); oppErrors++;
+        optEl.querySelectorAll('button').forEach(b => { if (b.textContent === item.opposite) b.classList.add('correct'); });
+        document.getElementById('opp-feedback').textContent = `Opposite: ${item.opposite}`;
+        document.getElementById('opp-feedback').className = 'quiz-feedback bad';
+      }
+      document.getElementById('opp-score').textContent = oppCorrect;
+      document.getElementById('opp-errors').textContent = oppErrors;
+      document.getElementById('opp-next-btn').classList.remove('hidden');
+    };
+    optEl.appendChild(btn);
+  });
+}
+
+function nextOpp() { oppIdx++; showOpp(); }
+function endOpp() {
+  document.getElementById('opp-play').classList.add('hidden');
+  document.getElementById('opp-result').classList.remove('hidden');
+  const pct = Math.round(oppCorrect/oppItems.length*100);
+  document.getElementById('opp-final').textContent = `${oppCorrect}/${oppItems.length}`;
+  document.getElementById('opp-sub').textContent = `${pct}% correct`;
+  document.getElementById('opp-emoji').textContent = pct>=80?'🏆':pct>=50?'👍':'📖';
+}
+
+// ===================== QUIZ =====================
+let quizItems = [], quizIdx = 0, quizCorrect = 0, quizAnswered = false, quizMistakes = [];
+
+function initQuiz(onlyErrors = false) {
+  document.getElementById('quiz-result').classList.add('hidden');
+  document.getElementById('quiz-play').classList.remove('hidden');
+  quizItems = shuffle(onlyErrors && quizMistakes.length ? quizMistakes : vocab).slice(0, onlyErrors ? quizMistakes.length : 15);
+  quizMistakes = []; quizIdx = 0; quizCorrect = 0;
+  renderDots(); showQuiz();
+}
+
+function renderDots() {
+  document.getElementById('quiz-dots').innerHTML = quizItems.map((_, i) =>
+    `<div class="dot ${i===0?'active':''}" id="dot-${i}"></div>`).join('');
+}
+
+function showQuiz() {
+  if (quizIdx >= quizItems.length) { endQuiz(); return; }
+  const v = quizItems[quizIdx];
+  quizAnswered = false;
+  const dir = Math.random() > 0.5;
+  document.getElementById('quiz-dir').textContent = dir ? 'English → Russian' : 'Russian → English';
+  document.getElementById('quiz-word').textContent = dir ? v.en : v.ru;
+  document.getElementById('quiz-ctx').textContent = dir ? v.pos : '';
+  document.getElementById('quiz-feedback').textContent = '';
+  document.getElementById('quiz-feedback').className = 'quiz-feedback';
+  document.getElementById('quiz-next-btn').style.display = 'none';
+  document.getElementById('quiz-counter').textContent = `Question ${quizIdx+1} of ${quizItems.length}`;
+  document.getElementById('quiz-bar').style.width = (quizIdx/quizItems.length*100)+'%';
+  document.querySelectorAll('.dot').forEach((d,i) => {
+    d.className = 'dot' + (i<quizIdx?' done':i===quizIdx?' active':'');
+  });
+  const wrong = shuffle(vocab.filter(x=>x.en!==v.en)).slice(0,3);
+  const opts = shuffle([v, ...wrong]);
+  const optEl = document.getElementById('quiz-options');
+  optEl.innerHTML = '';
+  opts.forEach(o => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-option';
+    btn.textContent = dir ? o.ru : o.en;
+    btn.onclick = () => {
+      if (quizAnswered) return; quizAnswered = true;
+      const correct = o.en === v.en;
+      btn.classList.add(correct ? 'correct' : 'wrong');
+      if (!correct) {
+        quizMistakes.push(v);
+        optEl.querySelectorAll('button').forEach(b => { if(b.textContent===(dir?v.ru:v.en)) b.classList.add('correct'); });
+        document.getElementById('quiz-feedback').textContent = `Answer: ${dir?v.ru:v.en}`;
+        document.getElementById('quiz-feedback').className = 'quiz-feedback bad';
+      } else {
+        quizCorrect++;
+        document.getElementById('quiz-feedback').textContent = '✓ Correct!';
+        document.getElementById('quiz-feedback').className = 'quiz-feedback good';
+      }
+      document.getElementById('quiz-next-btn').style.display = 'inline-block';
+    };
+    optEl.appendChild(btn);
+  });
+}
+
+function nextQuiz() { quizIdx++; showQuiz(); }
+function endQuiz() {
+  document.getElementById('quiz-play').classList.add('hidden');
+  document.getElementById('quiz-result').classList.remove('hidden');
+  const pct = Math.round(quizCorrect/quizItems.length*100);
+  document.getElementById('quiz-final-score').textContent = `${quizCorrect}/${quizItems.length}`;
+  document.getElementById('quiz-final-sub').textContent = `${pct}% correct`;
+  document.getElementById('quiz-emoji').textContent = pct>=80?'🏆':pct>=50?'👍':'📖';
+}
+
+// ===================== FILL =====================
+const fillTasks = [
+  { before: "We go to the", answer: "cinema", after: "every Saturday." },
+  { before: "I live in a small", answer: "town", after: "near Bratislava." },
+  { before: "She lives in a small", answer: "village", after: "in the mountains." },
+  { before: "The cathedral is a beautiful", answer: "building", after: "." },
+  { before: "We're going to the", answer: "stadium", after: "to watch the match." },
+  { before: "We spent the day on the", answer: "beach", after: "." },
+  { before: "We walked over the old stone", answer: "bridge", after: "." },
+  { before: "In the middle of the", answer: "forest", after: "there is a small lake." },
+  { before: "The river goes through the city from east to", answer: "west", after: ". (hint: the river)" },
+  { before: "It gets very", answer: "cold", after: "in the winter here." },
+  { before: "Messi is the most", answer: "famous", after: "footballer in the world." },
+  { before: "Pizza is my", answer: "favourite", after: "food." },
+  { before: "We had a", answer: "lovely", after: "time at the beach." },
+  { before: "The traffic outside is very", answer: "noisy", after: "." },
+  { before: "Modern technology makes communication much", answer: "easier", after: ". (hint: modern)" },
+  { before: "I'm taking a French", answer: "course", after: "online." },
+  { before: "Listening to music helps me", answer: "relax", after: "." },
+  { before: "We're", answer: "moving", after: "house next week." },
+  { before: "It's too far to", answer: "walk", after: "— let's get the bus." },
+  { before: "The city is full of", answer: "tourists", after: "in the summer." },
+  { before: "Food is an important part of Italian", answer: "culture", after: "." },
+  { before: "Please take out the", answer: "rubbish", after: "." },
+  { before: "I do my", answer: "shopping", after: "once a week at the supermarket." },
+  { before: "She spent three years at Cambridge", answer: "University", after: "." },
+];
+
+let fillIdx = 0, fillCorrect = 0, fillItems = [];
+
+function initFill() {
+  fillItems = shuffle(fillTasks);
+  fillIdx = 0; fillCorrect = 0;
+  document.getElementById('fill-result').classList.add('hidden');
+  document.getElementById('fill-play').classList.remove('hidden');
+  showFill();
+}
+
+function showFill() {
+  if (fillIdx >= fillItems.length) { endFill(); return; }
+  const t = fillItems[fillIdx];
+  document.getElementById('fill-situation').innerHTML =
+    `${t.before} <span class="blank">___</span> ${t.after}`;
+  document.getElementById('fill-input').value = '';
+  document.getElementById('fill-input').className = 'fill-input';
+  document.getElementById('fill-feedback').textContent = '';
+  document.getElementById('fill-feedback').className = 'fill-feedback';
+  document.getElementById('fill-counter').textContent = `Sentence ${fillIdx+1} of ${fillItems.length}`;
+  document.getElementById('fill-bar').style.width = (fillIdx/fillItems.length*100)+'%';
+  document.getElementById('fill-skip').classList.remove('hidden');
+  document.getElementById('fill-next').classList.add('hidden');
+  document.getElementById('fill-input').disabled = false;
+  setTimeout(() => document.getElementById('fill-input').focus(), 100);
+}
+
+function normalize(s) { return s.toLowerCase().trim().replace(/[!?\.,]/g,''); }
+
+function checkFill() {
+  const t = fillItems[fillIdx];
+  const val = document.getElementById('fill-input').value;
+  if (!val.trim()) return;
+  const correct = normalize(val) === normalize(t.answer);
+  document.getElementById('fill-input').classList.add(correct ? 'correct' : 'wrong');
+  document.getElementById('fill-input').disabled = true;
+  if (correct) {
+    fillCorrect++;
+    document.getElementById('fill-feedback').textContent = '✓ Correct!';
+    document.getElementById('fill-feedback').className = 'fill-feedback good';
+  } else {
+    document.getElementById('fill-feedback').textContent = `✗ Answer: ${t.answer}`;
+    document.getElementById('fill-feedback').className = 'fill-feedback bad';
+  }
+  document.getElementById('fill-skip').classList.add('hidden');
+  document.getElementById('fill-next').classList.remove('hidden');
+}
+
+function skipFill() {
+  const t = fillItems[fillIdx];
+  document.getElementById('fill-feedback').textContent = `Answer: ${t.answer}`;
+  document.getElementById('fill-feedback').className = 'fill-feedback bad';
+  document.getElementById('fill-input').disabled = true;
+  document.getElementById('fill-skip').classList.add('hidden');
+  document.getElementById('fill-next').classList.remove('hidden');
+}
+
+function nextFill() { fillIdx++; showFill(); }
+
+function endFill() {
+  document.getElementById('fill-play').classList.add('hidden');
+  document.getElementById('fill-result').classList.remove('hidden');
+  const pct = Math.round(fillCorrect/fillItems.length*100);
+  document.getElementById('fill-final-score').textContent = `${fillCorrect}/${fillItems.length}`;
+  document.getElementById('fill-final-sub').textContent = `${pct}% correct`;
+  document.getElementById('fill-emoji').textContent = pct>=80?'🌟':pct>=50?'📝':'📖';
+}
+
+renderCards();
+</script>
+</body>
+</html>
