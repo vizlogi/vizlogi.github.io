@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Outcomes Elementary — Unit 1C</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f0f4ff;
+    --blue: #2d5be3;
+    --navy: #1a2e6e;
+    --sky: #4a90d9;
+    --olive: #3a7a5a;
+    --ink: #1a2030;
+    --sand: #d0d8f0;
+    --mist: #e8eeff;
+    --shadow: rgba(26,46,110,0.12);
+    --gold: #c8992a;
+    --rose: #c84060;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Nunito', sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; overflow-x: hidden; }
+  body::before {
+    content: ''; position: fixed; inset: 0;
+    background: radial-gradient(ellipse 60% 40% at 10% 20%, rgba(45,91,227,0.07) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 50% at 90% 80%, rgba(74,144,217,0.08) 0%, transparent 60%);
+    pointer-events: none; z-index: 0;
+  }
+  .wrapper { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 24px 16px 60px; }
+
+  header { text-align: center; margin-bottom: 36px; }
+  .flag { font-size: 2.4rem; margin-bottom: 8px; }
+  header h1 { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem,5vw,2.8rem); color: var(--blue); line-height: 1.1; }
+  header p { color: #6070a0; font-size: 0.95rem; margin-top: 6px; }
+
+  .tabs { display: flex; gap: 6px; justify-content: center; margin-bottom: 32px; flex-wrap: wrap; }
+  .tab-btn {
+    padding: 9px 16px; border: 2px solid var(--sand); background: white; border-radius: 50px;
+    font-family: 'Nunito', sans-serif; font-size: 0.8rem; font-weight: 700; color: #6070a0; cursor: pointer; transition: all 0.2s;
+  }
+  .tab-btn:hover { border-color: var(--blue); color: var(--blue); }
+  .tab-btn.active { background: var(--blue); border-color: var(--blue); color: white; box-shadow: 0 4px 14px rgba(45,91,227,0.3); }
+
+  #section-cards { display: block; }
+  #section-match, #section-quiz, #section-fill, #section-collocations { display: none; }
+
+  .category-label {
+    font-family: 'Playfair Display', serif; font-size: 0.8rem; font-style: italic;
+    color: var(--gold); letter-spacing: 0.1em; text-transform: uppercase;
+    margin-bottom: 16px; margin-top: 28px; display: flex; align-items: center; gap: 8px;
+  }
+  .category-label::after { content:''; flex:1; height:1px; background:var(--sand); }
+
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
+
+  /* 3-sided card */
+  .card {
+    background: white; border-radius: 16px; cursor: pointer;
+    box-shadow: 0 2px 12px var(--shadow); border: 1.5px solid var(--sand);
+    transition: transform 0.15s, box-shadow 0.15s; position: relative;
+    min-height: 130px; user-select: none; overflow: hidden;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 6px 22px var(--shadow); }
+
+  .card-face { padding: 16px 15px; min-height: 130px; display: flex; flex-direction: column; justify-content: center; }
+
+  .card[data-side="0"] .face-word { display: flex; }
+  .card[data-side="0"] .face-trans { display: none; }
+  .card[data-side="0"] .face-ex { display: none; }
+  .card[data-side="1"] .face-word { display: none; }
+  .card[data-side="1"] .face-trans { display: flex; }
+  .card[data-side="1"] .face-ex { display: none; }
+  .card[data-side="2"] .face-word { display: none; }
+  .card[data-side="2"] .face-trans { display: none; }
+  .card[data-side="2"] .face-ex { display: flex; }
+
+  .face-word, .face-trans, .face-ex { flex-direction: column; gap: 4px; }
+
+  .word-en { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--blue); font-weight: 700; }
+  .word-meta { font-size: 0.7rem; color: #8090c0; margin-bottom: 2px; }
+  .word-pron { font-family: monospace; color: #a0b0d0; }
+  .word-def { font-size: 0.77rem; color: #404870; line-height: 1.5; margin-top: 4px; }
+  .word-collocate { font-size: 0.72rem; color: var(--rose); margin-top: 4px; font-weight: 600; }
+  .word-related { font-size: 0.72rem; color: #6070a0; margin-top: 2px; }
+
+  .word-trans-main { font-size: 1.05rem; color: var(--olive); font-weight: 700; }
+  .word-trans-opp { font-size: 0.75rem; color: #a0b0d0; margin-top: 3px; }
+  .word-trans-opp span { color: var(--blue); }
+
+  .word-ex-label { font-size: 0.66rem; color: #a0b0c0; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+  .word-ex-text { font-size: 0.79rem; color: #3a4060; font-style: italic; line-height: 1.55; }
+  .word-ex-note { font-size: 0.7rem; color: #8090b0; margin-top: 4px; }
+
+  .card-tap { position: absolute; bottom: 7px; right: 11px; font-size: 0.63rem; color: #c0d0e0; font-style: italic; pointer-events: none; }
+  .card[data-side="2"] .card-tap { display: none; }
+
+  .card-dots { position: absolute; top: 8px; right: 10px; display: flex; gap: 4px; }
+  .card-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--sand); }
+  .card-dot.active { background: var(--blue); }
+  .card-dot.done { background: var(--olive); }
+
+  /* MATCH */
+  .game-header { text-align: center; margin-bottom: 24px; }
+  .game-header h2 { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--blue); }
+  .game-header p { color: #6070a0; font-size: 0.88rem; margin-top: 4px; }
+  .match-board { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+  .match-col { display: flex; flex-direction: column; gap: 8px; }
+  .match-item {
+    background: white; border: 2px solid var(--sand); border-radius: 10px;
+    padding: 11px 12px; cursor: pointer; font-size: 0.88rem; text-align: center;
+    transition: all 0.2s; min-height: 46px; display: flex; align-items: center; justify-content: center; line-height: 1.3;
+  }
+  .match-item.en-word { font-family: 'Playfair Display', serif; color: var(--blue); font-size: 0.95rem; }
+  .match-item.ru-word { color: var(--olive); font-size: 0.85rem; }
+  .match-item:hover:not(.matched):not(.wrong) { border-color: var(--gold); background: var(--mist); }
+  .match-item.selected { border-color: var(--blue); background: rgba(45,91,227,0.08); }
+  .match-item.matched { border-color: var(--olive); background: rgba(58,122,90,0.1); opacity: 0.6; cursor: default; }
+  .match-item.wrong { border-color: #e05050; background: rgba(224,80,80,0.08); animation: shake 0.4s; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+
+  .score-bar { display: flex; align-items: center; justify-content: space-between; background: white; border-radius: 12px; padding: 12px 18px; border: 1.5px solid var(--sand); margin-bottom: 16px; }
+  .score-num { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--blue); }
+  .score-label { font-size: 0.78rem; color: #6070a0; text-transform: uppercase; letter-spacing: 0.06em; }
+
+  .btn { display: inline-block; padding: 11px 28px; background: var(--blue); color: white; border: none; border-radius: 50px; font-family: 'Nunito', sans-serif; font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 14px rgba(45,91,227,0.25); }
+  .btn:hover { background: #1e40b0; transform: translateY(-1px); }
+  .btn.secondary { background: white; color: var(--blue); border: 2px solid var(--blue); box-shadow: none; }
+  .btn-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+
+  /* QUIZ */
+  .quiz-progress { height: 6px; background: var(--sand); border-radius: 99px; margin-bottom: 28px; overflow: hidden; }
+  .quiz-progress-fill { height: 100%; background: linear-gradient(90deg, var(--blue), var(--sky)); border-radius: 99px; transition: width 0.4s; }
+  .quiz-card { background: white; border-radius: 18px; padding: 28px 22px; text-align: center; box-shadow: 0 4px 20px var(--shadow); border: 1.5px solid var(--sand); margin-bottom: 20px; }
+  .quiz-question-label { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.1em; color: #a0b0d0; margin-bottom: 12px; }
+  .quiz-question { font-family: 'Playfair Display', serif; font-size: clamp(1.4rem,4.5vw,2rem); color: var(--ink); margin-bottom: 6px; }
+  .quiz-sub { font-size: 0.78rem; color: #6070a0; font-style: italic; }
+  .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; }
+  .quiz-option { padding: 13px 10px; background: white; border: 2px solid var(--sand); border-radius: 12px; font-size: 0.88rem; cursor: pointer; transition: all 0.2s; font-family: 'Nunito', sans-serif; color: var(--ink); line-height: 1.3; }
+  .quiz-option:hover:not(.correct):not(.wrong) { border-color: var(--gold); background: var(--mist); }
+  .quiz-option.correct { border-color: var(--olive); background: rgba(58,122,90,0.12); color: var(--olive); font-weight: 700; }
+  .quiz-option.wrong { border-color: #e05050; background: rgba(224,80,80,0.08); color: #c03030; }
+  .quiz-feedback { text-align: center; font-size: 0.88rem; margin-top: 10px; min-height: 22px; font-weight: 600; }
+  .quiz-feedback.good { color: var(--olive); }
+  .quiz-feedback.bad { color: #c03030; }
+  .quiz-counter { font-size: 0.85rem; color: #6070a0; text-align: center; margin-bottom: 10px; }
+  .progress-dots { display: flex; gap: 6px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--sand); transition: all 0.3s; }
+  .dot.done { background: var(--olive); }
+  .dot.active { background: var(--blue); transform: scale(1.3); }
+
+  /* FILL */
+  .fill-card { background: white; border-radius: 18px; padding: 26px 22px; box-shadow: 0 4px 20px var(--shadow); border: 1.5px solid var(--sand); margin-bottom: 20px; }
+  .fill-prompt { font-size: 0.78rem; color: #6070a0; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; }
+  .fill-situation { font-family: 'Playfair Display', serif; font-size: 1.05rem; color: var(--ink); line-height: 1.8; margin-bottom: 14px; }
+  .fill-blank { display: inline-block; min-width: 100px; border-bottom: 2px solid var(--blue); color: transparent; background: var(--mist); border-radius: 4px; padding: 0 8px; }
+  .fill-hint { font-size: 0.75rem; color: #8090b0; margin-bottom: 12px; font-style: italic; }
+  .fill-input-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .fill-input { flex: 1; min-width: 160px; padding: 10px 14px; border: 2px solid var(--sand); border-radius: 10px; font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--ink); outline: none; transition: border-color 0.2s; background: var(--mist); }
+  .fill-input:focus { border-color: var(--blue); background: white; }
+  .fill-input.correct { border-color: var(--olive); background: rgba(58,122,90,0.08); }
+  .fill-input.wrong { border-color: #e05050; }
+  .fill-feedback { font-size: 0.88rem; margin-top: 10px; min-height: 20px; font-weight: 600; }
+  .fill-feedback.good { color: var(--olive); }
+  .fill-feedback.bad { color: #c03030; }
+
+  /* COLLOCATIONS */
+  .colloc-intro { background: white; border-radius: 14px; padding: 14px 18px; border: 1.5px solid var(--sand); margin-bottom: 16px; color: #6070a0; font-size: 0.88rem; line-height: 1.5; text-align: center; }
+  .colloc-intro strong { color: var(--blue); }
+  .colloc-question { background: white; border-radius: 18px; padding: 22px; border: 1.5px solid var(--sand); margin-bottom: 14px; text-align: center; }
+  .colloc-q-label { font-size: 0.72rem; color: #a0b0d0; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
+  .colloc-word { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--blue); font-style: italic; }
+  .colloc-q-text { font-size: 0.85rem; color: #6070a0; margin-top: 4px; }
+  .colloc-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .colloc-option { padding: 13px 10px; background: white; border: 2px solid var(--sand); border-radius: 12px; cursor: pointer; font-family: 'Nunito', sans-serif; font-size: 0.9rem; color: var(--ink); text-align: center; transition: all 0.2s; }
+  .colloc-option:hover { border-color: var(--gold); background: var(--mist); }
+  .colloc-option.correct { border-color: var(--olive); background: rgba(58,122,90,0.12); color: var(--olive); font-weight: 700; }
+  .colloc-option.wrong { border-color: #e05050; background: rgba(224,80,80,0.08); color: #c03030; }
+
+  .result-screen { text-align: center; padding: 40px 20px; }
+  .result-emoji { font-size: 3.5rem; margin-bottom: 12px; }
+  .result-title { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--blue); margin-bottom: 8px; }
+  .result-sub { color: #6070a0; margin-bottom: 24px; }
+  .result-score { font-family: 'Playfair Display', serif; font-size: 3rem; color: var(--gold); }
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <div class="flag">🇬🇧</div>
+    <h1>Outcomes Elementary — Unit 1C</h1>
+    <p>Work & daily life · Elementary · Outcomes</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showSection('cards')">📚 Cards</button>
+    <button class="tab-btn" onclick="showSection('match')">🔗 Match</button>
+    <button class="tab-btn" onclick="showSection('collocations')">🧩 Collocations</button>
+    <button class="tab-btn" onclick="showSection('quiz')">🎯 Quiz</button>
+    <button class="tab-btn" onclick="showSection('fill')">✏️ Fill in</button>
+  </div>
+
+  <!-- CARDS -->
+  <div id="section-cards">
+    <div class="category-label">People & work</div>
+    <div class="cards-grid" id="grid-people"></div>
+    <div class="category-label">Places</div>
+    <div class="cards-grid" id="grid-places"></div>
+    <div class="category-label">Adjectives</div>
+    <div class="cards-grid" id="grid-adj"></div>
+    <div class="category-label">Verbs & phrasal verbs</div>
+    <div class="cards-grid" id="grid-verbs"></div>
+    <div class="category-label">Nouns — life & society</div>
+    <div class="cards-grid" id="grid-nouns"></div>
+    <p style="text-align:center;color:#a0b0d0;font-size:0.8rem;margin-top:20px;font-style:italic;">Tap once → translation · Tap twice → example from textbook</p>
+  </div>
+
+  <!-- MATCH -->
+  <div id="section-match">
+    <div class="game-header"><h2>Match the words</h2><p>Select an English word, then its Russian translation</p></div>
+    <div class="score-bar">
+      <div><div class="score-num" id="match-score">0</div><div class="score-label">Matched</div></div>
+      <div><div class="score-num" id="match-total">0</div><div class="score-label">Total</div></div>
+      <div><div class="score-num" id="match-errors">0</div><div class="score-label">Errors</div></div>
+    </div>
+    <div class="match-board">
+      <div class="match-col" id="match-left"></div>
+      <div class="match-col" id="match-right"></div>
+    </div>
+    <div class="btn-row"><button class="btn" onclick="initMatch()">🔄 New round</button></div>
+    <div id="match-result" class="result-screen hidden">
+      <div class="result-emoji">🎉</div><div class="result-title">Well done!</div><div class="result-sub">All pairs found!</div>
+      <div class="btn-row"><button class="btn" onclick="initMatch()">Play again</button></div>
+    </div>
+  </div>
+
+  <!-- COLLOCATIONS -->
+  <div id="section-collocations">
+    <div class="game-header"><h2>Collocations</h2><p>Choose the correct word to complete the collocation</p></div>
+    <div class="colloc-intro"><strong>Collocations</strong> are words that often go together. Choose the right partner!</div>
+    <div class="score-bar">
+      <div><div class="score-num" id="col-score">0</div><div class="score-label">Correct</div></div>
+      <div><div class="score-num" id="col-current">1</div><div class="score-label">Of 12</div></div>
+      <div><div class="score-num" id="col-errors">0</div><div class="score-label">Errors</div></div>
+    </div>
+    <div id="col-play">
+      <div class="colloc-question">
+        <div class="colloc-q-label">Complete the collocation:</div>
+        <div class="colloc-word" id="col-word">—</div>
+        <div class="colloc-q-text" id="col-qtext"></div>
+      </div>
+      <div class="colloc-options" id="col-options"></div>
+      <div class="quiz-feedback" id="col-feedback"></div>
+      <div class="btn-row"><button class="btn secondary hidden" id="col-next" onclick="nextColloc()">Next →</button></div>
+    </div>
+    <div id="col-result" class="result-screen hidden">
+      <div class="result-emoji" id="col-emoji">🏆</div><div class="result-title">Result</div>
+      <div class="result-score" id="col-final"></div><div class="result-sub" id="col-sub"></div>
+      <div class="btn-row"><button class="btn" onclick="initColloc()">Again</button></div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="section-quiz">
+    <div class="game-header"><h2>Choose the correct translation</h2><p>EN → RU or RU → EN</p></div>
+    <div class="quiz-progress"><div class="quiz-progress-fill" id="quiz-bar"></div></div>
+    <div class="progress-dots" id="quiz-dots"></div>
+    <div class="quiz-counter" id="quiz-counter"></div>
+    <div id="quiz-play">
+      <div class="quiz-card">
+        <div class="quiz-question-label" id="quiz-dir">English → Russian</div>
+        <div class="quiz-question" id="quiz-word">—</div>
+        <div class="quiz-sub" id="quiz-ctx"></div>
+      </div>
+      <div class="quiz-options" id="quiz-options"></div>
+      <div class="quiz-feedback" id="quiz-feedback"></div>
+      <div class="btn-row"><button class="btn secondary" id="quiz-next-btn" onclick="nextQuiz()" style="display:none">Next →</button></div>
+    </div>
+    <div id="quiz-result" class="result-screen hidden">
+      <div class="result-emoji" id="quiz-emoji">🏆</div><div class="result-title">Result</div>
+      <div class="result-score" id="quiz-final-score"></div><div class="result-sub" id="quiz-final-sub"></div>
+      <div class="btn-row">
+        <button class="btn" onclick="initQuiz()">Again</button>
+        <button class="btn secondary" onclick="initQuiz(true)">Mistakes only</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILL -->
+  <div id="section-fill">
+    <div class="game-header"><h2>Fill in the gap</h2><p>Use words from the unit to complete the sentences</p></div>
+    <div class="quiz-progress"><div class="quiz-progress-fill" id="fill-bar"></div></div>
+    <div class="quiz-counter" id="fill-counter"></div>
+    <div id="fill-play">
+      <div class="fill-card">
+        <div class="fill-prompt">Complete the sentence:</div>
+        <div class="fill-situation" id="fill-situation"></div>
+        <div class="fill-hint" id="fill-hint"></div>
+        <div class="fill-input-row">
+          <input class="fill-input" id="fill-input" placeholder="Type the missing word..." onkeydown="if(event.key==='Enter')checkFill()">
+          <button class="btn" onclick="checkFill()">→</button>
+        </div>
+        <div class="fill-feedback" id="fill-feedback"></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn secondary" id="fill-skip" onclick="skipFill()">Skip</button>
+        <button class="btn secondary hidden" id="fill-next" onclick="nextFill()">Next →</button>
+      </div>
+    </div>
+    <div id="fill-result" class="result-screen hidden">
+      <div class="result-emoji" id="fill-emoji">🌟</div><div class="result-title">Done!</div>
+      <div class="result-score" id="fill-final-score"></div><div class="result-sub" id="fill-final-sub"></div>
+      <div class="btn-row"><button class="btn" onclick="initFill()">Again</button></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const vocab = [
+  // PEOPLE & WORK
+  {
+    en: "boss", pos: "Noun", pron: "/bɒs/",
+    ru: "начальник / босс",
+    def: "the person who is in charge of an organization and tells others what to do",
+    ex: "The boss will review the reports today. | I have a meeting with my boss this afternoon.",
+    collocate: null, related: null, cat: "people"
+  },
+  {
+    en: "customer", pos: "Noun", pron: "/ˈkʌstəmər/",
+    ru: "покупатель / клиент",
+    def: "a person who buys goods or a service",
+    ex: "The customer wasn't happy with the service. | As a regular customer, he knows the menu well.",
+    collocate: null, related: null, cat: "people"
+  },
+  {
+    en: "shop assistant", pos: "Noun", pron: "/ʃɒp əsɪst(ə)nt/",
+    ru: "продавец-консультант",
+    def: "a person who works in a shop and helps the customers",
+    ex: "He's a shop assistant in the supermarket. | I worked for three years as a shop assistant.",
+    collocate: null, related: null, cat: "people"
+  },
+  {
+    en: "police officer", pos: "Noun", pron: "/pəˈliːs ɒfɪsər/",
+    ru: "полицейский",
+    def: "a man or woman who is in the police",
+    ex: "One police officer was hurt during the fighting. | He wants to become a police officer.",
+    collocate: null, related: null, cat: "people"
+  },
+  {
+    en: "tour guide", pos: "Noun", pron: "/tʊər ɡaɪd/",
+    ru: "гид / экскурсовод",
+    def: "a person whose job is to show tourists around places of interest",
+    ex: "The tour guide explained the history of the castle. | Our tour guide was very knowledgeable about the city.",
+    collocate: null, related: null, cat: "people"
+  },
+  {
+    en: "the other people", pos: "Noun", pron: "/ðiː ˈʌðər ˈpiːp(ə)l/",
+    ru: "остальные люди / другие",
+    def: "people other than oneself or the ones already mentioned",
+    ex: "I like the other people at work. | The other people in the class are very friendly.",
+    collocate: null, related: null, cat: "people"
+  },
+
+  // PLACES
+  {
+    en: "office", pos: "Noun", pron: "/ˈɒfɪs/",
+    ru: "офис",
+    def: "a building or room where people work, usually sitting at desks",
+    ex: "My office is on the second floor. | I don't want to work in an office.",
+    collocate: null, related: null, cat: "places"
+  },
+  {
+    en: "museum", pos: "Noun", pron: "/mjuːˈziːəm/",
+    ru: "музей",
+    def: "a building where people can look at interesting things connected with art, history or science",
+    ex: "The Louvre is a famous museum in Paris. | The museum is free — you don't have to pay to get in.",
+    collocate: null, related: null, cat: "places"
+  },
+
+  // ADJECTIVES
+  {
+    en: "alone", pos: "Adjective", pron: "/əˈləʊn/",
+    ru: "один / в одиночестве",
+    def: "if you are alone, you are without other people",
+    ex: "She lives alone in a big house. | Sometimes I like walking alone for hours.",
+    collocate: null, related: null, cat: "adj", opposite: null
+  },
+  {
+    en: "big", pos: "Adjective", pron: "/bɪɡ/",
+    ru: "большой",
+    def: "something that is big is large",
+    ex: "London is a very big city. | I'm afraid of big dogs.",
+    collocate: null, related: null, cat: "adj", opposite: "small"
+  },
+  {
+    en: "dangerous", pos: "Adjective", pron: "/ˈdeɪndʒərəs/",
+    ru: "опасный",
+    def: "able or likely to cause harm or injury",
+    ex: "The centre of town can be quite dangerous at night. | Driving in the snow is dangerous.",
+    collocate: null, related: "Noun: danger", cat: "adj", opposite: null
+  },
+  {
+    en: "different", pos: "Adjective", pron: "/ˈdɪfrənt/",
+    ru: "другой / отличающийся",
+    def: "if two things are different, they are not the same",
+    ex: "I want a different job. | His second film was very different from his first one.",
+    collocate: "different from something/someone", related: "Noun: difference", cat: "adj", opposite: null
+  },
+  {
+    en: "great", pos: "Adjective", pron: "/ɡreɪt/",
+    ru: "великолепный / отличный",
+    def: "you mean that you like it and it is very good",
+    ex: "Birmingham is a great place to live. | We saw a great film last night.",
+    collocate: null, related: null, cat: "adj", opposite: null
+  },
+  {
+    en: "hard", pos: "Adverb / Adjective", pron: "/hɑː(r)d/",
+    ru: "усердно / тяжело",
+    def: "if you work hard, you spend a lot of time and energy working",
+    ex: "I'm working very hard at school. | You must try harder.",
+    collocate: null, related: null, cat: "adj", opposite: null
+  },
+  {
+    en: "interesting", pos: "Adjective", pron: "/ˈɪntrəstɪŋ/",
+    ru: "интересный",
+    def: "if something is interesting, you would like to see more or know more about it",
+    ex: "This is an interesting book. | We met lots of interesting people in Canada.",
+    collocate: "be interested in something", related: "Adjective: interested | boring | bored", cat: "adj", opposite: "boring"
+  },
+  {
+    en: "sad", pos: "Adjective", pron: "/sæd/",
+    ru: "грустный / печальный",
+    def: "when someone is sad, they are unhappy",
+    ex: "It's sad to see bad things happen to good people. | The movie was so sad that everyone cried.",
+    collocate: null, related: null, cat: "adj", opposite: null
+  },
+
+  // VERBS & PHRASAL VERBS
+  {
+    en: "earn", pos: "Verb", pron: "/ɜːn/",
+    ru: "зарабатывать",
+    def: "to receive money as payment for work that you do",
+    ex: "She earns a good salary at her new job. | How much do you earn per hour?",
+    collocate: "earn money", related: null, cat: "verbs"
+  },
+  {
+    en: "enjoy", pos: "Verb", pron: "/ɪnˈdʒɔɪ/",
+    ru: "получать удовольствие / наслаждаться",
+    def: "if you enjoy something, you like it when it is happening",
+    ex: "Do you enjoy your job? | I hope you enjoy your meal.",
+    collocate: "enjoy doing something", related: "Adjective: enjoyable", cat: "verbs"
+  },
+  {
+    en: "get up", pos: "Phrasal verb", pron: "/ˌɡet ˈʌp/",
+    ru: "вставать (с постели)",
+    def: "when you get up, you get out of bed after you have finished sleeping",
+    ex: "What time do you get up? | She got up at 6:30. | I hate getting up in the dark in winter.",
+    collocate: null, related: null, cat: "verbs"
+  },
+  {
+    en: "go out", pos: "Phrasal verb", pron: "/ˌɡəʊ ˈaʊt/",
+    ru: "выходить / идти куда-нибудь",
+    def: "if you go out somewhere, you go to a restaurant or cinema to have a nice time",
+    ex: "Do you want to go out? | I can't afford to go out tonight. | They went out for a meal.",
+    collocate: null, related: null, cat: "verbs"
+  },
+  {
+    en: "look after", pos: "Phrasal verb", pron: "/lʊk ˈɑːftər/",
+    ru: "заботиться / присматривать",
+    def: "to take care of someone or something",
+    ex: "Can you look after my dog this weekend? | It's important to look after your health.",
+    collocate: null, related: null, cat: "verbs"
+  },
+  {
+    en: "love", pos: "Verb", pron: "/lʌv/",
+    ru: "любить / обожать",
+    def: "if you love something, you like it or them very much",
+    ex: "I love my job. | I just love walking by the sea. | Everyone loves Christmas.",
+    collocate: null, related: null, cat: "verbs"
+  },
+  {
+    en: "show", pos: "Verb", pron: "/ʃəʊ/",
+    ru: "показывать",
+    def: "to make something visible to others, or to display it",
+    ex: "Can you show me how to do this? | He showed his ticket to the guard.",
+    collocate: null, related: null, cat: "verbs"
+  },
+  {
+    en: "sleep", pos: "Verb", pron: "/sliːp/",
+    ru: "спать",
+    def: "when you sleep, you rest with your eyes closed",
+    ex: "I sleep eight hours a night. | I went to bed but I was too worried to sleep.",
+    collocate: null, related: "Noun: sleep", cat: "verbs"
+  },
+  {
+    en: "speak", pos: "Verb", pron: "/spiːk/",
+    ru: "говорить / разговаривать",
+    def: "when you speak, you say words that people can hear. If you can speak a language, you know it well enough to talk",
+    ex: "How many languages can you speak? | Can you speak more slowly, please?",
+    collocate: "speak to someone", related: "Noun: speaker", cat: "verbs"
+  },
+  {
+    en: "travel", pos: "Verb", pron: "/ˈtræv(ə)l/",
+    ru: "путешествовать",
+    def: "when you travel, you make a journey, usually over a long distance",
+    ex: "She loves to travel and see new places. | Have you ever traveled by train?",
+    collocate: null, related: null, cat: "verbs"
+  },
+  {
+    en: "want", pos: "Verb", pron: "/wɒnt/",
+    ru: "хотеть",
+    def: "if you want something, you do not have it but would like to have it",
+    ex: "Do you want a drink? | She wanted a new car. | He wants to become a police officer.",
+    collocate: null, related: null, cat: "verbs"
+  },
+
+  // NOUNS
+  {
+    en: "clothes", pos: "Noun (plural)", pron: "/kləʊðz/",
+    ru: "одежда",
+    def: "pieces of material such as shirts, jackets, and trousers that people wear",
+    ex: "I enjoy buying new clothes. | I'm going shopping for clothes. | My wardrobe is full of clothes.",
+    collocate: null, related: null, cat: "nouns"
+  },
+  {
+    en: "company", pos: "Noun", pron: "/ˈkʌmp(ə)ni/",
+    ru: "компания / фирма",
+    def: "a business organization",
+    ex: "Microsoft is a big company. | She runs a small company in Paris. | He left the company after six years.",
+    collocate: null, related: null, cat: "nouns"
+  },
+  {
+    en: "fashion", pos: "Noun", pron: "/ˈfæʃən/",
+    ru: "мода",
+    def: "a style that is popular at a particular time, especially in clothes, hair, and makeup",
+    ex: "She's really interested in fashion and design. | That style of dress is back in fashion this year.",
+    collocate: "in fashion | out of fashion", related: "Adjective: fashionable", cat: "nouns"
+  },
+  {
+    en: "free time", pos: "Noun (uncount)", pron: "/ˌfriː ˈtaɪm/",
+    ru: "свободное время",
+    def: "the time when you do not have to work or do school work",
+    ex: "I like to go to the gym in my free time. | How do you spend your free time?",
+    collocate: null, related: null, cat: "nouns"
+  },
+  {
+    en: "government", pos: "Noun", pron: "/ˈɡʌvə(r)nmənt/",
+    ru: "правительство",
+    def: "the group of people who are in charge of a country or region",
+    ex: "I don't want the government to raise taxes. | Can the government make people happier?",
+    collocate: null, related: null, cat: "nouns"
+  },
+  {
+    en: "group", pos: "Noun", pron: "/ɡruːp/",
+    ru: "группа",
+    def: "a number of people or things that are together in one place or considered as a unit",
+    ex: "We saw a group of tourists outside the museum. | A small group of friends met up for coffee.",
+    collocate: "group of (people, friends)", related: null, cat: "nouns"
+  },
+  {
+    en: "home", pos: "Noun (uncount)", pron: "/həʊm/",
+    ru: "дом / домой",
+    def: "your home is the house or flat where you live",
+    ex: "I work at home. | I'm going to stay at home tonight. | What's your home address?",
+    collocate: "at home | go home", related: null, cat: "nouns"
+  },
+  {
+    en: "job", pos: "Noun", pron: "/dʒɒb/",
+    ru: "работа / должность",
+    def: "someone's job is the work that they do every day in order to earn money",
+    ex: "Do you enjoy your job? | She found a job as soon as she left school. | It's a very boring job.",
+    collocate: null, related: null, cat: "nouns"
+  },
+  {
+    en: "language", pos: "Noun", pron: "/ˈlæŋɡwɪdʒ/",
+    ru: "язык",
+    def: "the set of words that people use when they speak to each other",
+    ex: "How many languages do you speak? | Russian is a difficult language to learn.",
+    collocate: null, related: null, cat: "nouns"
+  },
+  {
+    en: "long hours", pos: "Adverb", pron: "/lɒŋ ˈaʊə(r)z/",
+    ru: "долгие часы (на работе)",
+    def: "if you work long hours, you spend a long time at work every day",
+    ex: "I enjoy the job, but I have to work long hours. | I did long hours when I started work as a doctor.",
+    collocate: null, related: null, cat: "nouns"
+  },
+  {
+    en: "money", pos: "Noun (uncount)", pron: "/ˈmʌni/",
+    ru: "деньги",
+    def: "the coins and bank notes that you can use to buy things",
+    ex: "Have you got enough money for the train ticket? | It costs a lot of money to fly to Australia.",
+    collocate: null, related: null, cat: "nouns"
+  },
+  {
+    en: "most of the time", pos: "Adverbial phrase", pron: "/məʊst əv ðə taɪm/",
+    ru: "большую часть времени / обычно",
+    def: "usually, or in most situations",
+    ex: "Most of the time I walk to work. | She's usually quite quiet most of the time.",
+    collocate: null, related: null, cat: "nouns"
+  },
+  {
+    en: "newspaper", pos: "Noun", pron: "/ˈnjuːzpeɪpər/",
+    ru: "газета",
+    def: "a set of sheets of paper with stories and pictures about the news, printed on them daily",
+    ex: "Which newspaper do you read? | I bought a newspaper at the station.",
+    collocate: null, related: null, cat: "nouns"
+  },
+  {
+    en: "work", pos: "Noun (uncount)", pron: "/wɜː(r)k/",
+    ru: "работа / труд",
+    def: "the job you do and the place where you do it",
+    ex: "I like my job, but it's hard work. | I don't get home from work until after 6 o'clock.",
+    collocate: null, related: "Verb: work | Noun: worker", cat: "nouns"
+  },
+];
+
+const catMap = { people:"grid-people", places:"grid-places", adj:"grid-adj", verbs:"grid-verbs", nouns:"grid-nouns" };
+
+// ===================== RENDER CARDS =====================
+function renderCards() {
+  Object.values(catMap).forEach(id => document.getElementById(id).innerHTML = '');
+  vocab.forEach(v => {
+    const el = document.createElement('div');
+    el.className = 'card';
+    el.dataset.side = '0';
+    const oppHtml = v.opposite ? `<div class="word-trans-opp">Opposite: <span>${v.opposite}</span></div>` : '';
+    const relHtml = v.related ? `<div class="word-related">→ ${v.related}</div>` : '';
+    const colHtml = v.collocate ? `<div class="word-collocate">⚡ ${v.collocate}</div>` : '';
+    // Pick first 2 example sentences
+    const exShort = v.ex.split('|').slice(0,2).join(' | ');
+    el.innerHTML = `
+      <div class="card-dots">
+        <div class="card-dot active"></div>
+        <div class="card-dot"></div>
+        <div class="card-dot"></div>
+      </div>
+      <div class="card-face">
+        <div class="face-word">
+          <div class="word-meta">${v.pos} &nbsp; <span class="word-pron">${v.pron}</span></div>
+          <div class="word-en">${v.en}</div>
+          <div class="word-def">${v.def}</div>
+          ${colHtml}
+        </div>
+        <div class="face-trans">
+          <div class="word-meta">${v.pos}</div>
+          <div class="word-en">${v.en}</div>
+          <div class="word-trans-main">${v.ru}</div>
+          ${oppHtml}${relHtml}
+        </div>
+        <div class="face-ex">
+          <div class="word-ex-label">Textbook examples</div>
+          <div class="word-ex-text">${exShort}</div>
+        </div>
+      </div>
+      <div class="card-tap">tap →</div>
+    `;
+    el.onclick = () => {
+      const cur = parseInt(el.dataset.side);
+      const next = (cur + 1) % 3;
+      el.dataset.side = next;
+      el.querySelectorAll('.card-dot').forEach((d,i) => {
+        d.className = 'card-dot' + (i<next?' done':i===next?' active':'');
+      });
+    };
+    const grid = document.getElementById(catMap[v.cat]);
+    if (grid) grid.appendChild(el);
+  });
+}
+
+function showSection(name) {
+  ['cards','match','collocations','quiz','fill'].forEach(s => {
+    document.getElementById('section-'+s).style.display = s===name?'block':'none';
+  });
+  document.querySelectorAll('.tab-btn').forEach((b,i) => {
+    b.classList.toggle('active',['cards','match','collocations','quiz','fill'][i]===name);
+  });
+  if(name==='match') initMatch();
+  if(name==='collocations') initColloc();
+  if(name==='quiz') initQuiz();
+  if(name==='fill') initFill();
+}
+
+function shuffle(a){ return [...a].sort(()=>Math.random()-0.5); }
+
+// ===================== MATCH =====================
+let matchSel=null, matchScore=0, matchErrors=0;
+function initMatch(){
+  const pool=shuffle(vocab).slice(0,8);
+  matchScore=0; matchErrors=0;
+  document.getElementById('match-score').textContent=0;
+  document.getElementById('match-errors').textContent=0;
+  document.getElementById('match-total').textContent=pool.length;
+  document.getElementById('match-result').classList.add('hidden');
+  matchSel=null;
+  const L=document.getElementById('match-left'), R=document.getElementById('match-right');
+  L.innerHTML=''; R.innerHTML='';
+  shuffle(pool).forEach(v=>{
+    const el=document.createElement('div');
+    el.className='match-item en-word'; el.textContent=v.en; el.dataset.key=v.en; el.dataset.side='en';
+    el.onclick=()=>handleMatch(el); L.appendChild(el);
+  });
+  shuffle(pool).forEach(v=>{
+    const el=document.createElement('div');
+    el.className='match-item ru-word'; el.textContent=v.ru; el.dataset.key=v.en; el.dataset.side='ru';
+    el.onclick=()=>handleMatch(el); R.appendChild(el);
+  });
+}
+function handleMatch(el){
+  if(el.classList.contains('matched')||el.classList.contains('wrong')) return;
+  if(!matchSel){
+    document.querySelectorAll('.match-item').forEach(e=>e.classList.remove('selected'));
+    el.classList.add('selected'); matchSel=el; return;
+  }
+  if(el===matchSel){el.classList.remove('selected'); matchSel=null; return;}
+  if(el.dataset.side===matchSel.dataset.side){
+    document.querySelectorAll('.match-item').forEach(e=>e.classList.remove('selected'));
+    el.classList.add('selected'); matchSel=el; return;
+  }
+  if(el.dataset.key===matchSel.dataset.key){
+    el.classList.add('matched'); matchSel.classList.add('matched');
+    el.classList.remove('selected'); matchSel.classList.remove('selected');
+    matchScore++; document.getElementById('match-score').textContent=matchScore; matchSel=null;
+    if(matchScore===parseInt(document.getElementById('match-total').textContent))
+      setTimeout(()=>document.getElementById('match-result').classList.remove('hidden'),500);
+  } else {
+    el.classList.add('wrong'); matchSel.classList.add('wrong');
+    matchErrors++; document.getElementById('match-errors').textContent=matchErrors;
+    const a=el,b=matchSel; matchSel=null;
+    setTimeout(()=>{a.classList.remove('wrong','selected');b.classList.remove('wrong','selected');},700);
+  }
+}
+
+// ===================== COLLOCATIONS =====================
+const collocItems = [
+  { word: "earn ___", answer: "money", options: ["money","work","time","fashion"], hint: "earn + ?" },
+  { word: "___ doing something", answer: "enjoy", options: ["enjoy","want","love","sleep"], hint: "enjoy + doing" },
+  { word: "in ___ / out of ___", answer: "fashion", options: ["fashion","work","home","time"], hint: "trendy = in ___" },
+  { word: "different ___ something", answer: "from", options: ["from","of","to","at"], hint: "different ___ something" },
+  { word: "be interested ___ something", answer: "in", options: ["in","of","at","about"], hint: "be interested ___" },
+  { word: "speak ___ someone", answer: "to", options: ["to","with","for","at"], hint: "speak ___ someone" },
+  { word: "___ home", answer: "at", options: ["at","in","on","to"], hint: "___ home = нома" },
+  { word: "go ___", answer: "home", options: ["home","house","office","work"], hint: "go ___ (без предлога!)" },
+  { word: "group ___ people", answer: "of", options: ["of","from","with","by"], hint: "group ___ people" },
+  { word: "look ___ someone", answer: "after", options: ["after","at","for","over"], hint: "to take care of" },
+  { word: "work long ___", answer: "hours", options: ["hours","times","days","minutes"], hint: "work long ___ (много времени)" },
+  { word: "a ___ newspaper", answer: "local", options: ["local","near","small","home"], hint: "местная газета" },
+];
+
+let colItems=[], colIdx=0, colScore=0, colErrors=0, colAnswered=false;
+function initColloc(){
+  colItems=shuffle(collocItems).slice(0,12);
+  colIdx=0; colScore=0; colErrors=0;
+  document.getElementById('col-result').classList.add('hidden');
+  document.getElementById('col-play').classList.remove('hidden');
+  showColloc();
+}
+function showColloc(){
+  if(colIdx>=colItems.length){endColloc();return;}
+  const item=colItems[colIdx]; colAnswered=false;
+  document.getElementById('col-word').textContent=item.word;
+  document.getElementById('col-qtext').textContent=item.hint;
+  document.getElementById('col-current').textContent=colIdx+1;
+  document.getElementById('col-score').textContent=colScore;
+  document.getElementById('col-errors').textContent=colErrors;
+  document.getElementById('col-feedback').textContent='';
+  document.getElementById('col-feedback').className='quiz-feedback';
+  document.getElementById('col-next').classList.add('hidden');
+  const optEl=document.getElementById('col-options');
+  optEl.innerHTML='';
+  shuffle(item.options).forEach(o=>{
+    const btn=document.createElement('button');
+    btn.className='colloc-option'; btn.textContent=o;
+    btn.onclick=()=>{
+      if(colAnswered)return; colAnswered=true;
+      if(o===item.answer){
+        btn.classList.add('correct'); colScore++;
+        document.getElementById('col-feedback').textContent='✓ Correct!';
+        document.getElementById('col-feedback').className='quiz-feedback good';
+      } else {
+        btn.classList.add('wrong'); colErrors++;
+        optEl.querySelectorAll('button').forEach(b=>{if(b.textContent===item.answer)b.classList.add('correct');});
+        document.getElementById('col-feedback').textContent=`Answer: ${item.answer}`;
+        document.getElementById('col-feedback').className='quiz-feedback bad';
+      }
+      document.getElementById('col-score').textContent=colScore;
+      document.getElementById('col-errors').textContent=colErrors;
+      document.getElementById('col-next').classList.remove('hidden');
+    };
+    optEl.appendChild(btn);
+  });
+}
+function nextColloc(){colIdx++;showColloc();}
+function endColloc(){
+  document.getElementById('col-play').classList.add('hidden');
+  document.getElementById('col-result').classList.remove('hidden');
+  const pct=Math.round(colScore/colItems.length*100);
+  document.getElementById('col-final').textContent=`${colScore}/${colItems.length}`;
+  document.getElementById('col-sub').textContent=`${pct}% correct`;
+  document.getElementById('col-emoji').textContent=pct>=80?'🏆':pct>=50?'👍':'📖';
+}
+
+// ===================== QUIZ =====================
+let quizItems=[],quizIdx=0,quizCorrect=0,quizAnswered=false,quizMistakes=[];
+function initQuiz(onlyErrors=false){
+  document.getElementById('quiz-result').classList.add('hidden');
+  document.getElementById('quiz-play').classList.remove('hidden');
+  quizItems=shuffle(onlyErrors&&quizMistakes.length?quizMistakes:vocab).slice(0,onlyErrors?quizMistakes.length:15);
+  quizMistakes=[]; quizIdx=0; quizCorrect=0;
+  renderDots(); showQuiz();
+}
+function renderDots(){
+  document.getElementById('quiz-dots').innerHTML=quizItems.map((_,i)=>
+    `<div class="dot ${i===0?'active':''}" id="dot-${i}"></div>`).join('');
+}
+function showQuiz(){
+  if(quizIdx>=quizItems.length){endQuiz();return;}
+  const v=quizItems[quizIdx]; quizAnswered=false;
+  const dir=Math.random()>0.5;
+  document.getElementById('quiz-dir').textContent=dir?'English → Russian':'Russian → English';
+  document.getElementById('quiz-word').textContent=dir?v.en:v.ru;
+  document.getElementById('quiz-ctx').textContent=dir?v.pos:'';
+  document.getElementById('quiz-feedback').textContent='';
+  document.getElementById('quiz-feedback').className='quiz-feedback';
+  document.getElementById('quiz-next-btn').style.display='none';
+  document.getElementById('quiz-counter').textContent=`Question ${quizIdx+1} of ${quizItems.length}`;
+  document.getElementById('quiz-bar').style.width=(quizIdx/quizItems.length*100)+'%';
+  document.querySelectorAll('.dot').forEach((d,i)=>{
+    d.className='dot'+(i<quizIdx?' done':i===quizIdx?' active':'');
+  });
+  const wrong=shuffle(vocab.filter(x=>x.en!==v.en)).slice(0,3);
+  const opts=shuffle([v,...wrong]);
+  const optEl=document.getElementById('quiz-options'); optEl.innerHTML='';
+  opts.forEach(o=>{
+    const btn=document.createElement('button'); btn.className='quiz-option';
+    btn.textContent=dir?o.ru:o.en;
+    btn.onclick=()=>{
+      if(quizAnswered)return; quizAnswered=true;
+      const correct=o.en===v.en;
+      btn.classList.add(correct?'correct':'wrong');
+      if(!correct){
+        quizMistakes.push(v);
+        optEl.querySelectorAll('button').forEach(b=>{if(b.textContent===(dir?v.ru:v.en))b.classList.add('correct');});
+        document.getElementById('quiz-feedback').textContent=`Answer: ${dir?v.ru:v.en}`;
+        document.getElementById('quiz-feedback').className='quiz-feedback bad';
+      } else {
+        quizCorrect++;
+        document.getElementById('quiz-feedback').textContent='✓ Correct!';
+        document.getElementById('quiz-feedback').className='quiz-feedback good';
+      }
+      document.getElementById('quiz-next-btn').style.display='inline-block';
+    };
+    optEl.appendChild(btn);
+  });
+}
+function nextQuiz(){quizIdx++;showQuiz();}
+function endQuiz(){
+  document.getElementById('quiz-play').classList.add('hidden');
+  document.getElementById('quiz-result').classList.remove('hidden');
+  const pct=Math.round(quizCorrect/quizItems.length*100);
+  document.getElementById('quiz-final-score').textContent=`${quizCorrect}/${quizItems.length}`;
+  document.getElementById('quiz-final-sub').textContent=`${pct}% correct`;
+  document.getElementById('quiz-emoji').textContent=pct>=80?'🏆':pct>=50?'👍':'📖';
+}
+
+// ===================== FILL =====================
+const fillTasks = [
+  { sentence:"The ___ will review the reports today.", answer:"boss", hint:"who is in charge?" },
+  { sentence:"The ___ wasn't happy with the service.", answer:"customer", hint:"person who buys" },
+  { sentence:"He's a shop ___ in the supermarket.", answer:"assistant", hint:"helps customers" },
+  { sentence:"I have a meeting with my ___ this afternoon.", answer:"boss", hint:"your manager" },
+  { sentence:"She earns a good ___ at her new job.", answer:"salary", hint:"earn + ?" },
+  { sentence:"Do you ___ your job?", answer:"enjoy", hint:"like when happening" },
+  { sentence:"What time do you ___ up?", answer:"get", hint:"get ___ = leave bed" },
+  { sentence:"I can't afford to go ___ tonight.", answer:"out", hint:"go ___ = go to restaurant" },
+  { sentence:"Can you ___ after my dog this weekend?", answer:"look", hint:"phrasal verb = take care" },
+  { sentence:"How many languages can you ___?", answer:"speak", hint:"use words" },
+  { sentence:"She loves to ___ and see new places.", answer:"travel", hint:"make a long journey" },
+  { sentence:"I'm working very ___ at school.", answer:"hard", hint:"with a lot of effort" },
+  { sentence:"She's really interested in ___ and design.", answer:"fashion", hint:"popular style" },
+  { sentence:"I like to go to the gym in my ___ time.", answer:"free", hint:"___ time = не работаешь" },
+  { sentence:"How much ___ have you got for the ticket?", answer:"money", hint:"coins and banknotes" },
+  { sentence:"Most of the ___ I walk to work.", answer:"time", hint:"most of the ___" },
+  { sentence:"Which ___ do you read every day?", answer:"newspaper", hint:"daily printed paper" },
+  { sentence:"The tour ___ explained the history of the castle.", answer:"guide", hint:"shows tourists around" },
+  { sentence:"She lives ___ in a big house.", answer:"alone", hint:"without other people" },
+  { sentence:"The centre of town can be quite ___ at night.", answer:"dangerous", hint:"can cause harm" },
+  { sentence:"I want a ___ job — this one is boring.", answer:"different", hint:"not the same" },
+  { sentence:"The Louvre is a famous ___ in Paris.", answer:"museum", hint:"art and history building" },
+  { sentence:"We went to a restaurant ___ work.", answer:"after", hint:"after work" },
+  { sentence:"I don't get ___ from work until after 6.", answer:"home", hint:"go ___ = return" },
+];
+
+let fillIdx=0,fillCorrect=0,fillItems=[];
+function initFill(){
+  fillItems=shuffle(fillTasks); fillIdx=0; fillCorrect=0;
+  document.getElementById('fill-result').classList.add('hidden');
+  document.getElementById('fill-play').classList.remove('hidden');
+  showFill();
+}
+function showFill(){
+  if(fillIdx>=fillItems.length){endFill();return;}
+  const t=fillItems[fillIdx];
+  document.getElementById('fill-situation').innerHTML=t.sentence.replace('___','<span class="fill-blank">___</span>');
+  document.getElementById('fill-hint').textContent=`💡 Hint: ${t.hint}`;
+  document.getElementById('fill-input').value='';
+  document.getElementById('fill-input').className='fill-input';
+  document.getElementById('fill-feedback').textContent='';
+  document.getElementById('fill-feedback').className='fill-feedback';
+  document.getElementById('fill-counter').textContent=`Sentence ${fillIdx+1} of ${fillItems.length}`;
+  document.getElementById('fill-bar').style.width=(fillIdx/fillItems.length*100)+'%';
+  document.getElementById('fill-skip').classList.remove('hidden');
+  document.getElementById('fill-next').classList.add('hidden');
+  document.getElementById('fill-input').disabled=false;
+  setTimeout(()=>document.getElementById('fill-input').focus(),100);
+}
+function normalize(s){return s.toLowerCase().trim().replace(/[!?\.,]/g,'');}
+function checkFill(){
+  const t=fillItems[fillIdx];
+  const val=document.getElementById('fill-input').value;
+  if(!val.trim())return;
+  const correct=normalize(val)===normalize(t.answer);
+  document.getElementById('fill-input').classList.add(correct?'correct':'wrong');
+  document.getElementById('fill-input').disabled=true;
+  if(correct){
+    fillCorrect++;
+    document.getElementById('fill-feedback').textContent='✓ Correct!';
+    document.getElementById('fill-feedback').className='fill-feedback good';
+  } else {
+    document.getElementById('fill-feedback').textContent=`✗ Answer: ${t.answer}`;
+    document.getElementById('fill-feedback').className='fill-feedback bad';
+  }
+  document.getElementById('fill-skip').classList.add('hidden');
+  document.getElementById('fill-next').classList.remove('hidden');
+}
+function skipFill(){
+  const t=fillItems[fillIdx];
+  document.getElementById('fill-feedback').textContent=`Answer: ${t.answer}`;
+  document.getElementById('fill-feedback').className='fill-feedback bad';
+  document.getElementById('fill-input').disabled=true;
+  document.getElementById('fill-skip').classList.add('hidden');
+  document.getElementById('fill-next').classList.remove('hidden');
+}
+function nextFill(){fillIdx++;showFill();}
+function endFill(){
+  document.getElementById('fill-play').classList.add('hidden');
+  document.getElementById('fill-result').classList.remove('hidden');
+  const pct=Math.round(fillCorrect/fillItems.length*100);
+  document.getElementById('fill-final-score').textContent=`${fillCorrect}/${fillItems.length}`;
+  document.getElementById('fill-final-sub').textContent=`${pct}% correct`;
+  document.getElementById('fill-emoji').textContent=pct>=80?'🌟':pct>=50?'📝':'📖';
+}
+
+renderCards();
+</script>
+</body>
+</html>
