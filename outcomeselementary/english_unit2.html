@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English — Unit 2: School & Learning</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #fdf6ec;
+    --terracotta: #c0533a;
+    --gold: #d4a843;
+    --olive: #5a6e3c;
+    --ink: #2c2118;
+    --sand: #e8d9c0;
+    --mist: #f5ede0;
+    --shadow: rgba(44,33,24,0.15);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 40% at 10% 20%, rgba(192,83,58,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 50% at 90% 80%, rgba(212,168,67,0.08) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrapper { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 24px 16px 60px; }
+
+  header { text-align: center; margin-bottom: 36px; }
+  .flag { font-size: 2.4rem; margin-bottom: 8px; }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 6vw, 3rem);
+    color: var(--terracotta);
+    line-height: 1.1;
+  }
+  header .sub { font-style: italic; color: var(--gold); font-size: 1.1rem; margin-top: 4px; }
+  header p { color: #8a7060; font-size: 0.95rem; margin-top: 6px; }
+
+  .tabs {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+  .tab-btn {
+    padding: 9px 22px;
+    border: 2px solid var(--sand);
+    background: white;
+    border-radius: 50px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #8a7060;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.03em;
+  }
+  .tab-btn:hover { border-color: var(--terracotta); color: var(--terracotta); }
+  .tab-btn.active {
+    background: var(--terracotta);
+    border-color: var(--terracotta);
+    color: white;
+    box-shadow: 0 4px 14px rgba(192,83,58,0.3);
+  }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  .cat-filter {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    justify-content: center;
+    margin-bottom: 24px;
+  }
+  .cat-chip {
+    padding: 6px 14px;
+    border: 1.5px solid var(--sand);
+    background: white;
+    border-radius: 50px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #8a7060;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .cat-chip:hover { border-color: var(--gold); color: var(--gold); }
+  .cat-chip.active { background: var(--gold); border-color: var(--gold); color: white; }
+
+  .category-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    margin-top: 32px;
+    border-top: 1px dashed var(--sand);
+    padding-top: 22px;
+  }
+  .category-label:first-child { margin-top: 0; border-top: 0; padding-top: 0; }
+
+  /* FLASHCARDS */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 14px;
+  }
+
+  .card {
+    background: white;
+    border-radius: 14px;
+    padding: 18px 14px;
+    cursor: pointer;
+    box-shadow: 0 2px 10px var(--shadow);
+    border: 1.5px solid var(--sand);
+    transition: transform 0.15s, box-shadow 0.15s;
+    position: relative;
+    min-height: 110px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    user-select: none;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px var(--shadow); }
+  .card .en { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--terracotta); font-weight: 700; line-height: 1.2; }
+  .card .pron { font-size: 0.75rem; color: var(--gold); font-style: italic; margin-top: 2px; }
+  .card .ru {
+    font-size: 0.85rem;
+    color: var(--olive);
+    margin-top: 8px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  .card .ex {
+    font-size: 0.72rem;
+    color: #8a7060;
+    margin-top: 4px;
+    font-style: italic;
+    opacity: 0;
+    transition: opacity 0.3s;
+    line-height: 1.4;
+  }
+  .card.flipped .ru, .card.flipped .ex { opacity: 1; }
+  .card .hint {
+    position: absolute;
+    top: 8px; right: 10px;
+    font-size: 0.65rem;
+    color: #c8b8a0;
+    font-style: italic;
+  }
+  .card.flipped .hint { display: none; }
+
+  /* MATCH */
+  .game-header { text-align: center; margin-bottom: 24px; }
+  .game-header h2 { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--terracotta); }
+  .game-header p { color: #8a7060; font-size: 0.88rem; margin-top: 4px; }
+
+  .match-board {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .match-col { display: flex; flex-direction: column; gap: 8px; }
+  .match-item {
+    background: white;
+    border: 2px solid var(--sand);
+    border-radius: 10px;
+    padding: 12px 14px;
+    cursor: pointer;
+    font-size: 0.92rem;
+    text-align: center;
+    transition: all 0.2s;
+    min-height: 46px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .match-item.en-word { font-family: 'Playfair Display', serif; color: var(--terracotta); font-size: 1rem; font-weight: 700; }
+  .match-item.ru-word { color: var(--olive); }
+  .match-item:hover:not(.matched):not(.wrong) { border-color: var(--gold); background: var(--mist); }
+  .match-item.selected { border-color: var(--terracotta); background: rgba(192,83,58,0.08); }
+  .match-item.matched { border-color: var(--olive); background: rgba(90,110,60,0.1); color: var(--olive); opacity: 0.6; cursor: default; }
+  .match-item.wrong { border-color: #e05050; background: rgba(224,80,80,0.08); animation: shake 0.4s; }
+
+  @keyframes shake {
+    0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)}
+  }
+
+  .score-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    background: white; border-radius: 12px; padding: 12px 18px;
+    border: 1.5px solid var(--sand);
+    margin-bottom: 16px;
+  }
+  .score-num { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--terracotta); }
+  .score-label { font-size: 0.78rem; color: #8a7060; text-transform: uppercase; letter-spacing: 0.06em; }
+
+  .btn {
+    display: inline-block;
+    padding: 11px 28px;
+    background: var(--terracotta);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 14px rgba(192,83,58,0.25);
+  }
+  .btn:hover { background: #a8422b; transform: translateY(-1px); }
+  .btn.secondary {
+    background: white;
+    color: var(--terracotta);
+    border: 2px solid var(--terracotta);
+    box-shadow: none;
+  }
+  .btn-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+
+  /* QUIZ */
+  .quiz-card {
+    background: white;
+    border-radius: 16px;
+    padding: 28px 22px;
+    border: 1.5px solid var(--sand);
+    box-shadow: 0 4px 16px var(--shadow);
+    text-align: center;
+    margin-bottom: 18px;
+  }
+  .quiz-dir {
+    font-size: 0.78rem;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+  .quiz-word {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.9rem;
+    color: var(--terracotta);
+    line-height: 1.2;
+    margin-bottom: 6px;
+  }
+  .quiz-ctx {
+    font-size: 0.85rem;
+    color: #8a7060;
+    font-style: italic;
+  }
+
+  .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  .quiz-option {
+    background: white;
+    border: 2px solid var(--sand);
+    border-radius: 10px;
+    padding: 14px 12px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.92rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--ink);
+    line-height: 1.4;
+  }
+  .quiz-option:hover { border-color: var(--gold); background: var(--mist); }
+  .quiz-option.correct { border-color: var(--olive); background: rgba(90,110,60,0.15); color: var(--olive); font-weight: 700; }
+  .quiz-option.wrong { border-color: #e05050; background: rgba(224,80,80,0.12); color: #c03030; }
+
+  .quiz-feedback {
+    text-align: center;
+    font-size: 0.95rem;
+    min-height: 24px;
+    margin: 8px 0 14px;
+    font-weight: 600;
+  }
+  .quiz-feedback.good { color: var(--olive); }
+  .quiz-feedback.bad { color: #c03030; }
+
+  .quiz-progress {
+    background: var(--sand);
+    height: 6px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .quiz-progress-bar {
+    background: var(--terracotta);
+    height: 100%;
+    transition: width 0.3s;
+  }
+  .quiz-counter {
+    text-align: center;
+    font-size: 0.78rem;
+    color: #8a7060;
+    margin-bottom: 16px;
+    letter-spacing: 0.04em;
+  }
+  .dots { display: flex; gap: 4px; justify-content: center; margin-bottom: 14px; flex-wrap: wrap; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--sand); }
+  .dot.active { background: var(--terracotta); }
+  .dot.done { background: var(--olive); }
+
+  /* FILL */
+  .fill-card {
+    background: white;
+    border-radius: 16px;
+    padding: 28px 22px;
+    border: 1.5px solid var(--sand);
+    box-shadow: 0 4px 16px var(--shadow);
+    margin-bottom: 18px;
+  }
+  .fill-situation {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    line-height: 1.5;
+    color: var(--ink);
+    margin-bottom: 8px;
+    text-align: center;
+  }
+  .fill-translation {
+    font-size: 0.82rem;
+    color: #8a7060;
+    font-style: italic;
+    text-align: center;
+    margin-bottom: 18px;
+    line-height: 1.5;
+  }
+  .fill-input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid var(--sand);
+    border-radius: 10px;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--terracotta);
+    text-align: center;
+    background: var(--mist);
+    transition: all 0.2s;
+  }
+  .fill-input:focus { outline: none; border-color: var(--gold); background: white; }
+  .fill-input.correct { border-color: var(--olive); background: rgba(90,110,60,0.08); color: var(--olive); }
+  .fill-input.wrong { border-color: #e05050; background: rgba(224,80,80,0.08); }
+
+  .fill-feedback {
+    text-align: center;
+    font-size: 0.95rem;
+    min-height: 24px;
+    margin-top: 12px;
+    font-weight: 600;
+  }
+  .fill-feedback.good { color: var(--olive); }
+  .fill-feedback.bad { color: #c03030; }
+
+  .result-screen {
+    text-align: center;
+    background: white;
+    border-radius: 16px;
+    padding: 40px 24px;
+    border: 1.5px solid var(--sand);
+    box-shadow: 0 4px 16px var(--shadow);
+  }
+  .result-emoji { font-size: 3.5rem; margin-bottom: 8px; }
+  .result-score {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    color: var(--terracotta);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .result-sub { color: #8a7060; font-size: 0.95rem; margin-bottom: 20px; }
+
+  .hidden { display: none !important; }
+
+  @media (max-width: 480px) {
+    .quiz-options { grid-template-columns: 1fr; }
+    .quiz-word { font-size: 1.5rem; }
+    .cards-grid { grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); }
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <div class="flag">🇬🇧</div>
+    <h1>English · Unit 2</h1>
+    <div class="sub">School & Learning</div>
+    <p><span id="totalCount">40</span> слов · страницы 20–21</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="cards" onclick="switchTab('cards')">📇 Карточки</button>
+    <button class="tab-btn" data-tab="match" onclick="switchTab('match')">🎴 Найди пару</button>
+    <button class="tab-btn" data-tab="quiz" onclick="switchTab('quiz')">🎯 Тест</button>
+    <button class="tab-btn" data-tab="fill" onclick="switchTab('fill')">✍️ Впиши слово</button>
+  </div>
+
+  <div id="section-cards" class="section active">
+    <div class="cat-filter" id="cat-filter"></div>
+    <div id="cards-container"></div>
+    <div class="btn-row" style="margin-top:28px;">
+      <button class="btn secondary" onclick="flipAll(true)">Показать все переводы</button>
+      <button class="btn secondary" onclick="flipAll(false)">Скрыть все</button>
+    </div>
+  </div>
+
+  <div id="section-match" class="section">
+    <div class="game-header">
+      <h2>Найди пару</h2>
+      <p>Сопоставьте английское слово с переводом</p>
+    </div>
+    <div class="score-bar">
+      <div>
+        <div class="score-label">Найдено пар</div>
+        <div><span class="score-num" id="match-score">0</span> <span style="color:#8a7060;">/ <span id="match-total">10</span></span></div>
+      </div>
+      <div>
+        <div class="score-label">Ошибок</div>
+        <div class="score-num" id="match-errors">0</div>
+      </div>
+    </div>
+    <div class="match-board" id="match-board"></div>
+    <div id="match-result" class="result-screen hidden">
+      <div class="result-emoji" id="match-emoji">🎉</div>
+      <div class="result-score" id="match-final">10/10</div>
+      <div class="result-sub" id="match-sub">Все пары найдены!</div>
+      <button class="btn" onclick="initMatch()">Играть снова</button>
+    </div>
+    <div class="btn-row">
+      <button class="btn secondary" onclick="initMatch()">🔄 Новая партия</button>
+    </div>
+  </div>
+
+  <div id="section-quiz" class="section">
+    <div class="game-header">
+      <h2>Тест</h2>
+      <p>Выберите правильный перевод</p>
+    </div>
+    <div id="quiz-play">
+      <div class="dots" id="quiz-dots"></div>
+      <div class="quiz-progress"><div class="quiz-progress-bar" id="quiz-bar" style="width:0%"></div></div>
+      <div class="quiz-counter" id="quiz-counter">Вопрос 1</div>
+      <div class="quiz-card">
+        <div class="quiz-dir" id="quiz-dir"></div>
+        <div class="quiz-word" id="quiz-word"></div>
+        <div class="quiz-ctx" id="quiz-ctx"></div>
+      </div>
+      <div class="quiz-options" id="quiz-options"></div>
+      <div class="quiz-feedback" id="quiz-feedback"></div>
+      <div class="btn-row">
+        <button class="btn" id="quiz-next-btn" onclick="nextQuiz()" style="display:none;">Дальше →</button>
+      </div>
+    </div>
+    <div id="quiz-result" class="result-screen hidden">
+      <div class="result-emoji" id="quiz-emoji">🏆</div>
+      <div class="result-score" id="quiz-final-score">15/15</div>
+      <div class="result-sub" id="quiz-final-sub"></div>
+      <div class="btn-row">
+        <button class="btn" onclick="initQuiz(false)">Играть снова</button>
+        <button class="btn secondary" id="quiz-mistakes-btn" onclick="initQuiz(true)" style="display:none;">Только ошибки</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="section-fill" class="section">
+    <div class="game-header">
+      <h2>Впиши пропущенное слово</h2>
+      <p>Прочитайте предложение и впишите нужное слово</p>
+    </div>
+    <div id="fill-play">
+      <div class="quiz-progress"><div class="quiz-progress-bar" id="fill-bar" style="width:0%"></div></div>
+      <div class="quiz-counter" id="fill-counter">Задание 1</div>
+      <div class="fill-card">
+        <div class="fill-situation" id="fill-situation"></div>
+        <div class="fill-translation" id="fill-translation"></div>
+        <input type="text" class="fill-input" id="fill-input" placeholder="введите слово..." autocomplete="off" onkeydown="if(event.key==='Enter') checkFill()">
+        <div class="fill-feedback" id="fill-feedback"></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn" id="fill-check" onclick="checkFill()">Проверить</button>
+        <button class="btn secondary" id="fill-skip" onclick="skipFill()">Подсказать</button>
+        <button class="btn" id="fill-next" onclick="nextFill()" style="display:none;">Дальше →</button>
+      </div>
+    </div>
+    <div id="fill-result" class="result-screen hidden">
+      <div class="result-emoji" id="fill-emoji">🌟</div>
+      <div class="result-score" id="fill-final-score">15/15</div>
+      <div class="result-sub" id="fill-final-sub"></div>
+      <button class="btn" onclick="initFill()">Играть снова</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const vocab = [
+  // Школьные предметы
+  {en:"notebook", pron:"/ˈnəʊtbʊk/", ru:"тетрадь", cat:"objects", ex:"Write the words in your notebook."},
+  {en:"notes", pron:"/nəʊts/", ru:"заметки, записи", cat:"objects", ex:"I took some notes on my iPad."},
+  {en:"paper", pron:"/ˈpeɪpə/", ru:"бумага", cat:"objects", ex:"A piece of paper."},
+  {en:"pen", pron:"/pen/", ru:"ручка", cat:"objects", ex:"Have you got a black pen?"},
+  {en:"pencil", pron:"/ˈpensəl/", ru:"карандаш", cat:"objects", ex:"Can I borrow your pencil?"},
+  {en:"rubber", pron:"/ˈrʌbə/", ru:"ластик, резинка", cat:"objects", ex:"Can I borrow your rubber?"},
+  {en:"scissors", pron:"/ˈsɪzəz/", ru:"ножницы", cat:"objects", ex:"A pair of scissors."},
+  {en:"dictionary", pron:"/ˈdɪkʃənəri/", ru:"словарь", cat:"objects", ex:"An online dictionary."},
+  {en:"light", pron:"/laɪt/", ru:"свет; лампа", cat:"objects", ex:"Turn off the light before you go out."},
+
+  // Учёба и школа
+  {en:"learn", pron:"/lɜːn/", ru:"учить, изучать", cat:"study", ex:"I want to learn to drive."},
+  {en:"remember", pron:"/rɪˈmembə/", ru:"помнить, вспоминать", cat:"study", ex:"Do you remember the first time we met?"},
+  {en:"forget", pron:"/fəˈɡet/", ru:"забывать", cat:"study", ex:"Don't forget to lock the door."},
+  {en:"think", pron:"/θɪŋk/", ru:"думать, считать", cat:"study", ex:"I think he lives in Leeds."},
+  {en:"exam", pron:"/ɪɡˈzæm/", ru:"экзамен", cat:"study", ex:"I have to take my exams at the end of the year."},
+  {en:"question", pron:"/ˈkwestʃən/", ru:"вопрос", cat:"study", ex:"Ask a question."},
+  {en:"answer", pron:"/ˈɑːnsə/", ru:"ответ; отвечать", cat:"study", ex:"That's the wrong answer."},
+  {en:"meaning", pron:"/ˈmiːnɪŋ/", ru:"значение, смысл", cat:"study", ex:"Check the meaning in your dictionary."},
+  {en:"word", pron:"/wɜːd/", ru:"слово", cat:"study", ex:"What does this word mean?"},
+  {en:"text", pron:"/tekst/", ru:"текст", cat:"study", ex:"Read the text, then answer the questions."},
+  {en:"lazy", pron:"/ˈleɪzi/", ru:"ленивый", cat:"study", ex:"Don't be so lazy!"},
+
+  // Глаголы действия
+  {en:"see", pron:"/siː/", ru:"видеть", cat:"actions", ex:"Did you see Tom's new car?"},
+  {en:"hear", pron:"/hɪə/", ru:"слышать", cat:"actions", ex:"Did you hear what I said?"},
+  {en:"write", pron:"/raɪt/", ru:"писать", cat:"actions", ex:"Can you write your address for me?"},
+  {en:"use", pron:"/juːz/", ru:"использовать", cat:"actions", ex:"Can I use your phone?"},
+  {en:"take", pron:"/teɪk/", ru:"брать; взять", cat:"actions", ex:"I can take notes."},
+  {en:"bring", pron:"/brɪŋ/", ru:"приносить", cat:"actions", ex:"Can you bring a pen tomorrow?"},
+  {en:"sit", pron:"/sɪt/", ru:"сидеть", cat:"actions", ex:"Come in and sit down."},
+  {en:"stand up", pron:"/stænd ʌp/", ru:"вставать", cat:"actions", ex:"Please stand up when the judge enters."},
+  {en:"turn off", pron:"/tɜːn ɒf/", ru:"выключать", cat:"actions", ex:"Turn your phones off, please."},
+
+  // Время и структура
+  {en:"beginning", pron:"/bɪˈɡɪnɪŋ/", ru:"начало", cat:"time", ex:"The beginning of the film."},
+  {en:"middle", pron:"/ˈmɪdəl/", ru:"середина", cat:"time", ex:"In the middle of the night."},
+  {en:"end", pron:"/end/", ru:"конец", cat:"time", ex:"At the end of the class."},
+  {en:"break", pron:"/breɪk/", ru:"перерыв, пауза", cat:"time", ex:"Take a break."},
+  {en:"quick", pron:"/kwɪk/", ru:"быстрый", cat:"time", ex:"A quick call."},
+
+  // Разные
+  {en:"on my own", pron:"/ɒn maɪ əʊn/", ru:"сам, самостоятельно", cat:"other", ex:"I enjoy working on my own."},
+];
+
+const categories = {
+  objects: "📓 Школьные предметы",
+  study: "🎓 Учёба и школа",
+  actions: "✍️ Глаголы действия",
+  time: "⏰ Время и структура",
+  other: "💭 Разное"
+};
+
+document.getElementById('totalCount').textContent = vocab.length;
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('section-' + name).classList.add('active');
+  if (name === 'match' && !matchInitialized) initMatch();
+  if (name === 'quiz' && !quizInitialized) initQuiz(false);
+  if (name === 'fill' && !fillInitialized) initFill();
+}
+
+// FLASHCARDS
+let activeFilter = 'all';
+
+function renderFilters() {
+  const el = document.getElementById('cat-filter');
+  let html = '<div class="cat-chip ' + (activeFilter==='all'?'active':'') + '" onclick="setFilter(\'all\')">Все (' + vocab.length + ')</div>';
+  Object.keys(categories).forEach(cat => {
+    const count = vocab.filter(v => v.cat === cat).length;
+    html += '<div class="cat-chip ' + (activeFilter===cat?'active':'') + '" onclick="setFilter(\'' + cat + '\')">' + categories[cat] + ' (' + count + ')</div>';
+  });
+  el.innerHTML = html;
+}
+
+function setFilter(cat) {
+  activeFilter = cat;
+  renderFilters();
+  renderCards();
+}
+
+function renderCards() {
+  const container = document.getElementById('cards-container');
+  let html = '';
+  const cats = activeFilter === 'all' ? Object.keys(categories) : [activeFilter];
+  cats.forEach(cat => {
+    const items = vocab.filter(v => v.cat === cat);
+    if (!items.length) return;
+    html += '<div class="category-label">' + categories[cat] + '</div>';
+    html += '<div class="cards-grid">';
+    items.forEach(v => {
+      html += '<div class="card" onclick="this.classList.toggle(\'flipped\')">' +
+        '<span class="hint">переверни</span>' +
+        '<div class="en">' + v.en + '</div>' +
+        '<div class="pron">' + v.pron + '</div>' +
+        '<div class="ru">' + v.ru + '</div>' +
+        '<div class="ex">' + v.ex + '</div>' +
+        '</div>';
+    });
+    html += '</div>';
+  });
+  container.innerHTML = html;
+}
+
+function flipAll(state) {
+  document.querySelectorAll('.card').forEach(c => {
+    if (state) c.classList.add('flipped');
+    else c.classList.remove('flipped');
+  });
+}
+
+// MATCH
+let matchInitialized = false;
+let matchSelected = null;
+let matchScore = 0;
+let matchErrors = 0;
+const MATCH_PAIRS = 10;
+
+function initMatch() {
+  matchInitialized = true;
+  matchScore = 0; matchErrors = 0;
+  matchSelected = null;
+  document.getElementById('match-score').textContent = 0;
+  document.getElementById('match-errors').textContent = 0;
+  document.getElementById('match-total').textContent = MATCH_PAIRS;
+  document.getElementById('match-result').classList.add('hidden');
+
+  const picks = shuffle(vocab).slice(0, MATCH_PAIRS);
+  const board = document.getElementById('match-board');
+  board.innerHTML = '';
+
+  const leftCol = document.createElement('div'); leftCol.className = 'match-col';
+  const rightCol = document.createElement('div'); rightCol.className = 'match-col';
+
+  const enShuffled = shuffle(picks);
+  const ruShuffled = shuffle(picks);
+
+  enShuffled.forEach(v => {
+    const el = document.createElement('div');
+    el.className = 'match-item en-word';
+    el.dataset.key = v.en;
+    el.dataset.side = 'en';
+    el.textContent = v.en;
+    el.onclick = () => handleMatch(el);
+    leftCol.appendChild(el);
+  });
+  ruShuffled.forEach(v => {
+    const el = document.createElement('div');
+    el.className = 'match-item ru-word';
+    el.dataset.key = v.en;
+    el.dataset.side = 'ru';
+    el.textContent = v.ru;
+    el.onclick = () => handleMatch(el);
+    rightCol.appendChild(el);
+  });
+
+  board.appendChild(leftCol);
+  board.appendChild(rightCol);
+}
+
+function handleMatch(el) {
+  if (el.classList.contains('matched') || el.classList.contains('wrong')) return;
+
+  if (!matchSelected) {
+    document.querySelectorAll('.match-item').forEach(e => e.classList.remove('selected'));
+    el.classList.add('selected');
+    matchSelected = el;
+    return;
+  }
+
+  if (el === matchSelected) { el.classList.remove('selected'); matchSelected = null; return; }
+
+  if (el.dataset.side === matchSelected.dataset.side) {
+    document.querySelectorAll('.match-item').forEach(e => e.classList.remove('selected'));
+    el.classList.add('selected');
+    matchSelected = el;
+    return;
+  }
+
+  if (el.dataset.key === matchSelected.dataset.key) {
+    el.classList.add('matched'); matchSelected.classList.add('matched');
+    el.classList.remove('selected'); matchSelected.classList.remove('selected');
+    matchScore++;
+    document.getElementById('match-score').textContent = matchScore;
+    matchSelected = null;
+    if (matchScore === MATCH_PAIRS) {
+      setTimeout(() => {
+        const r = document.getElementById('match-result');
+        r.classList.remove('hidden');
+        document.getElementById('match-final').textContent = matchScore + '/' + MATCH_PAIRS;
+        document.getElementById('match-sub').textContent = matchErrors === 0 ? 'Без ошибок! Превосходно!' : 'Ошибок: ' + matchErrors;
+        document.getElementById('match-emoji').textContent = matchErrors === 0 ? '🏆' : matchErrors <= 3 ? '🎉' : '👍';
+      }, 500);
+    }
+  } else {
+    el.classList.add('wrong'); matchSelected.classList.add('wrong');
+    matchErrors++;
+    document.getElementById('match-errors').textContent = matchErrors;
+    const a = el, b = matchSelected;
+    matchSelected = null;
+    setTimeout(() => { a.classList.remove('wrong','selected'); b.classList.remove('wrong','selected'); }, 700);
+  }
+}
+
+// QUIZ
+let quizInitialized = false;
+let quizItems = [], quizIdx = 0, quizCorrect = 0, quizAnswered = false;
+let quizMistakes = [];
+const QUIZ_LEN = 15;
+
+function initQuiz(onlyErrors) {
+  quizInitialized = true;
+  document.getElementById('quiz-result').classList.add('hidden');
+  document.getElementById('quiz-play').classList.remove('hidden');
+  const source = onlyErrors && quizMistakes.length ? quizMistakes : vocab;
+  quizItems = shuffle(source).slice(0, Math.min(QUIZ_LEN, source.length));
+  quizMistakes = [];
+  quizIdx = 0; quizCorrect = 0;
+  renderDots();
+  showQuiz();
+}
+
+function renderDots() {
+  const el = document.getElementById('quiz-dots');
+  let html = '';
+  for (let i = 0; i < quizItems.length; i++) {
+    html += '<div class="dot ' + (i===0?'active':'') + '" id="dot-' + i + '"></div>';
+  }
+  el.innerHTML = html;
+}
+
+function showQuiz() {
+  if (quizIdx >= quizItems.length) { endQuiz(); return; }
+  const v = quizItems[quizIdx];
+  quizAnswered = false;
+  const dir = Math.random() > 0.5;
+  document.getElementById('quiz-dir').textContent = dir ? 'English → Русский' : 'Русский → English';
+  document.getElementById('quiz-word').textContent = dir ? v.en : v.ru;
+  document.getElementById('quiz-ctx').textContent = dir ? v.pron : '';
+  document.getElementById('quiz-feedback').textContent = '';
+  document.getElementById('quiz-feedback').className = 'quiz-feedback';
+  document.getElementById('quiz-next-btn').style.display = 'none';
+  document.getElementById('quiz-counter').textContent = 'Вопрос ' + (quizIdx+1) + ' из ' + quizItems.length;
+  document.getElementById('quiz-bar').style.width = (quizIdx/quizItems.length*100)+'%';
+
+  document.querySelectorAll('.dot').forEach((d,i) => {
+    d.className = 'dot' + (i<quizIdx?' done':i===quizIdx?' active':'');
+  });
+
+  const wrong = shuffle(vocab.filter(x=>x.en!==v.en)).slice(0,3);
+  const opts = shuffle([v].concat(wrong));
+  const optEl = document.getElementById('quiz-options');
+  optEl.innerHTML = '';
+  opts.forEach(o => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-option';
+    btn.textContent = dir ? o.ru : o.en;
+    btn.onclick = function() {
+      if (quizAnswered) return;
+      quizAnswered = true;
+      const correct = o.en === v.en;
+      btn.classList.add(correct ? 'correct' : 'wrong');
+      if (!correct) {
+        quizMistakes.push(v);
+        optEl.querySelectorAll('button').forEach(b => {
+          if (b.textContent === (dir?v.ru:v.en)) b.classList.add('correct');
+        });
+        document.getElementById('quiz-feedback').textContent = 'Правильно: ' + (dir?v.ru:v.en);
+        document.getElementById('quiz-feedback').className = 'quiz-feedback bad';
+      } else {
+        quizCorrect++;
+        document.getElementById('quiz-feedback').textContent = '✓ Верно!';
+        document.getElementById('quiz-feedback').className = 'quiz-feedback good';
+      }
+      document.getElementById('quiz-next-btn').style.display = 'inline-block';
+    };
+    optEl.appendChild(btn);
+  });
+}
+
+function nextQuiz() { quizIdx++; showQuiz(); }
+
+function endQuiz() {
+  document.getElementById('quiz-play').classList.add('hidden');
+  document.getElementById('quiz-result').classList.remove('hidden');
+  const pct = Math.round(quizCorrect/quizItems.length*100);
+  document.getElementById('quiz-final-score').textContent = quizCorrect + '/' + quizItems.length;
+  document.getElementById('quiz-final-sub').textContent = pct + '% правильных ответов';
+  document.getElementById('quiz-emoji').textContent = pct>=80?'🏆':pct>=50?'👍':'📖';
+  document.getElementById('quiz-mistakes-btn').style.display = quizMistakes.length ? 'inline-block' : 'none';
+}
+
+// FILL
+const fillTasks = [
+  { situation: "Can I borrow your ___ to write my name?", translation: "Можно одолжить твою ручку, чтобы написать имя?", answer: "pen" },
+  { situation: "I write my notes with a ___ so I can erase them.", translation: "Я пишу заметки карандашом, чтобы можно было стереть.", answer: "pencil" },
+  { situation: "Write the new words in your ___ .", translation: "Запиши новые слова в тетрадь.", answer: "notebook" },
+  { situation: "Check the ___ of the word in your dictionary.", translation: "Проверь значение слова в словаре.", answer: "meaning" },
+  { situation: "What does this ___ mean? I don't know it.", translation: "Что значит это слово? Я его не знаю.", answer: "word" },
+  { situation: "I have to take my ___ at the end of the year.", translation: "В конце года мне нужно сдавать экзамены.", answer: "exams" },
+  { situation: "Ask me a ___ and I will try to answer.", translation: "Задай мне вопрос — я постараюсь ответить.", answer: "question" },
+  { situation: "That's the wrong ___ , try again.", translation: "Это неправильный ответ, попробуй ещё раз.", answer: "answer" },
+  { situation: "Don't ___ to bring your book tomorrow.", translation: "Не забудь принести книгу завтра.", answer: "forget" },
+  { situation: "I want to ___ how to drive.", translation: "Я хочу научиться водить.", answer: "learn" },
+  { situation: "I can't ___ where I put my keys.", translation: "Я не могу вспомнить, куда положил ключи.", answer: "remember" },
+  { situation: "Turn ___ the light before you leave.", translation: "Выключи свет перед уходом.", answer: "off" },
+  { situation: "Please ___ up when the teacher comes in.", translation: "Пожалуйста, встань, когда входит учитель.", answer: "stand" },
+  { situation: "Let's take a short ___ — I need coffee.", translation: "Давай сделаем короткий перерыв — мне нужен кофе.", answer: "break" },
+  { situation: "Read the ___ , then answer the questions.", translation: "Прочитайте текст, потом ответьте на вопросы.", answer: "text" },
+  { situation: "At the ___ of the film, everyone was crying.", translation: "В конце фильма все плакали.", answer: "end" },
+  { situation: "At the ___ of the film, we meet the main character.", translation: "В начале фильма мы знакомимся с главным героем.", answer: "beginning" },
+  { situation: "I woke up in the ___ of the night.", translation: "Я проснулся посреди ночи.", answer: "middle" },
+  { situation: "Can I ___ your dictionary for a minute?", translation: "Можно мне взять твой словарь на минутку?", answer: "use" },
+  { situation: "Did you ___ the noise outside last night?", translation: "Ты слышал ночью шум на улице?", answer: "hear" },
+  { situation: "I can't ___ where we are on the map.", translation: "Я не вижу, где мы на карте.", answer: "see" },
+  { situation: "Can you ___ me a coffee, please?", translation: "Можешь принести мне кофе, пожалуйста?", answer: "bring" },
+  { situation: "I ___ he lives in London, but I'm not sure.", translation: "Думаю, он живёт в Лондоне, но я не уверен.", answer: "think" },
+  { situation: "He's too ___ to help — he just watches TV.", translation: "Он слишком ленивый, чтобы помочь — только смотрит телевизор.", answer: "lazy" },
+  { situation: "I enjoy working on my ___ , without other people.", translation: "Мне нравится работать самому, без других людей.", answer: "own" },
+];
+
+let fillInitialized = false;
+let fillIdx = 0, fillCorrect = 0, fillItems = [];
+const FILL_LEN = 15;
+
+function initFill() {
+  fillInitialized = true;
+  fillItems = shuffle(fillTasks).slice(0, FILL_LEN);
+  fillIdx = 0; fillCorrect = 0;
+  document.getElementById('fill-result').classList.add('hidden');
+  document.getElementById('fill-play').classList.remove('hidden');
+  showFill();
+}
+
+function showFill() {
+  if (fillIdx >= fillItems.length) { endFill(); return; }
+  const t = fillItems[fillIdx];
+  document.getElementById('fill-situation').textContent = t.situation;
+  document.getElementById('fill-translation').textContent = t.translation;
+  document.getElementById('fill-input').value = '';
+  document.getElementById('fill-input').className = 'fill-input';
+  document.getElementById('fill-input').disabled = false;
+  document.getElementById('fill-feedback').textContent = '';
+  document.getElementById('fill-feedback').className = 'fill-feedback';
+  document.getElementById('fill-counter').textContent = 'Задание ' + (fillIdx+1) + ' из ' + fillItems.length;
+  document.getElementById('fill-bar').style.width = (fillIdx/fillItems.length*100)+'%';
+  document.getElementById('fill-check').style.display = 'inline-block';
+  document.getElementById('fill-skip').style.display = 'inline-block';
+  document.getElementById('fill-next').style.display = 'none';
+  setTimeout(() => document.getElementById('fill-input').focus(), 100);
+}
+
+function normalize(s) {
+  return s.toLowerCase().trim().replace(/[!?\.,;:]/g,'').replace(/\s+/g,' ');
+}
+
+function checkFill() {
+  const t = fillItems[fillIdx];
+  const val = document.getElementById('fill-input').value;
+  if (!val.trim()) return;
+  const correct = normalize(val) === normalize(t.answer);
+  document.getElementById('fill-input').classList.add(correct ? 'correct' : 'wrong');
+  document.getElementById('fill-input').disabled = true;
+  if (correct) {
+    fillCorrect++;
+    document.getElementById('fill-feedback').textContent = '✓ Правильно!';
+    document.getElementById('fill-feedback').className = 'fill-feedback good';
+  } else {
+    document.getElementById('fill-feedback').textContent = '✗ Правильно: ' + t.answer;
+    document.getElementById('fill-feedback').className = 'fill-feedback bad';
+  }
+  document.getElementById('fill-check').style.display = 'none';
+  document.getElementById('fill-skip').style.display = 'none';
+  document.getElementById('fill-next').style.display = 'inline-block';
+}
+
+function skipFill() {
+  const t = fillItems[fillIdx];
+  document.getElementById('fill-feedback').textContent = 'Правильный ответ: ' + t.answer;
+  document.getElementById('fill-feedback').className = 'fill-feedback bad';
+  document.getElementById('fill-input').disabled = true;
+  document.getElementById('fill-check').style.display = 'none';
+  document.getElementById('fill-skip').style.display = 'none';
+  document.getElementById('fill-next').style.display = 'inline-block';
+}
+
+function nextFill() { fillIdx++; showFill(); }
+
+function endFill() {
+  document.getElementById('fill-play').classList.add('hidden');
+  document.getElementById('fill-result').classList.remove('hidden');
+  const pct = Math.round(fillCorrect/fillItems.length*100);
+  document.getElementById('fill-final-score').textContent = fillCorrect + '/' + fillItems.length;
+  document.getElementById('fill-final-sub').textContent = pct + '% правильных ответов';
+  document.getElementById('fill-emoji').textContent = pct>=80?'🌟':pct>=50?'📝':'🇬🇧';
+}
+
+renderFilters();
+renderCards();
+</script>
+</body>
+</html>
