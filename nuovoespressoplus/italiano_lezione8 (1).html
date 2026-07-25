@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Italiano — Lezione 8: Da scoprire</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #fdf6ec;
+    --terracotta: #c0533a;
+    --gold: #d4a843;
+    --olive: #5a6e3c;
+    --ink: #2c2118;
+    --sand: #e8d9c0;
+    --mist: #f5ede0;
+    --shadow: rgba(44,33,24,0.15);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 40% at 10% 20%, rgba(192,83,58,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 50% at 90% 80%, rgba(212,168,67,0.08) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrapper { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 24px 16px 60px; }
+
+  header { text-align: center; margin-bottom: 36px; }
+  .flag { font-size: 2.4rem; margin-bottom: 8px; }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 6vw, 3rem);
+    color: var(--terracotta);
+    line-height: 1.1;
+  }
+  header .sub { font-style: italic; color: var(--gold); font-size: 1.1rem; margin-top: 4px; }
+  header p { color: #8a7060; font-size: 0.95rem; margin-top: 6px; }
+
+  .tabs {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+  .tab-btn {
+    padding: 9px 22px;
+    border: 2px solid var(--sand);
+    background: white;
+    border-radius: 50px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #8a7060;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.03em;
+  }
+  .tab-btn:hover { border-color: var(--terracotta); color: var(--terracotta); }
+  .tab-btn.active {
+    background: var(--terracotta);
+    border-color: var(--terracotta);
+    color: white;
+    box-shadow: 0 4px 14px rgba(192,83,58,0.3);
+  }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* Category chips */
+  .cat-filter {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  .cat-chip {
+    padding: 6px 14px;
+    border: 1.5px solid var(--sand);
+    background: white;
+    border-radius: 50px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #8a7060;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .cat-chip:hover { border-color: var(--gold); color: var(--gold); }
+  .cat-chip.active { background: var(--gold); border-color: var(--gold); color: white; }
+
+  .hint-box {
+    background: white;
+    border: 1.5px dashed var(--sand);
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 24px;
+    text-align: center;
+    font-size: 0.82rem;
+    color: #8a7060;
+    line-height: 1.6;
+  }
+  .hint-box b { color: var(--terracotta); }
+
+  .category-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    margin-top: 32px;
+    border-top: 1px dashed var(--sand);
+    padding-top: 22px;
+  }
+  .category-label:first-child { margin-top: 0; border-top: 0; padding-top: 0; }
+
+  /* FLASHCARDS - Multi-state */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 14px;
+  }
+
+  .card {
+    background: white;
+    border-radius: 14px;
+    padding: 18px 14px 24px;
+    cursor: pointer;
+    box-shadow: 0 2px 10px var(--shadow);
+    border: 1.5px solid var(--sand);
+    transition: transform 0.15s, box-shadow 0.15s;
+    position: relative;
+    min-height: 160px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    overflow: hidden;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px var(--shadow); }
+
+  .card > .face { display: none; width: 100%; text-align: center; }
+
+  .card[data-state="0"] > .face-front { display: flex; flex-direction: column; align-items: center; }
+  .card[data-state="1"] > .face-def { display: flex; flex-direction: column; align-items: center; }
+  .card[data-has-img="true"][data-state="2"] > .face-img { display: flex; flex-direction: column; align-items: center; }
+  .card[data-has-img="true"][data-state="3"] > .face-tr { display: flex; flex-direction: column; align-items: center; }
+  .card[data-has-img="false"][data-state="2"] > .face-tr { display: flex; flex-direction: column; align-items: center; }
+
+  .face-front .it {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    color: var(--terracotta);
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  .face-front .hint-txt {
+    font-size: 0.72rem;
+    color: #c8b8a0;
+    font-style: italic;
+    margin-top: 12px;
+  }
+
+  .face-def .label,
+  .face-img .label,
+  .face-tr .label {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+  .face-def .def-txt {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    color: var(--ink);
+    line-height: 1.35;
+    font-style: italic;
+    margin-bottom: 8px;
+  }
+  .face-def .ex-txt {
+    font-size: 0.78rem;
+    color: var(--olive);
+    line-height: 1.4;
+    font-weight: 600;
+  }
+  .face-def .ex-txt::before { content: "→ "; color: var(--gold); }
+
+  .face-img .img-wrap {
+    width: 100%;
+    max-width: 250px;
+    height: 155px;
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--mist);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 4px 0 8px;
+    border: 1px solid var(--sand);
+    position: relative;
+  }
+  .face-img .img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: opacity 0.3s;
+  }
+  .face-img .img-wrap.img-fail::after {
+    content: "📷";
+    font-size: 2.5rem;
+    color: var(--sand);
+  }
+  .face-img .img-wrap.img-fail img { display: none; }
+  .face-img .cap {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    color: var(--terracotta);
+    font-weight: 700;
+    margin-top: 8px;
+  }
+
+  .face-tr .ru-txt {
+    font-size: 1.15rem;
+    color: var(--olive);
+    font-weight: 700;
+    line-height: 1.3;
+  }
+  .face-tr .it-small {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.85rem;
+    color: var(--terracotta);
+    font-style: italic;
+    margin-top: 6px;
+  }
+
+  /* State indicator dots at bottom of card */
+  .card-state {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 4px;
+  }
+  .state-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--sand);
+    transition: background 0.2s;
+  }
+  .card[data-state="0"] .state-dot:nth-child(1),
+  .card[data-state="1"] .state-dot:nth-child(2),
+  .card[data-state="2"] .state-dot:nth-child(3),
+  .card[data-state="3"] .state-dot:nth-child(4) { background: var(--terracotta); }
+
+  /* MATCH */
+  .game-header { text-align: center; margin-bottom: 24px; }
+  .game-header h2 { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--terracotta); }
+  .game-header p { color: #8a7060; font-size: 0.88rem; margin-top: 4px; }
+
+  .match-board {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .match-col { display: flex; flex-direction: column; gap: 8px; }
+  .match-item {
+    background: white;
+    border: 2px solid var(--sand);
+    border-radius: 10px;
+    padding: 12px 14px;
+    cursor: pointer;
+    font-size: 0.92rem;
+    text-align: center;
+    transition: all 0.2s;
+    min-height: 46px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .match-item.it-word { font-family: 'Playfair Display', serif; color: var(--terracotta); font-size: 1rem; font-weight: 700; }
+  .match-item.ru-word { color: var(--olive); }
+  .match-item:hover:not(.matched):not(.wrong) { border-color: var(--gold); background: var(--mist); }
+  .match-item.selected { border-color: var(--terracotta); background: rgba(192,83,58,0.08); }
+  .match-item.matched { border-color: var(--olive); background: rgba(90,110,60,0.1); color: var(--olive); opacity: 0.6; cursor: default; }
+  .match-item.wrong { border-color: #e05050; background: rgba(224,80,80,0.08); animation: shake 0.4s; }
+
+  @keyframes shake {
+    0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)}
+  }
+
+  .score-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    background: white; border-radius: 12px; padding: 12px 18px;
+    border: 1.5px solid var(--sand);
+    margin-bottom: 16px;
+  }
+  .score-num { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--terracotta); }
+  .score-label { font-size: 0.78rem; color: #8a7060; text-transform: uppercase; letter-spacing: 0.06em; }
+
+  .btn {
+    display: inline-block;
+    padding: 11px 28px;
+    background: var(--terracotta);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 14px rgba(192,83,58,0.25);
+  }
+  .btn:hover { background: #a8422b; transform: translateY(-1px); }
+  .btn.secondary {
+    background: white;
+    color: var(--terracotta);
+    border: 2px solid var(--terracotta);
+    box-shadow: none;
+  }
+  .btn-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+
+  /* QUIZ */
+  .quiz-card {
+    background: white;
+    border-radius: 16px;
+    padding: 28px 22px;
+    border: 1.5px solid var(--sand);
+    box-shadow: 0 4px 16px var(--shadow);
+    text-align: center;
+    margin-bottom: 18px;
+  }
+  .quiz-dir {
+    font-size: 0.78rem;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+  .quiz-word {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.9rem;
+    color: var(--terracotta);
+    line-height: 1.2;
+    margin-bottom: 6px;
+  }
+
+  .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  .quiz-option {
+    background: white;
+    border: 2px solid var(--sand);
+    border-radius: 10px;
+    padding: 14px 12px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--ink);
+    line-height: 1.4;
+  }
+  .quiz-option:hover { border-color: var(--gold); background: var(--mist); }
+  .quiz-option.correct { border-color: var(--olive); background: rgba(90,110,60,0.15); color: var(--olive); font-weight: 700; }
+  .quiz-option.wrong { border-color: #e05050; background: rgba(224,80,80,0.12); color: #c03030; }
+
+  .quiz-feedback {
+    text-align: center;
+    font-size: 0.95rem;
+    min-height: 24px;
+    margin: 8px 0 14px;
+    font-weight: 600;
+  }
+  .quiz-feedback.good { color: var(--olive); }
+  .quiz-feedback.bad { color: #c03030; }
+
+  .quiz-progress {
+    background: var(--sand);
+    height: 6px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .quiz-progress-bar {
+    background: var(--terracotta);
+    height: 100%;
+    transition: width 0.3s;
+  }
+  .quiz-counter {
+    text-align: center;
+    font-size: 0.78rem;
+    color: #8a7060;
+    margin-bottom: 16px;
+    letter-spacing: 0.04em;
+  }
+  .dots { display: flex; gap: 4px; justify-content: center; margin-bottom: 14px; flex-wrap: wrap; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--sand); }
+  .dot.active { background: var(--terracotta); }
+  .dot.done { background: var(--olive); }
+
+  /* FILL */
+  .fill-card {
+    background: white;
+    border-radius: 16px;
+    padding: 28px 22px;
+    border: 1.5px solid var(--sand);
+    box-shadow: 0 4px 16px var(--shadow);
+    margin-bottom: 18px;
+  }
+  .fill-situation {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    line-height: 1.5;
+    color: var(--ink);
+    margin-bottom: 8px;
+    text-align: center;
+  }
+  .fill-translation {
+    font-size: 0.82rem;
+    color: #8a7060;
+    font-style: italic;
+    text-align: center;
+    margin-bottom: 18px;
+    line-height: 1.5;
+  }
+  .fill-input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid var(--sand);
+    border-radius: 10px;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--terracotta);
+    text-align: center;
+    background: var(--mist);
+    transition: all 0.2s;
+  }
+  .fill-input:focus { outline: none; border-color: var(--gold); background: white; }
+  .fill-input.correct { border-color: var(--olive); background: rgba(90,110,60,0.08); color: var(--olive); }
+  .fill-input.wrong { border-color: #e05050; background: rgba(224,80,80,0.08); }
+
+  .fill-feedback {
+    text-align: center;
+    font-size: 0.95rem;
+    min-height: 24px;
+    margin-top: 12px;
+    font-weight: 600;
+  }
+  .fill-feedback.good { color: var(--olive); }
+  .fill-feedback.bad { color: #c03030; }
+
+  .result-screen {
+    text-align: center;
+    background: white;
+    border-radius: 16px;
+    padding: 40px 24px;
+    border: 1.5px solid var(--sand);
+    box-shadow: 0 4px 16px var(--shadow);
+  }
+  .result-emoji { font-size: 3.5rem; margin-bottom: 8px; }
+  .result-score {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    color: var(--terracotta);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .result-sub { color: #8a7060; font-size: 0.95rem; margin-bottom: 20px; }
+
+  .hidden { display: none !important; }
+
+  @media (max-width: 480px) {
+    .quiz-options { grid-template-columns: 1fr; }
+    .quiz-word { font-size: 1.5rem; }
+    .cards-grid { grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); }
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <div class="flag">🇮🇹</div>
+    <h1>Lezione 8</h1>
+    <div class="sub">Da scoprire</div>
+    <p><span id="totalCount">122</span> слов · природа, история, путешествия, погода</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="cards" onclick="switchTab('cards')">📇 Карточки</button>
+    <button class="tab-btn" data-tab="match" onclick="switchTab('match')">🎴 Найди пару</button>
+    <button class="tab-btn" data-tab="quiz" onclick="switchTab('quiz')">🎯 Тест</button>
+    <button class="tab-btn" data-tab="fill" onclick="switchTab('fill')">✍️ Впиши слово</button>
+  </div>
+
+  <div id="section-cards" class="section active">
+    <div class="hint-box">
+      <b>Нажимай на карточку, чтобы открыть новое:</b><br>
+      1) слово → 2) определение и пример на итальянском → 3) перевод
+    </div>
+    <div class="cat-filter" id="cat-filter"></div>
+    <div id="cards-container"></div>
+    <div class="btn-row" style="margin-top:28px;">
+      <button class="btn secondary" onclick="resetAllCards()">↺ Сбросить все карточки</button>
+    </div>
+  </div>
+
+  <div id="section-match" class="section">
+    <div class="game-header">
+      <h2>Найди пару</h2>
+      <p>Сопоставьте итальянское слово с переводом</p>
+    </div>
+    <div class="score-bar">
+      <div>
+        <div class="score-label">Найдено пар</div>
+        <div><span class="score-num" id="match-score">0</span> <span style="color:#8a7060;">/ <span id="match-total">10</span></span></div>
+      </div>
+      <div>
+        <div class="score-label">Ошибок</div>
+        <div class="score-num" id="match-errors">0</div>
+      </div>
+    </div>
+    <div class="match-board" id="match-board"></div>
+    <div id="match-result" class="result-screen hidden">
+      <div class="result-emoji" id="match-emoji">🎉</div>
+      <div class="result-score" id="match-final">10/10</div>
+      <div class="result-sub" id="match-sub">Все пары найдены!</div>
+      <button class="btn" onclick="initMatch()">Играть снова</button>
+    </div>
+    <div class="btn-row">
+      <button class="btn secondary" onclick="initMatch()">🔄 Новая партия</button>
+    </div>
+  </div>
+
+  <div id="section-quiz" class="section">
+    <div class="game-header">
+      <h2>Тест</h2>
+      <p>Выберите правильный перевод (20 вопросов)</p>
+    </div>
+    <div id="quiz-play">
+      <div class="dots" id="quiz-dots"></div>
+      <div class="quiz-progress"><div class="quiz-progress-bar" id="quiz-bar" style="width:0%"></div></div>
+      <div class="quiz-counter" id="quiz-counter">Вопрос 1</div>
+      <div class="quiz-card">
+        <div class="quiz-dir" id="quiz-dir"></div>
+        <div class="quiz-word" id="quiz-word"></div>
+      </div>
+      <div class="quiz-options" id="quiz-options"></div>
+      <div class="quiz-feedback" id="quiz-feedback"></div>
+      <div class="btn-row">
+        <button class="btn" id="quiz-next-btn" onclick="nextQuiz()" style="display:none;">Дальше →</button>
+      </div>
+    </div>
+    <div id="quiz-result" class="result-screen hidden">
+      <div class="result-emoji" id="quiz-emoji">🏆</div>
+      <div class="result-score" id="quiz-final-score">20/20</div>
+      <div class="result-sub" id="quiz-final-sub"></div>
+      <div class="btn-row">
+        <button class="btn" onclick="initQuiz(false)">Играть снова</button>
+        <button class="btn secondary" id="quiz-mistakes-btn" onclick="initQuiz(true)" style="display:none;">Только ошибки</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="section-fill" class="section">
+    <div class="game-header">
+      <h2>Впиши пропущенное слово</h2>
+      <p>Прочитайте предложение и впишите итальянское слово</p>
+    </div>
+    <div id="fill-play">
+      <div class="quiz-progress"><div class="quiz-progress-bar" id="fill-bar" style="width:0%"></div></div>
+      <div class="quiz-counter" id="fill-counter">Задание 1</div>
+      <div class="fill-card">
+        <div class="fill-situation" id="fill-situation"></div>
+        <div class="fill-translation" id="fill-translation"></div>
+        <input type="text" class="fill-input" id="fill-input" placeholder="введите слово..." autocomplete="off" onkeydown="if(event.key==='Enter') checkFill()">
+        <div class="fill-feedback" id="fill-feedback"></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn" id="fill-check" onclick="checkFill()">Проверить</button>
+        <button class="btn secondary" id="fill-skip" onclick="skipFill()">Подсказать</button>
+        <button class="btn" id="fill-next" onclick="nextFill()" style="display:none;">Дальше →</button>
+      </div>
+    </div>
+    <div id="fill-result" class="result-screen hidden">
+      <div class="result-emoji" id="fill-emoji">🌟</div>
+      <div class="result-score" id="fill-final-score">15/15</div>
+      <div class="result-sub" id="fill-final-sub"></div>
+      <button class="btn" onclick="initFill()">Играть снова</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const vocab = [
+  // NATURA
+  {it:"vulcano", ru:"вулкан", cat:"natura", def:"Una montagna che può eruttare fuoco e lava.", ex:"L'Etna è un vulcano famoso in Sicilia.", img:"volcano"},
+  {it:"magma", ru:"магма", cat:"natura", def:"Il materiale caldo e liquido dentro il vulcano.", ex:"Il magma esce dal vulcano.", img:"lava"},
+  {it:"colata", ru:"поток (лавы)", cat:"natura", def:"Un fiume di lava che scende dal vulcano.", ex:"La colata di lava è arrivata al mare.", img:""},
+  {it:"fiume", ru:"река", cat:"natura", def:"L'acqua che scorre dalla montagna al mare.", ex:"Il Po è il fiume più lungo d'Italia.", img:"river"},
+  {it:"montagna", ru:"гора", cat:"natura", def:"Una terra molto alta e grande.", ex:"D'inverno andiamo in montagna a sciare.", img:"mountain"},
+  {it:"monte", ru:"гора (в названиях)", cat:"natura", def:"Sinonimo di montagna, si usa nei nomi geografici.", ex:"Il Monte Bianco è molto alto.", img:"mountain-peak"},
+  {it:"picco", ru:"пик, вершина", cat:"natura", def:"La cima più alta di una montagna.", ex:"Abbiamo raggiunto il picco della montagna.", img:"mountain-peak"},
+  {it:"grotta", ru:"пещера", cat:"natura", def:"Un grande spazio vuoto dentro una montagna o sotto terra.", ex:"Abbiamo visitato una grotta bellissima.", img:"cave"},
+  {it:"stalattite", ru:"сталактит (сверху)", cat:"natura", def:"Una formazione di pietra che scende dal soffitto di una grotta.", ex:"Le stalattiti scendono dall'alto.", img:""},
+  {it:"stalagmite", ru:"сталагмит (снизу)", cat:"natura", def:"Una formazione di pietra che sale dal pavimento di una grotta.", ex:"Le stalagmiti salgono dal basso.", img:""},
+  {it:"formazione", ru:"формация, образование", cat:"natura", def:"Un gruppo di rocce o cose naturali insieme.", ex:"Nella grotta ci sono formazioni antiche.", img:""},
+  {it:"sasso", ru:"камень", cat:"natura", def:"Una pietra piccola o media.", ex:"Ho preso un sasso dal fiume.", img:"stone-rock"},
+  {it:"ghiaccio", ru:"лёд", cat:"natura", def:"Acqua molto fredda diventata solida.", ex:"D'inverno c'è ghiaccio sulle strade.", img:"ice"},
+  {it:"sorgente", ru:"источник (воды)", cat:"natura", def:"Il posto dove nasce l'acqua di un fiume.", ex:"La sorgente del fiume è in montagna.", img:"water-spring"},
+  {it:"stella", ru:"звезда", cat:"natura", def:"Un punto luminoso nel cielo di notte.", ex:"Le stelle sono lontane.", img:"star-night-sky"},
+  {it:"gola", ru:"ущелье; горло", cat:"natura", def:"Un passaggio stretto tra due montagne.", ex:"Il fiume passa in una gola profonda.", img:""},
+  {it:"selvaggio", ru:"дикий", cat:"natura", def:"Che non è toccato dall'uomo, naturale.", ex:"Amo la natura selvaggia della foresta.", img:""},
+  {it:"ambiente", ru:"среда, окружение", cat:"natura", def:"La natura e tutto quello che ci sta intorno.", ex:"Dobbiamo proteggere l'ambiente.", img:"earth-nature"},
+
+  // STORIA E ARCHEOLOGIA
+  {it:"capolavoro", ru:"шедевр", cat:"storia", def:"Un'opera molto bella e importante di un artista.", ex:"La Gioconda è un capolavoro di Leonardo.", img:"painting-art"},
+  {it:"piramide", ru:"пирамида", cat:"storia", def:"Un monumento antico con quattro lati e una punta.", ex:"Le piramidi egizie sono antichissime.", img:"pyramid-egypt"},
+  {it:"egizio", ru:"египетский", cat:"storia", def:"Che viene dall'Egitto o dall'antico Egitto.", ex:"Il museo egizio di Torino è famoso.", img:""},
+  {it:"archeologico", ru:"археологический", cat:"storia", def:"Che riguarda lo studio delle cose antiche.", ex:"Pompei è un sito archeologico importante.", img:""},
+  {it:"sito", ru:"место, объект", cat:"storia", def:"Un posto importante da visitare o studiare.", ex:"Questo sito è patrimonio dell'UNESCO.", img:""},
+  {it:"tempio", ru:"храм", cat:"storia", def:"Un edificio antico dedicato agli dei.", ex:"I Greci costruivano templi bellissimi.", img:"temple-column"},
+  {it:"secolo", ru:"век, столетие", cat:"storia", def:"Un periodo di cento anni.", ex:"Il Colosseo è del primo secolo.", img:""},
+  {it:"borgo", ru:"деревня, посёлок", cat:"storia", def:"Un piccolo paese antico.", ex:"In Toscana ci sono borghi medievali molto belli.", img:"italian-village"},
+  {it:"reggia", ru:"королевский дворец", cat:"storia", def:"Il grande palazzo dove abitava il re.", ex:"La Reggia di Caserta è enorme.", img:"royal-palace"},
+  {it:"residenza", ru:"резиденция", cat:"storia", def:"La casa dove abita una persona importante.", ex:"Questa era la residenza dei duchi.", img:""},
+  {it:"architettura", ru:"архитектура", cat:"storia", def:"L'arte di costruire edifici.", ex:"L'architettura italiana è famosa nel mondo.", img:"temple-column"},
+  {it:"preistoria", ru:"доисторическая эпоха", cat:"storia", def:"Il tempo prima della storia scritta.", ex:"I dinosauri vivevano nella preistoria.", img:"dinosaur"},
+  {it:"storico", ru:"исторический", cat:"storia", def:"Che riguarda la storia, del passato.", ex:"Il centro storico di Roma è meraviglioso.", img:""},
+  {it:"passato", ru:"прошлое", cat:"storia", def:"Il tempo che è già finito.", ex:"Nel passato non c'erano i telefoni.", img:""},
+  {it:"medioevale", ru:"средневековый", cat:"storia", def:"Del Medioevo, tra il 500 e il 1500 dopo Cristo.", ex:"Il castello medioevale è ancora in piedi.", img:"medieval-castle"},
+  {it:"etrusco", ru:"этрусский", cat:"storia", def:"Popolo antico dell'Italia centrale prima dei Romani.", ex:"Gli Etruschi vivevano in Toscana.", img:""},
+  {it:"mummia", ru:"мумия", cat:"storia", def:"Un corpo antico conservato, come nell'antico Egitto.", ex:"Nel museo c'è una mummia egizia.", img:"egyptian-mummy"},
+  {it:"corpo", ru:"тело", cat:"storia", def:"Tutte le parti fisiche di una persona o animale.", ex:"Il corpo umano è complesso.", img:"human-body"},
+
+  // AGGETTIVI
+  {it:"sconosciuto", ru:"неизвестный", cat:"agg", def:"Che non si conosce.", ex:"Ha ricevuto una lettera da uno sconosciuto.", img:"mystery"},
+  {it:"profondo", ru:"глубокий", cat:"agg", def:"Che va molto in basso o dentro.", ex:"Il lago è molto profondo.", img:""},
+  {it:"spettacolare", ru:"впечатляющий, эффектный", cat:"agg", def:"Molto bello da vedere.", ex:"Il tramonto era spettacolare.", img:""},
+  {it:"incredibile", ru:"невероятный", cat:"agg", def:"Così bello o strano che sembra impossibile.", ex:"Questa storia è incredibile!", img:""},
+  {it:"eccellente", ru:"отличный", cat:"agg", def:"Molto molto buono.", ex:"Il tuo lavoro è eccellente.", img:""},
+  {it:"celebre", ru:"знаменитый", cat:"agg", def:"Conosciuto da tutti, famoso.", ex:"Firenze è celebre per l'arte.", img:""},
+  {it:"unico", ru:"уникальный, единственный", cat:"agg", def:"Solo uno, senza altri uguali.", ex:"Venezia è una città unica.", img:""},
+  {it:"straordinario", ru:"необыкновенный", cat:"agg", def:"Fuori dal normale, molto speciale.", ex:"Ha una voce straordinaria.", img:""},
+  {it:"significativo", ru:"значимый, важный", cat:"agg", def:"Che ha molta importanza.", ex:"Questo è un momento significativo.", img:""},
+  {it:"sotterraneo", ru:"подземный", cat:"agg", def:"Che sta sotto la terra.", ex:"Roma ha molti passaggi sotterranei.", img:""},
+  {it:"intenso", ru:"интенсивный, насыщенный", cat:"agg", def:"Forte, con molta energia.", ex:"Ho avuto una giornata intensa.", img:""},
+  {it:"impressionante", ru:"впечатляющий", cat:"agg", def:"Che colpisce, che fa una grande impressione.", ex:"La vista dalla montagna è impressionante.", img:""},
+  {it:"stanco", ru:"уставший", cat:"agg", def:"Che non ha più energia, che vuole riposare.", ex:"Dopo il lavoro sono molto stanco.", img:"tired-sleep"},
+  {it:"felice", ru:"счастливый", cat:"agg", def:"Contento, di buon umore.", ex:"Sono felice di vederti!", img:"happy-smile"},
+  {it:"freddo", ru:"холодный", cat:"agg", def:"Contrario di caldo.", ex:"Fa freddo, metti il maglione.", img:"cold-winter"},
+  {it:"fresco", ru:"прохладный; свежий", cat:"agg", def:"Poco freddo, piacevole; anche appena fatto.", ex:"L'aria di montagna è fresca.", img:""},
+  {it:"fantastico", ru:"фантастический, чудесный", cat:"agg", def:"Bellissimo, meraviglioso.", ex:"È stata una vacanza fantastica.", img:""},
+  {it:"breve", ru:"короткий (по времени)", cat:"agg", def:"Che dura poco tempo.", ex:"Faccio una breve pausa.", img:""},
+  {it:"costante", ru:"постоянный", cat:"agg", def:"Che non cambia, sempre uguale.", ex:"Ha una temperatura costante di 20 gradi.", img:""},
+
+  // VERBI
+  {it:"creare", ru:"создавать", cat:"verbi", def:"Fare qualcosa di nuovo.", ex:"L'artista crea opere d'arte.", img:""},
+  {it:"ritrovare", ru:"находить снова", cat:"verbi", def:"Trovare di nuovo una cosa persa.", ex:"Ho ritrovato le chiavi in tasca.", img:"search"},
+  {it:"conservare", ru:"сохранять, беречь", cat:"verbi", def:"Tenere qualcosa in buono stato.", ex:"Il museo conserva opere antiche.", img:""},
+  {it:"immergersi", ru:"погружаться, окунаться", cat:"verbi", def:"Entrare nell'acqua con tutto il corpo.", ex:"Mi piace immergermi nelle terme.", img:"diving"},
+  {it:"regalare", ru:"дарить", cat:"verbi", def:"Dare una cosa a qualcuno come regalo.", ex:"Le ho regalato dei fiori.", img:"gift-present"},
+  {it:"proteggere", ru:"защищать", cat:"verbi", def:"Difendere qualcuno o qualcosa dal pericolo.", ex:"Dobbiamo proteggere gli animali.", img:"shield"},
+  {it:"apprezzare", ru:"ценить, любить", cat:"verbi", def:"Trovare buono o bello qualcosa.", ex:"Apprezzo molto il tuo aiuto.", img:""},
+  {it:"conoscere", ru:"знать, знакомиться", cat:"verbi", def:"Sapere una persona, un posto o una cosa.", ex:"Conosco Roma molto bene.", img:""},
+  {it:"rimanere", ru:"оставаться", cat:"verbi", def:"Stare in un posto, non andare via.", ex:"Rimango a casa stasera.", img:""},
+  {it:"mettere in ordine", ru:"наводить порядок", cat:"verbi", def:"Sistemare le cose al loro posto.", ex:"Devo mettere in ordine la camera.", img:""},
+  {it:"sciare", ru:"кататься на лыжах", cat:"verbi", def:"Andare sulla neve con gli sci.", ex:"D'inverno vado a sciare sulle Alpi.", img:"skiing"},
+  {it:"salire", ru:"подниматься", cat:"verbi", def:"Andare verso l'alto.", ex:"Saliamo sulla montagna.", img:""},
+  {it:"montare", ru:"собирать, устанавливать", cat:"verbi", def:"Costruire o mettere insieme qualcosa.", ex:"Dobbiamo montare la tenda.", img:""},
+  {it:"affittare", ru:"снимать (арендовать)", cat:"verbi", def:"Pagare per usare una casa o un oggetto.", ex:"Ho affittato un appartamento al mare.", img:""},
+  {it:"assicurare", ru:"уверять; страховать", cat:"verbi", def:"Dire con sicurezza che una cosa è vera.", ex:"Ti assicuro che è vero!", img:""},
+  {it:"parlare al telefono", ru:"говорить по телефону", cat:"verbi", def:"Comunicare a distanza usando il telefono.", ex:"Ieri ho parlato al telefono con mia madre.", img:"phone-call"},
+  {it:"fare fotografie", ru:"фотографировать", cat:"verbi", def:"Scattare foto con la macchina fotografica.", ex:"In vacanza faccio molte fotografie.", img:"camera"},
+
+  // METEO
+  {it:"clima", ru:"климат", cat:"meteo", def:"Il tempo che fa di solito in un posto.", ex:"In Italia il clima è mite.", img:""},
+  {it:"grado", ru:"градус", cat:"meteo", def:"L'unità della temperatura.", ex:"Oggi ci sono 25 gradi.", img:"thermometer"},
+  {it:"temperatura", ru:"температура", cat:"meteo", def:"Quanto fa caldo o freddo.", ex:"La temperatura è di 20 gradi.", img:""},
+  {it:"pioggia", ru:"дождь", cat:"meteo", def:"L'acqua che cade dal cielo.", ex:"Prendi l'ombrello, sta arrivando la pioggia.", img:"rain"},
+  {it:"vento", ru:"ветер", cat:"meteo", def:"L'aria che si muove forte.", ex:"Oggi c'è molto vento.", img:"wind"},
+  {it:"sole", ru:"солнце", cat:"meteo", def:"La stella che ci dà luce e calore di giorno.", ex:"Oggi c'è il sole, andiamo al mare!", img:"sun"},
+  {it:"nuvola", ru:"облако", cat:"meteo", def:"Formazione bianca o grigia nel cielo.", ex:"Il cielo è pieno di nuvole.", img:"cloud"},
+  {it:"ombra", ru:"тень", cat:"meteo", def:"La zona scura dove non arriva il sole.", ex:"D'estate cerco sempre l'ombra.", img:""},
+  {it:"meteo", ru:"прогноз погоды", cat:"meteo", def:"Le informazioni sul tempo.", ex:"Guardo sempre il meteo prima di uscire.", img:"weather"},
+  {it:"previsioni del tempo", ru:"прогноз погоды", cat:"meteo", def:"Quello che dicono su come sarà il tempo.", ex:"Le previsioni dicono che domani piove.", img:""},
+  {it:"temporale", ru:"гроза, буря", cat:"meteo", def:"Pioggia forte con tuoni e lampi.", ex:"C'è stato un forte temporale.", img:"thunderstorm"},
+  {it:"tramonto", ru:"закат", cat:"meteo", def:"Il momento quando il sole scende, la sera.", ex:"Il tramonto sul mare è meraviglioso.", img:"sunset"},
+
+  // VIAGGI
+  {it:"campeggio", ru:"кемпинг", cat:"viaggio", def:"Vacanza dove si dorme in tenda.", ex:"Andiamo in campeggio al lago.", img:"camping-tent"},
+  {it:"surf", ru:"сёрфинг", cat:"viaggio", def:"Sport che si fa sulle onde del mare.", ex:"Faccio surf in estate.", img:"surfing"},
+  {it:"vaporetto", ru:"речной трамвайчик (в Венеции)", cat:"viaggio", def:"Il piccolo battello di Venezia.", ex:"A Venezia si viaggia in vaporetto.", img:"venice-boat"},
+  {it:"funivia", ru:"канатная дорога", cat:"viaggio", def:"Il mezzo che porta le persone in cima alla montagna.", ex:"Prendiamo la funivia per salire.", img:"cable-car"},
+  {it:"giro", ru:"поездка, тур; круг", cat:"viaggio", def:"Un percorso che si fa per vedere posti.", ex:"Facciamo un giro in bici.", img:""},
+  {it:"bingo", ru:"бинго (игра)", cat:"viaggio", def:"Un gioco con i numeri.", ex:"Stasera giochiamo a bingo.", img:""},
+  {it:"ospite", ru:"гость", cat:"viaggio", def:"Una persona invitata a casa di qualcuno.", ex:"Abbiamo ospiti a cena.", img:""},
+  {it:"pensione", ru:"пансион, гостиница", cat:"viaggio", def:"Piccolo hotel a gestione familiare.", ex:"Dormiamo in una pensione al centro.", img:"small-hotel"},
+  {it:"vasca", ru:"ванна, бассейн", cat:"viaggio", def:"Grande recipiente pieno d'acqua.", ex:"La vasca termale è calda.", img:"bathtub"},
+  {it:"termale", ru:"термальный", cat:"viaggio", def:"Dell'acqua calda naturale.", ex:"Andiamo alle terme termali.", img:"hot-spring"},
+  {it:"(essere) vietato", ru:"запрещённый", cat:"viaggio", def:"Che non si può fare per legge.", ex:"È vietato fumare qui.", img:"prohibited-sign"},
+
+  // TEMPO E AVVERBI
+  {it:"ieri", ru:"вчера", cat:"tempo", def:"Il giorno prima di oggi.", ex:"Ieri ho lavorato molto.", img:""},
+  {it:"giornata", ru:"день (в течение дня)", cat:"tempo", def:"Un giorno intero visto dal punto di vista di quello che fai.", ex:"Ho avuto una bella giornata.", img:""},
+  {it:"praticamente", ru:"практически", cat:"tempo", def:"Quasi del tutto, in pratica.", ex:"Praticamente ho finito il lavoro.", img:""},
+  {it:"prima", ru:"раньше, перед этим", cat:"tempo", def:"In un momento precedente.", ex:"Prima ho fatto colazione, poi sono uscito.", img:""},
+  {it:"oltre", ru:"больше, свыше", cat:"tempo", def:"Più di, in aggiunta a.", ex:"Ci sono oltre cento persone qui.", img:""},
+  {it:"stavolta", ru:"на этот раз", cat:"tempo", def:"Questa volta.", ex:"Stavolta pago io!", img:""},
+  {it:"per niente", ru:"совсем нет, вовсе", cat:"tempo", def:"Assolutamente no.", ex:"Non mi piace per niente questo film.", img:""},
+  {it:"troppo", ru:"слишком", cat:"tempo", def:"Più del necessario.", ex:"Ho mangiato troppo!", img:""},
+  {it:"niente di particolare", ru:"ничего особенного", cat:"tempo", def:"Nulla di speciale.", ex:"Cosa hai fatto? — Niente di particolare.", img:""},
+  {it:"tardi", ru:"поздно", cat:"tempo", def:"In ritardo, dopo l'ora giusta.", ex:"È tardi, andiamo a dormire.", img:""},
+  {it:"dopo", ru:"после, потом", cat:"tempo", def:"Il tempo che viene dopo.", ex:"Dopo il lavoro vado in palestra.", img:""},
+  {it:"ogni", ru:"каждый", cat:"tempo", def:"Tutti, uno per uno.", ex:"Vado in palestra ogni lunedì.", img:""},
+  {it:"scorso", ru:"прошлый", cat:"tempo", def:"Che è appena passato.", ex:"La settimana scorsa sono stato a Roma.", img:""},
+  {it:"a lungo", ru:"долго", cat:"tempo", def:"Per molto tempo.", ex:"Abbiamo parlato a lungo.", img:""},
+  {it:"un poco", ru:"немного", cat:"tempo", def:"Una piccola quantità.", ex:"Sono un poco stanco.", img:""},
+  {it:"alla ricerca", ru:"в поисках", cat:"tempo", def:"Cercando qualcosa.", ex:"Vado alla ricerca di un buon ristorante.", img:""},
+  {it:"pomeridiano", ru:"дневной (после полудня)", cat:"tempo", def:"Del pomeriggio.", ex:"Ho una lezione pomeridiana alle tre.", img:""},
+  {it:"quando è stata l'ultima volta che...?", ru:"когда ты последний раз...?", cat:"tempo", def:"Domanda per sapere l'ultima volta di un'azione.", ex:"Quando è stata l'ultima volta che sei andato al cinema?", img:""},
+
+  // ALTRO
+  {it:"da scoprire", ru:"открывать (для себя)", cat:"altro", def:"Trovare qualcosa che non si conosceva.", ex:"C'è tanto da scoprire in Italia.", img:""},
+  {it:"grandiosità", ru:"величие, грандиозность", cat:"altro", def:"La qualità di essere grande e impressionante.", ex:"La grandiosità del Colosseo è unica.", img:""},
+  {it:"spettacolo", ru:"спектакль, зрелище", cat:"altro", def:"Uno show o una scena da guardare.", ex:"Stasera c'è uno spettacolo a teatro.", img:"theater-mask"},
+  {it:"esempio", ru:"пример", cat:"altro", def:"Una cosa che serve a spiegare o mostrare qualcos'altro.", ex:"Ti faccio un esempio.", img:""},
+  {it:"meraviglia", ru:"чудо", cat:"altro", def:"Qualcosa di bellissimo che sorprende.", ex:"Le sette meraviglie del mondo.", img:"sparkle"},
+  {it:"idea", ru:"идея", cat:"altro", def:"Un pensiero, un progetto in mente.", ex:"Ho una buona idea!", img:"lightbulb"},
+  {it:"maglione", ru:"свитер", cat:"altro", def:"Un vestito caldo di lana per il corpo.", ex:"Fa freddo, metti il maglione.", img:"sweater"},
+  {it:"dentro", ru:"внутри", cat:"altro", def:"Nella parte interna.", ex:"Il libro è dentro la borsa.", img:""},
+  {it:"ricordo", ru:"воспоминание, сувенир", cat:"altro", def:"Quello che rimane in mente del passato; anche souvenir.", ex:"Ho un bel ricordo di quel viaggio.", img:""},
+  {it:"uomo", ru:"мужчина; человек", cat:"altro", def:"Persona di sesso maschile; anche l'essere umano.", ex:"Quell'uomo è mio padre.", img:"man-portrait"},
+];
+
+const categories = {
+  natura: "🌋 Природа и вулканы",
+  storia: "🏛️ История и археология",
+  agg: "✨ Прилагательные",
+  verbi: "🎬 Глаголы",
+  meteo: "☀️ Погода и климат",
+  viaggio: "🎒 Путешествия и отдых",
+  tempo: "⏰ Время и наречия",
+  altro: "💭 Разное"
+};
+
+document.getElementById('totalCount').textContent = vocab.length;
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('section-' + name).classList.add('active');
+  if (name === 'match' && !matchInitialized) initMatch();
+  if (name === 'quiz' && !quizInitialized) initQuiz(false);
+  if (name === 'fill' && !fillInitialized) initFill();
+}
+
+// ===== FLASHCARDS with 3-4 state flip =====
+let activeFilter = 'all';
+
+function renderFilters() {
+  const el = document.getElementById('cat-filter');
+  let html = '<div class="cat-chip ' + (activeFilter==='all'?'active':'') + '" onclick="setFilter(\'all\')">Все (' + vocab.length + ')</div>';
+  Object.keys(categories).forEach(cat => {
+    const count = vocab.filter(v => v.cat === cat).length;
+    html += '<div class="cat-chip ' + (activeFilter===cat?'active':'') + '" onclick="setFilter(\'' + cat + '\')">' + categories[cat] + ' (' + count + ')</div>';
+  });
+  el.innerHTML = html;
+}
+
+function setFilter(cat) {
+  activeFilter = cat;
+  renderFilters();
+  renderCards();
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function renderCards() {
+  const container = document.getElementById('cards-container');
+  let html = '';
+  const cats = activeFilter === 'all' ? Object.keys(categories) : [activeFilter];
+  cats.forEach(cat => {
+    const items = vocab.filter(v => v.cat === cat);
+    if (!items.length) return;
+    html += '<div class="category-label">' + categories[cat] + '</div>';
+    html += '<div class="cards-grid">';
+    items.forEach(v => {
+      const hasImg = false;
+      const totalStates = hasImg ? 4 : 3;
+      let dotsHtml = '';
+      for (let i = 0; i < totalStates; i++) dotsHtml += '<span class="state-dot"></span>';
+      html += '<div class="card" data-state="0" data-has-img="' + hasImg + '" onclick="advanceCard(this)">' +
+        '<div class="face face-front">' +
+          '<div class="it">' + escapeHtml(v.it) + '</div>' +
+          '<div class="hint-txt">нажми →</div>' +
+        '</div>' +
+        '<div class="face face-def">' +
+          '<div class="label">Definizione</div>' +
+          '<div class="def-txt">' + escapeHtml(v.def) + '</div>' +
+          '<div class="ex-txt">' + escapeHtml(v.ex) + '</div>' +
+        '</div>' +
+        (hasImg ? '<div class="face face-img">' +
+          '<div class="img-wrap"><img src="https://loremflickr.com/320/200/' + encodeURIComponent(v.img) + '?lock=' + (v.it.charCodeAt(0)*100 + v.it.length) + '" alt="' + escapeHtml(v.it) + '" loading="lazy" onerror="this.parentElement.classList.add(&quot;img-fail&quot;)"></div>' +
+          '<div class="cap">' + escapeHtml(v.it) + '</div>' +
+        '</div>' : '') +
+        '<div class="face face-tr">' +
+          '<div class="label">Перевод</div>' +
+          '<div class="ru-txt">' + escapeHtml(v.ru) + '</div>' +
+          '<div class="it-small">' + escapeHtml(v.it) + '</div>' +
+        '</div>' +
+        '<div class="card-state">' + dotsHtml + '</div>' +
+        '</div>';
+    });
+    html += '</div>';
+  });
+  container.innerHTML = html;
+}
+
+function advanceCard(el) {
+  const hasImg = el.dataset.hasImg === "true";
+  const max = hasImg ? 3 : 2;
+  let cur = parseInt(el.dataset.state);
+  cur = (cur + 1) > max ? 0 : cur + 1;
+  el.dataset.state = cur;
+}
+
+function resetAllCards() {
+  document.querySelectorAll('.card').forEach(c => c.dataset.state = "0");
+}
+
+// ===== MATCH =====
+let matchInitialized = false;
+let matchSelected = null;
+let matchScore = 0;
+let matchErrors = 0;
+const MATCH_PAIRS = 10;
+
+function initMatch() {
+  matchInitialized = true;
+  matchScore = 0; matchErrors = 0;
+  matchSelected = null;
+  document.getElementById('match-score').textContent = 0;
+  document.getElementById('match-errors').textContent = 0;
+  document.getElementById('match-total').textContent = MATCH_PAIRS;
+  document.getElementById('match-result').classList.add('hidden');
+
+  const picks = shuffle(vocab).slice(0, MATCH_PAIRS);
+  const board = document.getElementById('match-board');
+  board.innerHTML = '';
+
+  const leftCol = document.createElement('div'); leftCol.className = 'match-col';
+  const rightCol = document.createElement('div'); rightCol.className = 'match-col';
+
+  const itShuffled = shuffle(picks);
+  const ruShuffled = shuffle(picks);
+
+  itShuffled.forEach(v => {
+    const el = document.createElement('div');
+    el.className = 'match-item it-word';
+    el.dataset.key = v.it;
+    el.dataset.side = 'it';
+    el.textContent = v.it;
+    el.onclick = () => handleMatch(el);
+    leftCol.appendChild(el);
+  });
+  ruShuffled.forEach(v => {
+    const el = document.createElement('div');
+    el.className = 'match-item ru-word';
+    el.dataset.key = v.it;
+    el.dataset.side = 'ru';
+    el.textContent = v.ru;
+    el.onclick = () => handleMatch(el);
+    rightCol.appendChild(el);
+  });
+
+  board.appendChild(leftCol);
+  board.appendChild(rightCol);
+}
+
+function handleMatch(el) {
+  if (el.classList.contains('matched') || el.classList.contains('wrong')) return;
+
+  if (!matchSelected) {
+    document.querySelectorAll('.match-item').forEach(e => e.classList.remove('selected'));
+    el.classList.add('selected');
+    matchSelected = el;
+    return;
+  }
+
+  if (el === matchSelected) { el.classList.remove('selected'); matchSelected = null; return; }
+
+  if (el.dataset.side === matchSelected.dataset.side) {
+    document.querySelectorAll('.match-item').forEach(e => e.classList.remove('selected'));
+    el.classList.add('selected');
+    matchSelected = el;
+    return;
+  }
+
+  if (el.dataset.key === matchSelected.dataset.key) {
+    el.classList.add('matched'); matchSelected.classList.add('matched');
+    el.classList.remove('selected'); matchSelected.classList.remove('selected');
+    matchScore++;
+    document.getElementById('match-score').textContent = matchScore;
+    matchSelected = null;
+    if (matchScore === MATCH_PAIRS) {
+      setTimeout(() => {
+        const r = document.getElementById('match-result');
+        r.classList.remove('hidden');
+        document.getElementById('match-final').textContent = matchScore + '/' + MATCH_PAIRS;
+        document.getElementById('match-sub').textContent = matchErrors === 0 ? 'Без ошибок! Превосходно!' : 'Ошибок: ' + matchErrors;
+        document.getElementById('match-emoji').textContent = matchErrors === 0 ? '🏆' : matchErrors <= 3 ? '🎉' : '👍';
+      }, 500);
+    }
+  } else {
+    el.classList.add('wrong'); matchSelected.classList.add('wrong');
+    matchErrors++;
+    document.getElementById('match-errors').textContent = matchErrors;
+    const a = el, b = matchSelected;
+    matchSelected = null;
+    setTimeout(() => { a.classList.remove('wrong','selected'); b.classList.remove('wrong','selected'); }, 700);
+  }
+}
+
+// ===== QUIZ =====
+let quizInitialized = false;
+let quizItems = [], quizIdx = 0, quizCorrect = 0, quizAnswered = false;
+let quizMistakes = [];
+const QUIZ_LEN = 20;
+
+function initQuiz(onlyErrors) {
+  quizInitialized = true;
+  document.getElementById('quiz-result').classList.add('hidden');
+  document.getElementById('quiz-play').classList.remove('hidden');
+  const source = onlyErrors && quizMistakes.length ? quizMistakes : vocab;
+  quizItems = shuffle(source).slice(0, Math.min(QUIZ_LEN, source.length));
+  quizMistakes = [];
+  quizIdx = 0; quizCorrect = 0;
+  renderDots();
+  showQuiz();
+}
+
+function renderDots() {
+  const el = document.getElementById('quiz-dots');
+  let html = '';
+  for (let i = 0; i < quizItems.length; i++) {
+    html += '<div class="dot ' + (i===0?'active':'') + '"></div>';
+  }
+  el.innerHTML = html;
+}
+
+function showQuiz() {
+  if (quizIdx >= quizItems.length) { endQuiz(); return; }
+  const v = quizItems[quizIdx];
+  quizAnswered = false;
+  const dir = Math.random() > 0.5;
+  document.getElementById('quiz-dir').textContent = dir ? 'Italiano → Русский' : 'Русский → Italiano';
+  document.getElementById('quiz-word').textContent = dir ? v.it : v.ru;
+  document.getElementById('quiz-feedback').textContent = '';
+  document.getElementById('quiz-feedback').className = 'quiz-feedback';
+  document.getElementById('quiz-next-btn').style.display = 'none';
+  document.getElementById('quiz-counter').textContent = 'Вопрос ' + (quizIdx+1) + ' из ' + quizItems.length;
+  document.getElementById('quiz-bar').style.width = (quizIdx/quizItems.length*100)+'%';
+
+  document.querySelectorAll('.dot').forEach((d,i) => {
+    d.className = 'dot' + (i<quizIdx?' done':i===quizIdx?' active':'');
+  });
+
+  const wrong = shuffle(vocab.filter(x=>x.it!==v.it)).slice(0,3);
+  const opts = shuffle([v].concat(wrong));
+  const optEl = document.getElementById('quiz-options');
+  optEl.innerHTML = '';
+  opts.forEach(o => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-option';
+    btn.textContent = dir ? o.ru : o.it;
+    btn.onclick = function() {
+      if (quizAnswered) return;
+      quizAnswered = true;
+      const correct = o.it === v.it;
+      btn.classList.add(correct ? 'correct' : 'wrong');
+      if (!correct) {
+        quizMistakes.push(v);
+        optEl.querySelectorAll('button').forEach(b => {
+          if (b.textContent === (dir?v.ru:v.it)) b.classList.add('correct');
+        });
+        document.getElementById('quiz-feedback').textContent = 'Правильно: ' + (dir?v.ru:v.it);
+        document.getElementById('quiz-feedback').className = 'quiz-feedback bad';
+      } else {
+        quizCorrect++;
+        document.getElementById('quiz-feedback').textContent = '✓ Verto!';
+        document.getElementById('quiz-feedback').className = 'quiz-feedback good';
+      }
+      document.getElementById('quiz-next-btn').style.display = 'inline-block';
+    };
+    optEl.appendChild(btn);
+  });
+}
+
+function nextQuiz() { quizIdx++; showQuiz(); }
+
+function endQuiz() {
+  document.getElementById('quiz-play').classList.add('hidden');
+  document.getElementById('quiz-result').classList.remove('hidden');
+  const pct = Math.round(quizCorrect/quizItems.length*100);
+  document.getElementById('quiz-final-score').textContent = quizCorrect + '/' + quizItems.length;
+  document.getElementById('quiz-final-sub').textContent = pct + '% правильных ответов';
+  document.getElementById('quiz-emoji').textContent = pct>=80?'🏆':pct>=50?'👍':'📖';
+  document.getElementById('quiz-mistakes-btn').style.display = quizMistakes.length ? 'inline-block' : 'none';
+}
+
+// ===== FILL =====
+const fillTasks = [
+  { situation: "L'Etna è un ___ molto famoso in Sicilia.", translation: "Этна — очень известный вулкан в Сицилии.", answer: "vulcano" },
+  { situation: "Il Po è il ___ più lungo d'Italia.", translation: "По — самая длинная река в Италии.", answer: "fiume" },
+  { situation: "D'inverno andiamo in ___ a sciare.", translation: "Зимой мы ездим в горы кататься на лыжах.", answer: "montagna" },
+  { situation: "Abbiamo visitato una ___ con stalattiti bellissime.", translation: "Мы посетили пещеру с красивыми сталактитами.", answer: "grotta" },
+  { situation: "Le ___ egizie sono antichissime.", translation: "Египетские пирамиды очень древние.", answer: "piramidi" },
+  { situation: "Pompei è un famoso sito ___ .", translation: "Помпеи — знаменитый археологический объект.", answer: "archeologico" },
+  { situation: "La ___ di Caserta era la casa dei re.", translation: "Дворец Казерты был домом королей.", answer: "reggia" },
+  { situation: "Nel museo egizio c'è una ___ molto antica.", translation: "В египетском музее есть очень древняя мумия.", answer: "mummia" },
+  { situation: "Un ___ è un periodo di cento anni.", translation: "Век — это период в сто лет.", answer: "secolo" },
+  { situation: "Il centro ___ di Roma è meraviglioso.", translation: "Исторический центр Рима великолепен.", answer: "storico" },
+  { situation: "Dopo il lavoro sono molto ___ .", translation: "После работы я очень устал.", answer: "stanco" },
+  { situation: "Sono ___ di vederti!", translation: "Я счастлив тебя видеть!", answer: "felice" },
+  { situation: "Fa ___ , metti il maglione.", translation: "Холодно, надень свитер.", answer: "freddo" },
+  { situation: "Il ___ sul mare è spettacolare.", translation: "Закат на море впечатляющий.", answer: "tramonto" },
+  { situation: "Prendi l'ombrello, sta arrivando la ___ .", translation: "Возьми зонт, идёт дождь.", answer: "pioggia" },
+  { situation: "Oggi c'è il ___ , andiamo al mare!", translation: "Сегодня солнце, поедем на море!", answer: "sole" },
+  { situation: "Oggi c'è molto ___ , è difficile camminare.", translation: "Сегодня очень ветрено, тяжело идти.", answer: "vento" },
+  { situation: "Guardo le ___ del tempo prima di uscire.", translation: "Смотрю прогноз погоды перед выходом.", answer: "previsioni" },
+  { situation: "Andiamo in ___ al lago questo weekend.", translation: "В эти выходные поедем в кемпинг на озеро.", answer: "campeggio" },
+  { situation: "A Venezia si viaggia in ___ .", translation: "В Венеции ездят на речном трамвайчике.", answer: "vaporetto" },
+  { situation: "Per salire sulla montagna prendiamo la ___ .", translation: "Чтобы подняться на гору, мы едем на канатке.", answer: "funivia" },
+  { situation: "Dormiamo in una ___ familiare al centro.", translation: "Мы ночуем в семейном пансионе в центре.", answer: "pensione" },
+  { situation: "___ ho lavorato tutto il giorno.", translation: "Вчера я работал весь день.", answer: "ieri" },
+  { situation: "La settimana ___ sono stato a Roma.", translation: "На прошлой неделе я был в Риме.", answer: "scorsa" },
+  { situation: "Vado in palestra ___ lunedì.", translation: "Я хожу в спортзал каждый понедельник.", answer: "ogni" },
+  { situation: "___ mangio la pizza, poi vado a dormire.", translation: "Потом ем пиццу, потом иду спать.", answer: "dopo" },
+  { situation: "È ___ , andiamo a casa.", translation: "Поздно, пойдём домой.", answer: "tardi" },
+  { situation: "Il Colosseo è un ___ dell'arte romana.", translation: "Колизей — шедевр римского искусства.", answer: "capolavoro" },
+  { situation: "Abbiamo una ___ , andiamo in vacanza!", translation: "У нас есть идея — поедем в отпуск!", answer: "idea" },
+  { situation: "Fa freddo, metto il ___ di lana.", translation: "Холодно, надену шерстяной свитер.", answer: "maglione" },
+];
+
+let fillInitialized = false;
+let fillIdx = 0, fillCorrect = 0, fillItems = [];
+const FILL_LEN = 15;
+
+function initFill() {
+  fillInitialized = true;
+  fillItems = shuffle(fillTasks).slice(0, FILL_LEN);
+  fillIdx = 0; fillCorrect = 0;
+  document.getElementById('fill-result').classList.add('hidden');
+  document.getElementById('fill-play').classList.remove('hidden');
+  showFill();
+}
+
+function showFill() {
+  if (fillIdx >= fillItems.length) { endFill(); return; }
+  const t = fillItems[fillIdx];
+  document.getElementById('fill-situation').textContent = t.situation;
+  document.getElementById('fill-translation').textContent = t.translation;
+  document.getElementById('fill-input').value = '';
+  document.getElementById('fill-input').className = 'fill-input';
+  document.getElementById('fill-input').disabled = false;
+  document.getElementById('fill-feedback').textContent = '';
+  document.getElementById('fill-feedback').className = 'fill-feedback';
+  document.getElementById('fill-counter').textContent = 'Задание ' + (fillIdx+1) + ' из ' + fillItems.length;
+  document.getElementById('fill-bar').style.width = (fillIdx/fillItems.length*100)+'%';
+  document.getElementById('fill-check').style.display = 'inline-block';
+  document.getElementById('fill-skip').style.display = 'inline-block';
+  document.getElementById('fill-next').style.display = 'none';
+  setTimeout(() => document.getElementById('fill-input').focus(), 100);
+}
+
+function normalize(s) {
+  return s.toLowerCase().trim().replace(/[!?\.,;:]/g,'').replace(/\s+/g,' ');
+}
+
+function checkFill() {
+  const t = fillItems[fillIdx];
+  const val = document.getElementById('fill-input').value;
+  if (!val.trim()) return;
+  const correct = normalize(val) === normalize(t.answer);
+  document.getElementById('fill-input').classList.add(correct ? 'correct' : 'wrong');
+  document.getElementById('fill-input').disabled = true;
+  if (correct) {
+    fillCorrect++;
+    document.getElementById('fill-feedback').textContent = '✓ Bravo!';
+    document.getElementById('fill-feedback').className = 'fill-feedback good';
+  } else {
+    document.getElementById('fill-feedback').textContent = '✗ Правильно: ' + t.answer;
+    document.getElementById('fill-feedback').className = 'fill-feedback bad';
+  }
+  document.getElementById('fill-check').style.display = 'none';
+  document.getElementById('fill-skip').style.display = 'none';
+  document.getElementById('fill-next').style.display = 'inline-block';
+}
+
+function skipFill() {
+  const t = fillItems[fillIdx];
+  document.getElementById('fill-feedback').textContent = 'Правильный ответ: ' + t.answer;
+  document.getElementById('fill-feedback').className = 'fill-feedback bad';
+  document.getElementById('fill-input').disabled = true;
+  document.getElementById('fill-check').style.display = 'none';
+  document.getElementById('fill-skip').style.display = 'none';
+  document.getElementById('fill-next').style.display = 'inline-block';
+}
+
+function nextFill() { fillIdx++; showFill(); }
+
+function endFill() {
+  document.getElementById('fill-play').classList.add('hidden');
+  document.getElementById('fill-result').classList.remove('hidden');
+  const pct = Math.round(fillCorrect/fillItems.length*100);
+  document.getElementById('fill-final-score').textContent = fillCorrect + '/' + fillItems.length;
+  document.getElementById('fill-final-sub').textContent = pct + '% правильных ответов';
+  document.getElementById('fill-emoji').textContent = pct>=80?'🌟':pct>=50?'📝':'🇮🇹';
+}
+
+renderFilters();
+renderCards();
+</script>
+</body>
+</html>
