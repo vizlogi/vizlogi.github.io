@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Outcomes Elementary — Unit 3</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f0f4ff;
+    --blue: #2d5be3;
+    --navy: #1a2e6e;
+    --sky: #4a90d9;
+    --olive: #3a7a5a;
+    --ink: #1a2030;
+    --sand: #d0d8f0;
+    --mist: #e8eeff;
+    --shadow: rgba(26,46,110,0.12);
+    --gold: #c8992a;
+    --rose: #c84060;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Nunito', sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; overflow-x: hidden; }
+  body::before {
+    content: ''; position: fixed; inset: 0;
+    background: radial-gradient(ellipse 60% 40% at 10% 20%, rgba(45,91,227,0.07) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 50% at 90% 80%, rgba(74,144,217,0.08) 0%, transparent 60%);
+    pointer-events: none; z-index: 0;
+  }
+  .wrapper { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 24px 16px 60px; }
+
+  header { text-align: center; margin-bottom: 36px; }
+  .flag { font-size: 2.4rem; margin-bottom: 8px; }
+  header h1 { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem,5vw,2.8rem); color: var(--blue); line-height: 1.1; }
+  header p { color: #6070a0; font-size: 0.95rem; margin-top: 6px; }
+
+  .tabs { display: flex; gap: 6px; justify-content: center; margin-bottom: 32px; flex-wrap: wrap; }
+  .tab-btn {
+    padding: 9px 16px; border: 2px solid var(--sand); background: white; border-radius: 50px;
+    font-family: 'Nunito', sans-serif; font-size: 0.8rem; font-weight: 700; color: #6070a0; cursor: pointer; transition: all 0.2s;
+  }
+  .tab-btn:hover { border-color: var(--blue); color: var(--blue); }
+  .tab-btn.active { background: var(--blue); border-color: var(--blue); color: white; box-shadow: 0 4px 14px rgba(45,91,227,0.3); }
+
+  #section-cards { display: block; }
+  #section-match, #section-quiz, #section-fill, #section-collocations { display: none; }
+
+  .category-label {
+    font-family: 'Playfair Display', serif; font-size: 0.8rem; font-style: italic;
+    color: var(--gold); letter-spacing: 0.1em; text-transform: uppercase;
+    margin-bottom: 16px; margin-top: 28px; display: flex; align-items: center; gap: 8px;
+  }
+  .category-label::after { content:''; flex:1; height:1px; background:var(--sand); }
+
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
+
+  /* 3-sided card */
+  .card {
+    background: white; border-radius: 16px; cursor: pointer;
+    box-shadow: 0 2px 12px var(--shadow); border: 1.5px solid var(--sand);
+    transition: transform 0.15s, box-shadow 0.15s; position: relative;
+    min-height: 130px; user-select: none; overflow: hidden;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 6px 22px var(--shadow); }
+
+  .card-face { padding: 16px 15px; min-height: 130px; display: flex; flex-direction: column; justify-content: center; }
+
+  .card[data-side="0"] .face-word { display: flex; }
+  .card[data-side="0"] .face-trans { display: none; }
+  .card[data-side="0"] .face-ex { display: none; }
+  .card[data-side="1"] .face-word { display: none; }
+  .card[data-side="1"] .face-trans { display: flex; }
+  .card[data-side="1"] .face-ex { display: none; }
+  .card[data-side="2"] .face-word { display: none; }
+  .card[data-side="2"] .face-trans { display: none; }
+  .card[data-side="2"] .face-ex { display: flex; }
+
+  .face-word, .face-trans, .face-ex { flex-direction: column; gap: 4px; }
+
+  .word-en { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--blue); font-weight: 700; }
+  .word-meta { font-size: 0.7rem; color: #8090c0; margin-bottom: 2px; }
+  .word-pron { font-family: monospace; color: #a0b0d0; }
+  .word-def { font-size: 0.77rem; color: #404870; line-height: 1.5; margin-top: 4px; }
+  .word-collocate { font-size: 0.72rem; color: var(--rose); margin-top: 4px; font-weight: 600; }
+  .word-related { font-size: 0.72rem; color: #6070a0; margin-top: 2px; }
+
+  .word-trans-main { font-size: 1.05rem; color: var(--olive); font-weight: 700; }
+  .word-trans-opp { font-size: 0.75rem; color: #a0b0d0; margin-top: 3px; }
+  .word-trans-opp span { color: var(--blue); }
+
+  .word-ex-label { font-size: 0.66rem; color: #a0b0c0; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+  .word-ex-text { font-size: 0.79rem; color: #3a4060; font-style: italic; line-height: 1.55; }
+  .word-ex-note { font-size: 0.7rem; color: #8090b0; margin-top: 4px; }
+
+  .card-tap { position: absolute; bottom: 7px; right: 11px; font-size: 0.63rem; color: #c0d0e0; font-style: italic; pointer-events: none; }
+  .card[data-side="2"] .card-tap { display: none; }
+
+  .card-dots { position: absolute; top: 8px; right: 10px; display: flex; gap: 4px; }
+  .card-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--sand); }
+  .card-dot.active { background: var(--blue); }
+  .card-dot.done { background: var(--olive); }
+
+  /* MATCH */
+  .game-header { text-align: center; margin-bottom: 24px; }
+  .game-header h2 { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--blue); }
+  .game-header p { color: #6070a0; font-size: 0.88rem; margin-top: 4px; }
+  .match-board { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+  .match-col { display: flex; flex-direction: column; gap: 8px; }
+  .match-item {
+    background: white; border: 2px solid var(--sand); border-radius: 10px;
+    padding: 11px 12px; cursor: pointer; font-size: 0.88rem; text-align: center;
+    transition: all 0.2s; min-height: 46px; display: flex; align-items: center; justify-content: center; line-height: 1.3;
+  }
+  .match-item.en-word { font-family: 'Playfair Display', serif; color: var(--blue); font-size: 0.95rem; }
+  .match-item.ru-word { color: var(--olive); font-size: 0.85rem; }
+  .match-item:hover:not(.matched):not(.wrong) { border-color: var(--gold); background: var(--mist); }
+  .match-item.selected { border-color: var(--blue); background: rgba(45,91,227,0.08); }
+  .match-item.matched { border-color: var(--olive); background: rgba(58,122,90,0.1); opacity: 0.6; cursor: default; }
+  .match-item.wrong { border-color: #e05050; background: rgba(224,80,80,0.08); animation: shake 0.4s; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+
+  .score-bar { display: flex; align-items: center; justify-content: space-between; background: white; border-radius: 12px; padding: 12px 18px; border: 1.5px solid var(--sand); margin-bottom: 16px; }
+  .score-num { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--blue); }
+  .score-label { font-size: 0.78rem; color: #6070a0; text-transform: uppercase; letter-spacing: 0.06em; }
+
+  .btn { display: inline-block; padding: 11px 28px; background: var(--blue); color: white; border: none; border-radius: 50px; font-family: 'Nunito', sans-serif; font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 14px rgba(45,91,227,0.25); }
+  .btn:hover { background: #1e40b0; transform: translateY(-1px); }
+  .btn.secondary { background: white; color: var(--blue); border: 2px solid var(--blue); box-shadow: none; }
+  .btn-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+
+  /* QUIZ */
+  .quiz-progress { height: 6px; background: var(--sand); border-radius: 99px; margin-bottom: 28px; overflow: hidden; }
+  .quiz-progress-fill { height: 100%; background: linear-gradient(90deg, var(--blue), var(--sky)); border-radius: 99px; transition: width 0.4s; }
+  .quiz-card { background: white; border-radius: 18px; padding: 28px 22px; text-align: center; box-shadow: 0 4px 20px var(--shadow); border: 1.5px solid var(--sand); margin-bottom: 20px; }
+  .quiz-question-label { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.1em; color: #a0b0d0; margin-bottom: 12px; }
+  .quiz-question { font-family: 'Playfair Display', serif; font-size: clamp(1.4rem,4.5vw,2rem); color: var(--ink); margin-bottom: 6px; }
+  .quiz-sub { font-size: 0.78rem; color: #6070a0; font-style: italic; }
+  .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; }
+  .quiz-option { padding: 13px 10px; background: white; border: 2px solid var(--sand); border-radius: 12px; font-size: 0.88rem; cursor: pointer; transition: all 0.2s; font-family: 'Nunito', sans-serif; color: var(--ink); line-height: 1.3; }
+  .quiz-option:hover:not(.correct):not(.wrong) { border-color: var(--gold); background: var(--mist); }
+  .quiz-option.correct { border-color: var(--olive); background: rgba(58,122,90,0.12); color: var(--olive); font-weight: 700; }
+  .quiz-option.wrong { border-color: #e05050; background: rgba(224,80,80,0.08); color: #c03030; }
+  .quiz-feedback { text-align: center; font-size: 0.88rem; margin-top: 10px; min-height: 22px; font-weight: 600; }
+  .quiz-feedback.good { color: var(--olive); }
+  .quiz-feedback.bad { color: #c03030; }
+  .quiz-counter { font-size: 0.85rem; color: #6070a0; text-align: center; margin-bottom: 10px; }
+  .progress-dots { display: flex; gap: 6px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--sand); transition: all 0.3s; }
+  .dot.done { background: var(--olive); }
+  .dot.active { background: var(--blue); transform: scale(1.3); }
+
+  /* FILL */
+  .fill-card { background: white; border-radius: 18px; padding: 26px 22px; box-shadow: 0 4px 20px var(--shadow); border: 1.5px solid var(--sand); margin-bottom: 20px; }
+  .fill-prompt { font-size: 0.78rem; color: #6070a0; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; }
+  .fill-situation { font-family: 'Playfair Display', serif; font-size: 1.05rem; color: var(--ink); line-height: 1.8; margin-bottom: 14px; }
+  .fill-blank { display: inline-block; min-width: 100px; border-bottom: 2px solid var(--blue); color: transparent; background: var(--mist); border-radius: 4px; padding: 0 8px; }
+  .fill-hint { font-size: 0.75rem; color: #8090b0; margin-bottom: 12px; font-style: italic; }
+  .fill-input-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .fill-input { flex: 1; min-width: 160px; padding: 10px 14px; border: 2px solid var(--sand); border-radius: 10px; font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--ink); outline: none; transition: border-color 0.2s; background: var(--mist); }
+  .fill-input:focus { border-color: var(--blue); background: white; }
+  .fill-input.correct { border-color: var(--olive); background: rgba(58,122,90,0.08); }
+  .fill-input.wrong { border-color: #e05050; }
+  .fill-feedback { font-size: 0.88rem; margin-top: 10px; min-height: 20px; font-weight: 600; }
+  .fill-feedback.good { color: var(--olive); }
+  .fill-feedback.bad { color: #c03030; }
+
+  /* COLLOCATIONS */
+  .colloc-intro { background: white; border-radius: 14px; padding: 14px 18px; border: 1.5px solid var(--sand); margin-bottom: 16px; color: #6070a0; font-size: 0.88rem; line-height: 1.5; text-align: center; }
+  .colloc-intro strong { color: var(--blue); }
+  .colloc-question { background: white; border-radius: 18px; padding: 22px; border: 1.5px solid var(--sand); margin-bottom: 14px; text-align: center; }
+  .colloc-q-label { font-size: 0.72rem; color: #a0b0d0; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
+  .colloc-word { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--blue); font-style: italic; }
+  .colloc-q-text { font-size: 0.85rem; color: #6070a0; margin-top: 4px; }
+  .colloc-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .colloc-option { padding: 13px 10px; background: white; border: 2px solid var(--sand); border-radius: 12px; cursor: pointer; font-family: 'Nunito', sans-serif; font-size: 0.9rem; color: var(--ink); text-align: center; transition: all 0.2s; }
+  .colloc-option:hover { border-color: var(--gold); background: var(--mist); }
+  .colloc-option.correct { border-color: var(--olive); background: rgba(58,122,90,0.12); color: var(--olive); font-weight: 700; }
+  .colloc-option.wrong { border-color: #e05050; background: rgba(224,80,80,0.08); color: #c03030; }
+
+  .result-screen { text-align: center; padding: 40px 20px; }
+  .result-emoji { font-size: 3.5rem; margin-bottom: 12px; }
+  .result-title { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--blue); margin-bottom: 8px; }
+  .result-sub { color: #6070a0; margin-bottom: 24px; }
+  .result-score { font-family: 'Playfair Display', serif; font-size: 3rem; color: var(--gold); }
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <div class="flag">🇬🇧</div>
+    <h1>Outcomes Elementary — Unit 3</h1>
+    <p>Town, home & everyday life · Elementary · Outcomes</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showSection('cards')">📚 Cards</button>
+    <button class="tab-btn" onclick="showSection('match')">🔗 Match</button>
+    <button class="tab-btn" onclick="showSection('collocations')">🧩 Collocations</button>
+    <button class="tab-btn" onclick="showSection('quiz')">🎯 Quiz</button>
+    <button class="tab-btn" onclick="showSection('fill')">✏️ Fill in</button>
+  </div>
+
+  <!-- CARDS -->
+  <div id="section-cards">
+    <div class="category-label">Places in a town</div>
+    <div class="cards-grid" id="grid-places"></div>
+    <div class="category-label">Directions & prepositions</div>
+    <div class="cards-grid" id="grid-directions"></div>
+    <div class="category-label">Adjectives</div>
+    <div class="cards-grid" id="grid-adj"></div>
+    <div class="category-label">Verbs & phrasal verbs</div>
+    <div class="cards-grid" id="grid-verbs"></div>
+    <div class="category-label">Rooms & furniture</div>
+    <div class="cards-grid" id="grid-home"></div>
+    <div class="category-label">Home activities</div>
+    <div class="cards-grid" id="grid-activities"></div>
+    <div class="category-label">Nouns — objects & things</div>
+    <div class="cards-grid" id="grid-nouns"></div>
+    <p style="text-align:center;color:#a0b0d0;font-size:0.8rem;margin-top:20px;font-style:italic;">Tap once → translation · Tap twice → example from textbook</p>
+  </div>
+
+  <!-- MATCH -->
+  <div id="section-match">
+    <div class="game-header"><h2>Match the words</h2><p>Select an English word, then its Russian translation</p></div>
+    <div class="score-bar">
+      <div><div class="score-num" id="match-score">0</div><div class="score-label">Matched</div></div>
+      <div><div class="score-num" id="match-total">0</div><div class="score-label">Total</div></div>
+      <div><div class="score-num" id="match-errors">0</div><div class="score-label">Errors</div></div>
+    </div>
+    <div class="match-board">
+      <div class="match-col" id="match-left"></div>
+      <div class="match-col" id="match-right"></div>
+    </div>
+    <div class="btn-row"><button class="btn" onclick="initMatch()">🔄 New round</button></div>
+    <div id="match-result" class="result-screen hidden">
+      <div class="result-emoji">🎉</div><div class="result-title">Well done!</div><div class="result-sub">All pairs found!</div>
+      <div class="btn-row"><button class="btn" onclick="initMatch()">Play again</button></div>
+    </div>
+  </div>
+
+  <!-- COLLOCATIONS -->
+  <div id="section-collocations">
+    <div class="game-header"><h2>Collocations</h2><p>Choose the correct word to complete the collocation</p></div>
+    <div class="colloc-intro"><strong>Collocations</strong> are words that often go together. Choose the right partner!</div>
+    <div class="score-bar">
+      <div><div class="score-num" id="col-score">0</div><div class="score-label">Correct</div></div>
+      <div><div class="score-num" id="col-current">1</div><div class="score-label">Of 12</div></div>
+      <div><div class="score-num" id="col-errors">0</div><div class="score-label">Errors</div></div>
+    </div>
+    <div id="col-play">
+      <div class="colloc-question">
+        <div class="colloc-q-label">Complete the collocation:</div>
+        <div class="colloc-word" id="col-word">—</div>
+        <div class="colloc-q-text" id="col-qtext"></div>
+      </div>
+      <div class="colloc-options" id="col-options"></div>
+      <div class="quiz-feedback" id="col-feedback"></div>
+      <div class="btn-row"><button class="btn secondary hidden" id="col-next" onclick="nextColloc()">Next →</button></div>
+    </div>
+    <div id="col-result" class="result-screen hidden">
+      <div class="result-emoji" id="col-emoji">🏆</div><div class="result-title">Result</div>
+      <div class="result-score" id="col-final"></div><div class="result-sub" id="col-sub"></div>
+      <div class="btn-row"><button class="btn" onclick="initColloc()">Again</button></div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="section-quiz">
+    <div class="game-header"><h2>Choose the correct translation</h2><p>EN → RU or RU → EN</p></div>
+    <div class="quiz-progress"><div class="quiz-progress-fill" id="quiz-bar"></div></div>
+    <div class="progress-dots" id="quiz-dots"></div>
+    <div class="quiz-counter" id="quiz-counter"></div>
+    <div id="quiz-play">
+      <div class="quiz-card">
+        <div class="quiz-question-label" id="quiz-dir">English → Russian</div>
+        <div class="quiz-question" id="quiz-word">—</div>
+        <div class="quiz-sub" id="quiz-ctx"></div>
+      </div>
+      <div class="quiz-options" id="quiz-options"></div>
+      <div class="quiz-feedback" id="quiz-feedback"></div>
+      <div class="btn-row"><button class="btn secondary" id="quiz-next-btn" onclick="nextQuiz()" style="display:none">Next →</button></div>
+    </div>
+    <div id="quiz-result" class="result-screen hidden">
+      <div class="result-emoji" id="quiz-emoji">🏆</div><div class="result-title">Result</div>
+      <div class="result-score" id="quiz-final-score"></div><div class="result-sub" id="quiz-final-sub"></div>
+      <div class="btn-row">
+        <button class="btn" onclick="initQuiz()">Again</button>
+        <button class="btn secondary" onclick="initQuiz(true)">Mistakes only</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILL -->
+  <div id="section-fill">
+    <div class="game-header"><h2>Fill in the gap</h2><p>Use words from the unit to complete the sentences</p></div>
+    <div class="quiz-progress"><div class="quiz-progress-fill" id="fill-bar"></div></div>
+    <div class="quiz-counter" id="fill-counter"></div>
+    <div id="fill-play">
+      <div class="fill-card">
+        <div class="fill-prompt">Complete the sentence:</div>
+        <div class="fill-situation" id="fill-situation"></div>
+        <div class="fill-hint" id="fill-hint"></div>
+        <div class="fill-input-row">
+          <input class="fill-input" id="fill-input" placeholder="Type the missing word..." onkeydown="if(event.key==='Enter')checkFill()">
+          <button class="btn" onclick="checkFill()">→</button>
+        </div>
+        <div class="fill-feedback" id="fill-feedback"></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn secondary" id="fill-skip" onclick="skipFill()">Skip</button>
+        <button class="btn secondary hidden" id="fill-next" onclick="nextFill()">Next →</button>
+      </div>
+    </div>
+    <div id="fill-result" class="result-screen hidden">
+      <div class="result-emoji" id="fill-emoji">🌟</div><div class="result-title">Done!</div>
+      <div class="result-score" id="fill-final-score"></div><div class="result-sub" id="fill-final-sub"></div>
+      <div class="btn-row"><button class="btn" onclick="initFill()">Again</button></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const vocab = [
+  // PLACES IN TOWN (pp.28-29)
+  { en:"bank", pos:"Noun", pron:"/bæŋk/", ru:"банк", def:"a building that keeps people's money", ex:"she works in a bank | is there a bank near here?", collocate:null, related:null, cat:"places" },
+  { en:"bookshop", pos:"Noun", pron:"/ˈbʊkʃɒp/", ru:"книжный магазин", def:"a shop that sells books", ex:"is there a bookshop near here? | I got a job in a bookshop.", collocate:null, related:null, cat:"places" },
+  { en:"car park", pos:"Noun", pron:"/ˈkɑː pɑːk/", ru:"автостоянка / паркинг", def:"an area or building where cars can be parked", ex:"we left the car in the car park near the shopping centre.", collocate:null, related:null, cat:"places" },
+  { en:"chemist", pos:"Noun", pron:"/ˈkemɪst/", ru:"аптека / фармацевт", def:"a shop where you can get medicines; also the person who sells them", ex:"is there a chemist near here? | the chemist gave me some advice.", collocate:null, related:null, cat:"places" },
+  { en:"factory", pos:"Noun", pron:"/ˈfæktri/", ru:"фабрика / завод", def:"a big building where things such as cars and machines are made", ex:"my dad works in a factory | a car factory.", collocate:null, related:null, cat:"places" },
+  { en:"government building", pos:"Noun", pron:"/ˈɡʌvənmənt ˈbɪldɪŋ/", ru:"правительственное здание", def:"a building where government officials work", ex:"the government building is open to the public on weekdays.", collocate:null, related:null, cat:"places" },
+  { en:"library", pos:"Noun", pron:"/ˈlaɪbrəri/", ru:"библиотека", def:"a building containing collections of books for public use or borrowing", ex:"the university library is open until midnight.", collocate:null, related:null, cat:"places" },
+  { en:"market", pos:"Noun", pron:"/ˈmɑː(r)kɪt/", ru:"рынок", def:"an area or event where people meet to buy and sell goods", ex:"we buy our vegetables at the local market every Sunday.", collocate:null, related:null, cat:"places" },
+  { en:"post office", pos:"Noun", pron:"/ˈpəʊst ˈɒfɪs/", ru:"почта / почтовое отделение", def:"a shop where you can buy stamps and send letters", ex:"excuse me, is there a post office near here? | the post office closes at 5.", collocate:null, related:null, cat:"places" },
+  { en:"quiet place", pos:"Noun", pron:"/ˈkwaɪət pleɪs/", ru:"тихое место", def:"a location where there is little or no noise", ex:"she found a quiet place in the library to study.", collocate:null, related:null, cat:"places" },
+  { en:"sports centre", pos:"Noun", pron:"/ˈspɔː(r)ts ˈsentə(r)/", ru:"спортивный центр", def:"a large building where people can go and do sports", ex:"there's a good sports centre near my house.", collocate:null, related:null, cat:"places" },
+  { en:"theatre", pos:"Noun", pron:"/ˈθɪətə(r)/", ru:"театр", def:"a building where people go to see plays", ex:"we're going to the theatre tomorrow.", collocate:null, related:null, cat:"places" },
+  { en:"store", pos:"Noun", pron:"/stɔː(r)/", ru:"магазин (крупный)", def:"a shop, especially a large one", ex:"a department store | a clothes store.", collocate:null, related:null, cat:"places" },
+
+  // DIRECTIONS & PREPOSITIONS
+  { en:"at the end of", pos:"Preposition", pron:"/æt ði end ɒv/", ru:"в конце (чего-либо)", def:"in the final part of something", ex:"the bathroom is at the end of the hallway.", collocate:null, related:null, cat:"directions" },
+  { en:"between", pos:"Preposition", pron:"/bɪˈtwiːn/", ru:"между", def:"in or into the space that separates two places, people, or objects", ex:"the café is between the bookstore and the florist.", collocate:null, related:null, cat:"directions" },
+  { en:"corner", pos:"Noun", pron:"/ˈkɔː(r)nə(r)/", ru:"угол / поворот", def:"a place where two roads or walls meet", ex:"the shop is on the corner of Church Street.", collocate:"on the corner | in the corner", related:null, cat:"directions" },
+  { en:"in front of", pos:"Preposition", pron:"/ɪn frʌnt ɒv/", ru:"перед / впереди", def:"the part or side that is forward or at the front", ex:"please wait for me in front of the supermarket.", collocate:null, related:null, cat:"directions" },
+  { en:"left", pos:"Noun / Adverb", pron:"/left/", ru:"левый / налево", def:"one of two directions", ex:"the hotel is in the next street, on the left.", collocate:null, related:null, cat:"directions" },
+  { en:"near", pos:"Adjective", pron:"/nɪə(r)/", ru:"близко / рядом", def:"only a short distance away", ex:"the restaurant is near the station | is there a bank near here?", collocate:null, related:null, cat:"directions" },
+  { en:"next to", pos:"Preposition", pron:"/nekst tuː/", ru:"рядом с / по соседству", def:"at the side of; adjacent to", ex:"the pharmacy is next to the bakery.", collocate:null, related:null, cat:"directions" },
+  { en:"opposite", pos:"Adjective", pron:"/ˈɒpəzɪt/", ru:"напротив / противоположный", def:"completely different from something else; facing something", ex:"our house is opposite the park.", collocate:null, related:null, cat:"directions" },
+  { en:"path", pos:"Noun", pron:"/pɑːθ/", ru:"тропинка / дорожка", def:"a way or track for walking", ex:"the path through the woods leads to the lake.", collocate:null, related:null, cat:"directions" },
+  { en:"right", pos:"Noun singular", pron:"/raɪt/", ru:"правый / направо", def:"one of two directions", ex:"there's a museum on this road, on the right.", collocate:null, related:null, cat:"directions" },
+  { en:"street", pos:"Noun", pron:"/striːt/", ru:"улица", def:"a road in a town or city with buildings on each side", ex:"I live in Church Street | we walked along the street.", collocate:null, related:null, cat:"directions" },
+
+  // ADJECTIVES
+  { en:"broken", pos:"Adjective", pron:"/ˈbrəʊ.kən/", ru:"сломанный", def:"has been fractured or damaged and is no longer working", ex:"I can't use this chair, it's broken | he had a broken arm.", collocate:null, related:"Verb: break", cat:"adj", opposite:"working" },
+  { en:"clean", pos:"Verb / Adjective", pron:"/kliːn/", ru:"чистый / убирать", def:"if you clean something, you remove the dirt from it", ex:"you need to clean your bedroom | clean the floor.", collocate:null, related:"Adjective: clean | Noun: cleaning", cat:"adj", opposite:"dirty" },
+  { en:"dead", pos:"Adjective", pron:"/ded/", ru:"мёртвый / разряженный", def:"no longer alive; also used for batteries that have no charge", ex:"the battery in the TV remote is dead.", collocate:null, related:null, cat:"adj", opposite:"alive" },
+  { en:"empty", pos:"Adjective", pron:"/ˈempti/", ru:"пустой", def:"contains nothing; not filled or occupied", ex:"he found the room completely empty | the streets are empty late at night.", collocate:null, related:null, cat:"adj", opposite:"full" },
+  { en:"lazy", pos:"Adjective", pron:"/ˈleɪzi/", ru:"ленивый", def:"does not like working or making any effort", ex:"I'm too lazy to cook for myself | he's so lazy!", collocate:null, related:null, cat:"adj", opposite:null },
+  { en:"most", pos:"Determiner", pron:"/məʊst/", ru:"большинство / почти весь", def:"the majority of; nearly all of", ex:"she does most of the cooking | most people agree.", collocate:null, related:null, cat:"adj", opposite:null },
+  { en:"right", pos:"Adjective", pron:"/raɪt/", ru:"правильный / верный", def:"if something is right, it's true or correct", ex:"you're right, the shop is closed on Mondays.", collocate:null, related:null, cat:"adj", opposite:"wrong" },
+  { en:"tidy", pos:"Adjective", pron:"/ˈtaɪdi/", ru:"аккуратный / прибранный", def:"things are in their place and it is very neat", ex:"Nick's room is always very tidy | I try to keep my room tidy.", collocate:null, related:"Verb: tidy", cat:"adj", opposite:"untidy" },
+
+  // VERBS & PHRASAL VERBS
+  { en:"buy", pos:"Verb", pron:"/baɪ/", ru:"покупать", def:"you give someone money in order to have something", ex:"we need to buy a new car | I bought a newspaper at the station.", collocate:null, related:null, cat:"verbs" },
+  { en:"change", pos:"Verb", pron:"/tʃeɪndʒ/", ru:"менять / разменивать", def:"you stop using one thing and start using a different one", ex:"I went to the bank to change some money | have I got time to change my clothes?", collocate:null, related:null, cat:"verbs" },
+  { en:"come round", pos:"Phrasal verb", pron:"/kʌm raʊnd/", ru:"заходить в гости", def:"to visit someone at their house", ex:"why don't you come round after work? | my friends often come round for dinner.", collocate:null, related:null, cat:"verbs" },
+  { en:"cross", pos:"Verb", pron:"/krɒs/", ru:"переходить (дорогу)", def:"to go from one side of something to the other", ex:"look both ways before you cross the road.", collocate:null, related:null, cat:"verbs" },
+  { en:"eat", pos:"Verb", pron:"/iːt/", ru:"есть / кушать", def:"you put food into your mouth and take it down into your stomach", ex:"she doesn't eat meat | what did you eat for lunch?", collocate:null, related:null, cat:"verbs" },
+  { en:"fall over", pos:"Phrasal verb", pron:"/fɔːl ˈəʊvər/", ru:"упасть / потерять равновесие", def:"you lose your balance and collapse", ex:"he tripped and fell over | I almost fell over it.", collocate:null, related:null, cat:"verbs" },
+  { en:"find", pos:"Verb", pron:"/faɪnd/", ru:"находить", def:"you are looking for something and get it after looking for it", ex:"I can't find my keys | can you help me find the map?", collocate:null, related:null, cat:"verbs" },
+  { en:"forget", pos:"Verb", pron:"/fə(r)ˈɡet/", ru:"забывать", def:"you do not remember something", ex:"don't forget to lock the door | I forgot to buy milk.", collocate:"forget to do something | forget about something", related:"Opposite: remember", cat:"verbs" },
+  { en:"go out", pos:"Phrasal verb", pron:"/ˌɡəʊ ˈaʊt/", ru:"выходить (куда-то)", def:"if you go out somewhere, you leave your home to go somewhere", ex:"do you want to go out? | we often go out for a walk at the weekend.", collocate:null, related:null, cat:"verbs" },
+  { en:"happen", pos:"Verb", pron:"/ˈhæpən/", ru:"происходить / случаться", def:"to take place or occur", ex:"what happens at the end of the story? | accidents can happen.", collocate:null, related:null, cat:"verbs" },
+  { en:"help", pos:"Verb", pron:"/help/", ru:"помогать", def:"you do something that makes it easier for someone to succeed", ex:"can you help me? | she helped me to find a job.", collocate:"help someone with something | help someone to do something", related:"Noun: help", cat:"verbs" },
+  { en:"keep", pos:"Verb", pron:"/kiːp/", ru:"держать / хранить", def:"you keep something in the same condition", ex:"I keep the room tidy | she kept her room warm.", collocate:null, related:null, cat:"verbs" },
+  { en:"look", pos:"Verb", pron:"/lʊk/", ru:"смотреть / искать", def:"you use your eyes to see something", ex:"he looked at the picture on the wall | she was looking for her keys.", collocate:"look at | look for", related:"Noun: look", cat:"verbs" },
+  { en:"make", pos:"Verb", pron:"/meɪk/", ru:"делать / создавать", def:"to create, form, or produce something", ex:"she had made a new friend at school | can you make a cup of tea?", collocate:null, related:null, cat:"verbs" },
+  { en:"move", pos:"Verb", pron:"/muːv/", ru:"двигать(ся) / переезжать", def:"you change the position you are in, or take something to a different place", ex:"can you move? I can't see | we need to move the armchair.", collocate:null, related:null, cat:"verbs" },
+  { en:"pick up", pos:"Phrasal verb", pron:"/ˈpɪk ʌp/", ru:"поднимать / забирать", def:"to lift something or someone up; to collect or tidy up", ex:"can you pick up the toys from the floor? | I'll pick you up at 8.", collocate:null, related:null, cat:"verbs" },
+  { en:"put", pos:"Verb", pron:"/pʊt/", ru:"класть / ставить", def:"you take something to a place and leave it there", ex:"put the cheese in the fridge | put the plates on the table.", collocate:null, related:null, cat:"verbs" },
+  { en:"rent", pos:"Verb", pron:"/rent/", ru:"снимать / арендовать", def:"to pay a fixed amount of money for the use of a room, house, car, etc.", ex:"they rent accommodation near the university | he's looking to rent a flat.", collocate:null, related:null, cat:"verbs" },
+  { en:"repair", pos:"Verb", pron:"/rɪˈpeə/", ru:"чинить / ремонтировать", def:"when you repair something, you fix or mend a damaged thing", ex:"the mechanic repaired my car | the roof needs to be repaired.", collocate:null, related:null, cat:"verbs" },
+  { en:"send", pos:"Verb", pron:"/send/", ru:"отправлять / посылать", def:"you get someone to take something there for you", ex:"I sent a letter to my aunt | I'll send you a text when I get to the airport.", collocate:"send something to someone", related:null, cat:"verbs" },
+  { en:"share", pos:"Verb", pron:"/ʃeə(r)/", ru:"делить / делиться", def:"you both use it or have it; to live in the same house with someone", ex:"I share a bedroom with my brother | do you want to share my sandwich?", collocate:null, related:null, cat:"verbs" },
+  { en:"spend", pos:"Verb", pron:"/spend/", ru:"проводить (время) / тратить (деньги)", def:"a period of time passes while you do something; or you pay money to buy something", ex:"how do you spend your free time? | she spent £100 on a new jacket.", collocate:null, related:null, cat:"verbs" },
+  { en:"take", pos:"Verb", pron:"/teɪk/", ru:"занимать (время) / брать", def:"if something takes a certain amount of time, that much time passes", ex:"it takes an hour to get there | it took years for me to learn Russian.", collocate:null, related:null, cat:"verbs" },
+  { en:"talk", pos:"Verb", pron:"/tɔːk/", ru:"говорить / разговаривать", def:"you speak words to someone and they say things in return", ex:"we talked until 2 in the morning | I need to talk to you.", collocate:"talk to someone | talk about something", related:null, cat:"verbs" },
+  { en:"try", pos:"Verb", pron:"/traɪ/", ru:"пытаться / стараться", def:"you make an effort to do something although you are not sure if you will succeed", ex:"try to use the words you learn | I'm trying to stop smoking.", collocate:"try to do something", related:null, cat:"verbs" },
+  { en:"turn", pos:"Verb", pron:"/tɜː(r)n/", ru:"поворачивать", def:"to change direction or move into a different position", ex:"turn left at the next street | you need to turn right at the traffic lights.", collocate:"turn left/right", related:null, cat:"verbs" },
+  { en:"turn on", pos:"Phrasal verb", pron:"/tɜːn ɒn/", ru:"включать", def:"to start the flow of electricity, gas, water, etc. by moving a switch", ex:"turn on the heating, it's cold | please turn on the lights.", collocate:null, related:"Opposite: turn off", cat:"verbs" },
+  { en:"wait", pos:"Verb", pron:"/weɪt/", ru:"ждать", def:"you stay somewhere until something happens or arrives", ex:"the restaurant is full so we'll have to wait | can you wait outside?", collocate:"wait for something | wait to do something", related:null, cat:"verbs" },
+  { en:"wash", pos:"Verb", pron:"/wɒʃ/", ru:"мыть / стирать", def:"you make something clean by using water and sometimes soap", ex:"I need to wash my hands | let's wash the car.", collocate:"have a wash | give something a wash", related:"Noun: wash", cat:"verbs" },
+  { en:"work", pos:"Verb", pron:"/wɜːk/", ru:"работать (о машине/приборе)", def:"if something works, it performs a task", ex:"the heating isn't working | this old watch doesn't work anymore.", collocate:null, related:null, cat:"verbs" },
+  { en:"break", pos:"Verb", pron:"/breɪk/", ru:"ломать / разбивать", def:"you damage it badly so it doesn't work or goes into pieces", ex:"I dropped a plate and broke it | he broke the window with a football.", collocate:null, related:"Adjective: broken", cat:"verbs" },
+  { en:"brush", pos:"Verb", pron:"/brʌʃ/", ru:"чистить щёткой / расчёсывать", def:"you clean things or make hair tidy using a brush", ex:"you should brush your teeth twice a day.", collocate:null, related:"Noun: brush", cat:"verbs" },
+  { en:"call", pos:"Verb", pron:"/kɔːl/", ru:"звонить (по телефону)", def:"if you call someone, you phone them", ex:"I called my mum but she didn't answer | can I call you back later?", collocate:"give someone a call", related:"Noun: call", cat:"verbs" },
+  { en:"check", pos:"Verb", pron:"/tʃek/", ru:"проверять", def:"to look at something carefully to make sure it is correct or safe", ex:"check that all the windows are closed | he checked his pockets for his keys.", collocate:null, related:null, cat:"verbs" },
+
+  // ROOMS & FURNITURE (pp.30-33)
+  { en:"apartment", pos:"Noun", pron:"/əˈpɑː(r)tmənt/", ru:"квартира", def:"a group of rooms on one floor of a building where someone lives", ex:"we shared an apartment in Gas Street | a two-bedroom apartment in Paris.", collocate:null, related:null, cat:"home" },
+  { en:"area", pos:"Noun", pron:"/ˈeərɪə/", ru:"район / зона / часть", def:"a part of a country or place", ex:"it's a nice area to live in | Chelsea is a fashionable area of London.", collocate:null, related:null, cat:"home" },
+  { en:"balcony", pos:"Noun", pron:"/ˈbælkəni/", ru:"балкон", def:"a space outside a window upstairs where you can sit or stand", ex:"I stood on the balcony watching the traffic | our hotel room had a lovely large balcony.", collocate:null, related:null, cat:"home" },
+  { en:"bathroom", pos:"Noun", pron:"/ˈbɑːθruːm/", ru:"ванная комната", def:"a room where you can wash and have a bath or shower", ex:"my bedroom has its own small bathroom | the bathroom only has a shower.", collocate:null, related:null, cat:"home" },
+  { en:"cupboard", pos:"Noun", pron:"/ˈkʌbə(r)d/", ru:"шкаф / буфет", def:"a piece of furniture with a door and shelves for keeping things", ex:"put it back in the cupboard | a kitchen cupboard.", collocate:null, related:null, cat:"home" },
+  { en:"fridge", pos:"Noun", pron:"/frɪdʒ/", ru:"холодильник", def:"a large piece of kitchen equipment which keeps food at a low temperature", ex:"put the butter back in the fridge | there's a full bottle of milk in the fridge.", collocate:null, related:null, cat:"home" },
+  { en:"furniture", pos:"Noun uncount", pron:"/ˈfɜː(r)nɪtʃə(r)/", ru:"мебель", def:"things like chairs, tables, wardrobes that you have in your home", ex:"we bought some new bedroom furniture | there wasn't much furniture in the room.", collocate:null, related:null, cat:"home" },
+  { en:"glasses", pos:"Noun plural", pron:"/ˈɡlɑːsɪz/", ru:"очки", def:"a pair of lenses in a frame used to correct eyesight", ex:"I can't read the book without my glasses.", collocate:null, related:null, cat:"home" },
+  { en:"kitchen", pos:"Noun", pron:"/ˈkɪtʃən/", ru:"кухня", def:"a room where people prepare and cook food", ex:"we usually have breakfast in the kitchen | a kitchen cupboard.", collocate:null, related:null, cat:"home" },
+  { en:"living room", pos:"Noun", pron:"/ˈlɪvɪŋ ruːm/", ru:"гостиная", def:"the room where people spend most of their time watching TV, reading, etc.", ex:"there's a big sofa in the living room | we need to tidy the living room.", collocate:null, related:null, cat:"home" },
+  { en:"roof", pos:"Noun", pron:"/ruːf/", ru:"крыша", def:"the structure which forms the upper cover of a building", ex:"the roof of the house needs repairing | they sat on the roof to watch the sunset.", collocate:null, related:null, cat:"home" },
+  { en:"room", pos:"Noun", pron:"/ruːm/", ru:"комната", def:"a space in a building with walls and a door", ex:"I have to share a room with my brother | there's a carpet in every room.", collocate:null, related:null, cat:"home" },
+  { en:"shelf", pos:"Noun", pron:"/ʃelf/", ru:"полка (полки — shelves)", def:"a flat board on a wall where you put things", ex:"he put the books back on the shelf | the shelves in the supermarket were nearly empty.", collocate:"on the shelf | the top shelf", related:null, cat:"home" },
+  { en:"side", pos:"Noun", pron:"/saɪd/", ru:"сторона / бок", def:"a position to the left or right of an object or place", ex:"that's my side of the room | which side of the bed do you sleep on?", collocate:null, related:null, cat:"home" },
+  { en:"sofa", pos:"Noun", pron:"/ˈsəʊfə/", ru:"диван", def:"a long, soft chair that two or more people can sit on", ex:"there's a big sofa in the living room | we sat on the sofa watching TV.", collocate:null, related:null, cat:"home" },
+  { en:"space", pos:"Noun uncount", pron:"/speɪs/", ru:"пространство / место", def:"an area or place that is free, available, or unoccupied", ex:"there's more space at my parent's home | we need to create more space.", collocate:null, related:null, cat:"home" },
+  { en:"table", pos:"Noun", pron:"/ˈteɪb(ə)l/", ru:"стол", def:"a piece of furniture with a flat top that you put things on", ex:"there was a vase of flowers on the table | lay the table (put knives and forks ready for a meal).", collocate:null, related:null, cat:"home" },
+  { en:"the heating", pos:"Noun", pron:"/ðiː ˈhiːtɪŋ/", ru:"отопление", def:"the system used to keep a building warm", ex:"can you turn on the heating? | we need to get the heating fixed before winter.", collocate:"turn on/off the heating", related:null, cat:"home" },
+  { en:"toilet", pos:"Noun", pron:"/ˈtɔɪlɪt/", ru:"туалет", def:"a bowl-shaped thing in a bathroom which disposes of human waste", ex:"the toilet is down the hall on the right | we need to clean the toilet regularly.", collocate:"go to the toilet", related:null, cat:"home" },
+  { en:"toy", pos:"Noun", pron:"/tɔɪ/", ru:"игрушка", def:"an object that children play with", ex:"a wooden toy | children have so many toys these days.", collocate:null, related:null, cat:"home" },
+  { en:"washing machine", pos:"Noun", pron:"/ˈwɒʃɪŋ məˈʃiːn/", ru:"стиральная машина", def:"a machine for washing clothes, bed sheets, etc.", ex:"why is the washing machine so loud? | the washing machine broke.", collocate:null, related:null, cat:"home" },
+  { en:"floor", pos:"Noun", pron:"/flɔː/", ru:"пол / этаж", def:"the lower surface of a room that you walk on", ex:"she dropped the keys on the floor | we sat on the floor to play the game.", collocate:"on the floor", related:null, cat:"home" },
+  { en:"glass", pos:"Noun uncount", pron:"/ɡlɑːs/", ru:"стекло", def:"a hard, usually clear substance, used to make windows and drinking containers", ex:"be careful of the broken glass on the floor | she poured herself a glass of water.", collocate:null, related:null, cat:"home" },
+  { en:"board", pos:"Noun", pron:"/bɔː(r)d/", ru:"доска", def:"a large flat sheet of wood or plastic in a classroom where the teacher writes", ex:"I can't see the board | come and write the answer on the board.", collocate:null, related:null, cat:"home" },
+
+  // HOME ACTIVITIES
+  { en:"washing", pos:"Noun uncount", pron:"/ˈwɒʃɪŋ/", ru:"стирка / бельё", def:"clothes that have been worn and are now waiting to be washed", ex:"hang the washing out to dry | a pile of dirty washing.", collocate:"dirty washing", related:"Verb: wash", cat:"activities" },
+  { en:"dishes", pos:"Noun plural", pron:"/dɪʃɪz/", ru:"посуда", def:"the plates, cups, bowls that you use during a meal", ex:"it's your turn to wash the dishes | let's leave the dishes till later.", collocate:"wash the dishes | dirty dishes", related:null, cat:"activities" },
+  { en:"dog", pos:"Noun", pron:"/dɒɡ/", ru:"собака", def:"an animal with fur, four legs and a tail that people keep as a pet", ex:"take the dog for a walk | a friendly dog.", collocate:null, related:null, cat:"activities" },
+  { en:"mess", pos:"Noun singular", pron:"/mes/", ru:"беспорядок", def:"an untidy place with lots of rubbish and things that are not wanted", ex:"Costa's room is always a mess | your bedroom is such a mess!", collocate:"be in a mess | make a mess", related:"Adjective: messy", cat:"activities" },
+  { en:"moment", pos:"Noun", pron:"/ˈmaʊmənt/", ru:"момент / сейчас", def:"happening now but won't be happening after a while", ex:"he can't drive at the moment | Tom's out at the moment.", collocate:"at the moment", related:null, cat:"activities" },
+
+  // NOUNS — OBJECTS & THINGS
+  { en:"birthday card", pos:"Noun", pron:"/ˈbɜːθdeɪ kɑːd/", ru:"открытка на день рождения", def:"a greeting card given or sent to celebrate someone's birthday", ex:"I bought a birthday card for my friend | did you write a message in the birthday card?", collocate:null, related:null, cat:"nouns" },
+  { en:"food", pos:"Noun uncount", pron:"/fuːd/", ru:"еда / пища", def:"things like bread, potatoes, meat and fish that you eat to stay alive", ex:"the food in the hotel was not very good | do you like Italian food?", collocate:null, related:null, cat:"nouns" },
+  { en:"gift", pos:"Noun", pron:"/ɡɪft/", ru:"подарок", def:"something given willingly to someone without payment; a present", ex:"I got a book as a gift on my birthday | giving gifts is a part of many cultures.", collocate:"get a gift | give a gift", related:null, cat:"nouns" },
+  { en:"headache", pos:"Noun", pron:"/ˈhedeɪk/", ru:"головная боль", def:"if you have a headache, your head hurts", ex:"loud noises can give me a headache | I have a terrible headache; I need to rest.", collocate:"have a headache", related:null, cat:"nouns" },
+  { en:"map", pos:"Noun", pron:"/mæp/", ru:"карта", def:"a drawing of a place showing streets, rivers, mountains, etc.", ex:"can you show me your street on the map? | I'll never find it without a map.", collocate:null, related:null, cat:"nouns" },
+  { en:"place", pos:"Noun", pron:"/pleɪs/", ru:"место / населённый пункт", def:"a particular area where something can be", ex:"there's a nice place to eat near here | they're building new houses in several places.", collocate:null, related:null, cat:"nouns" },
+  { en:"shoe", pos:"Noun", pron:"/ʃuː/", ru:"туфля / ботинок", def:"the things that you wear on your feet so you can walk outside", ex:"a pair of brown shoes | I need some new shoes.", collocate:"a pair of shoes", related:null, cat:"nouns" },
+  { en:"shorts", pos:"Noun plural", pron:"/ʃɔːts/", ru:"шорты", def:"trousers that end above the knee or halfway down the thigh", ex:"it's hot, so I'm wearing shorts today | he packed several pairs of shorts for the holiday.", collocate:"wear shorts", related:null, cat:"nouns" },
+  { en:"stop", pos:"Noun", pron:"/stɒp/", ru:"остановка", def:"a specific place where buses or trains stop to pick up passengers", ex:"get off at the next bus stop | there's a stop just outside the school.", collocate:"bus stop", related:null, cat:"nouns" },
+  { en:"toothbrush", pos:"Noun", pron:"/ˈtuːθbrʌʃ/", ru:"зубная щётка", def:"a brush for cleaning the teeth", ex:"remember to pack your toothbrush | he forgot his toothbrush on the trip.", collocate:null, related:null, cat:"nouns" },
+  { en:"transport", pos:"Noun", pron:"/ˈtrænsˈpɔːt/", ru:"транспорт", def:"a system or means of conveying people or goods from place to place", ex:"public transport in the city is very efficient.", collocate:null, related:null, cat:"nouns" },
+  { en:"swimming", pos:"Noun uncount", pron:"/ˈswɪmɪŋ/", ru:"плавание", def:"the activity of moving in the water using your arms and legs", ex:"I love swimming | we go swimming every Saturday.", collocate:"swimming pool | swimming costume", related:"Verb: swim", cat:"nouns" },
+  { en:"turn", pos:"Noun", pron:"/tɜː(r)n/", ru:"очередь / ход", def:"one person does something, then another person does it, and so on", ex:"whose turn is it to wash the dishes? | we took turns with the camera.", collocate:"take turns | someone's turn to do something", related:null, cat:"nouns" },
+  { en:"back", pos:"Adverb", pron:"/bæk/", ru:"назад / обратно", def:"you use back with verbs to say something returns where it came from", ex:"you're back | put it back in the cupboard | I'll give it back tomorrow.", collocate:null, related:null, cat:"nouns" },
+  { en:"baby", pos:"Noun", pron:"/ˈbeɪbi/", ru:"младенец / ребёнок", def:"a very young child, especially one newly or recently born", ex:"they just had a baby girl | the baby woke up several times during the night.", collocate:null, related:null, cat:"nouns" },
+  { en:"engineer", pos:"Noun", pron:"/ˌendʒɪˈnɪə/", ru:"инженер / технический специалист", def:"a person who designs, builds, or maintains engines, machines, or structures", ex:"we need to call an engineer to fix the boiler.", collocate:null, related:null, cat:"nouns" },
+  { en:"family", pos:"Noun", pron:"/ˈfæm(ə)li/", ru:"семья", def:"your mother, father, brothers, sisters, etc.", ex:"our family home is in Milan | she came from a big family.", collocate:null, related:null, cat:"nouns" },
+];
+
+const catMap = {
+  places:"grid-places", directions:"grid-directions", adj:"grid-adj",
+  verbs:"grid-verbs", home:"grid-home", activities:"grid-activities", nouns:"grid-nouns"
+};
+
+function renderCards() {
+  Object.values(catMap).forEach(id => { const el=document.getElementById(id); if(el) el.innerHTML=''; });
+  vocab.forEach(v => {
+    const el = document.createElement('div');
+    el.className = 'card';
+    el.dataset.side = '0';
+    const oppHtml = v.opposite ? `<div class="word-trans-opp">Opposite: <span>${v.opposite}</span></div>` : '';
+    const relHtml = v.related ? `<div class="word-related">→ ${v.related}</div>` : '';
+    const colHtml = v.collocate ? `<div class="word-collocate">⚡ ${v.collocate}</div>` : '';
+    const exShort = v.ex.split('|').slice(0,2).join(' | ');
+    el.innerHTML = `
+      <div class="card-dots">
+        <div class="card-dot active"></div>
+        <div class="card-dot"></div>
+        <div class="card-dot"></div>
+      </div>
+      <div class="card-face">
+        <div class="face-word">
+          <div class="word-meta">${v.pos} &nbsp; <span class="word-pron">${v.pron}</span></div>
+          <div class="word-en">${v.en}</div>
+          <div class="word-def">${v.def}</div>
+          ${colHtml}
+        </div>
+        <div class="face-trans">
+          <div class="word-meta">${v.pos}</div>
+          <div class="word-en">${v.en}</div>
+          <div class="word-trans-main">${v.ru}</div>
+          ${oppHtml}${relHtml}
+        </div>
+        <div class="face-ex">
+          <div class="word-ex-label">Textbook examples</div>
+          <div class="word-ex-text">${exShort}</div>
+        </div>
+      </div>
+      <div class="card-tap">tap →</div>
+    `;
+    el.onclick = () => {
+      const cur = parseInt(el.dataset.side);
+      const next = (cur + 1) % 3;
+      el.dataset.side = next;
+      el.querySelectorAll('.card-dot').forEach((d,i) => {
+        d.className = 'card-dot' + (i<next?' done':i===next?' active':'');
+      });
+    };
+    const grid = document.getElementById(catMap[v.cat]);
+    if (grid) grid.appendChild(el);
+  });
+}
+
+function showSection(name) {
+  ['cards','match','collocations','quiz','fill'].forEach(s => {
+    document.getElementById('section-'+s).style.display = s===name?'block':'none';
+  });
+  document.querySelectorAll('.tab-btn').forEach((b,i) => {
+    b.classList.toggle('active',['cards','match','collocations','quiz','fill'][i]===name);
+  });
+  if(name==='match') initMatch();
+  if(name==='collocations') initColloc();
+  if(name==='quiz') initQuiz();
+  if(name==='fill') initFill();
+}
+
+function shuffle(a){ return [...a].sort(()=>Math.random()-0.5); }
+
+// MATCH
+let matchSel=null, matchScore=0, matchErrors=0;
+function initMatch(){
+  const pool=shuffle(vocab).slice(0,8);
+  matchScore=0; matchErrors=0;
+  document.getElementById('match-score').textContent=0;
+  document.getElementById('match-errors').textContent=0;
+  document.getElementById('match-total').textContent=pool.length;
+  document.getElementById('match-result').classList.add('hidden');
+  matchSel=null;
+  const L=document.getElementById('match-left'), R=document.getElementById('match-right');
+  L.innerHTML=''; R.innerHTML='';
+  shuffle(pool).forEach(v=>{
+    const el=document.createElement('div'); el.className='match-item en-word';
+    el.textContent=v.en; el.dataset.key=v.en; el.dataset.side='en';
+    el.onclick=()=>handleMatch(el); L.appendChild(el);
+  });
+  shuffle(pool).forEach(v=>{
+    const el=document.createElement('div'); el.className='match-item ru-word';
+    el.textContent=v.ru; el.dataset.key=v.en; el.dataset.side='ru';
+    el.onclick=()=>handleMatch(el); R.appendChild(el);
+  });
+}
+function handleMatch(el){
+  if(el.classList.contains('matched')||el.classList.contains('wrong')) return;
+  if(!matchSel){ document.querySelectorAll('.match-item').forEach(e=>e.classList.remove('selected')); el.classList.add('selected'); matchSel=el; return; }
+  if(el===matchSel){ el.classList.remove('selected'); matchSel=null; return; }
+  if(el.dataset.side===matchSel.dataset.side){ document.querySelectorAll('.match-item').forEach(e=>e.classList.remove('selected')); el.classList.add('selected'); matchSel=el; return; }
+  if(el.dataset.key===matchSel.dataset.key){
+    el.classList.add('matched'); matchSel.classList.add('matched');
+    el.classList.remove('selected'); matchSel.classList.remove('selected');
+    matchScore++; document.getElementById('match-score').textContent=matchScore; matchSel=null;
+    if(matchScore===parseInt(document.getElementById('match-total').textContent)) setTimeout(()=>document.getElementById('match-result').classList.remove('hidden'),500);
+  } else {
+    el.classList.add('wrong'); matchSel.classList.add('wrong');
+    matchErrors++; document.getElementById('match-errors').textContent=matchErrors;
+    const a=el,b=matchSel; matchSel=null;
+    setTimeout(()=>{ a.classList.remove('wrong','selected'); b.classList.remove('wrong','selected'); },700);
+  }
+}
+
+// COLLOCATIONS
+const collocItems = [
+  { word:"on the ___", answer:"corner", options:["corner","edge","side","end"], hint:"on the ___ of a street" },
+  { word:"wash the ___", answer:"dishes", options:["dishes","clothes","table","floor"], hint:"plates and cups" },
+  { word:"have a ___", answer:"headache", options:["headache","problem","mess","headache"], hint:"your head hurts" },
+  { word:"___ left/right", answer:"turn", options:["turn","go","cross","walk"], hint:"change direction" },
+  { word:"bus ___", answer:"stop", options:["stop","place","corner","park"], hint:"where buses stop" },
+  { word:"take ___", answer:"turns", options:["turns","time","back","away"], hint:"one person does it, then another" },
+  { word:"___ to do something", answer:"forget", options:["forget","miss","lose","drop"], hint:"don't remember to do it" },
+  { word:"___ something to someone", answer:"send", options:["send","give","put","take"], hint:"a letter or text" },
+  { word:"___ the dishes", answer:"wash", options:["wash","clean","make","do"], hint:"after a meal" },
+  { word:"at the ___", answer:"moment", options:["moment","time","end","corner"], hint:"happening now" },
+  { word:"___ on/off the heating", answer:"turn", options:["turn","put","switch","start"], hint:"collocate with heating" },
+  { word:"make a ___", answer:"mess", options:["mess","noise","mistake","fun"], hint:"untidy place" },
+  { word:"a pair of ___", answer:"shoes", options:["shoes","trousers","glasses","shorts"], hint:"for your feet" },
+  { word:"get a ___", answer:"gift", options:["gift","card","present","surprise"], hint:"collocate: get/give a ___" },
+];
+
+let colItems=[], colIdx=0, colScore=0, colErrors=0, colAnswered=false;
+function initColloc(){
+  colItems=shuffle(collocItems).slice(0,12); colIdx=0; colScore=0; colErrors=0;
+  document.getElementById('col-result').classList.add('hidden');
+  document.getElementById('col-play').classList.remove('hidden');
+  showColloc();
+}
+function showColloc(){
+  if(colIdx>=colItems.length){ endColloc(); return; }
+  const item=colItems[colIdx]; colAnswered=false;
+  document.getElementById('col-word').textContent=item.word;
+  document.getElementById('col-qtext').textContent=item.hint;
+  document.getElementById('col-current').textContent=colIdx+1;
+  document.getElementById('col-score').textContent=colScore;
+  document.getElementById('col-errors').textContent=colErrors;
+  document.getElementById('col-feedback').textContent='';
+  document.getElementById('col-feedback').className='quiz-feedback';
+  document.getElementById('col-next').classList.add('hidden');
+  const optEl=document.getElementById('col-options'); optEl.innerHTML='';
+  const uniqueOpts=[...new Set(item.options)];
+  shuffle(uniqueOpts).forEach(o=>{
+    const btn=document.createElement('button'); btn.className='colloc-option'; btn.textContent=o;
+    btn.onclick=()=>{
+      if(colAnswered) return; colAnswered=true;
+      if(o===item.answer){ btn.classList.add('correct'); colScore++; document.getElementById('col-feedback').textContent='✓ Correct!'; document.getElementById('col-feedback').className='quiz-feedback good'; }
+      else { btn.classList.add('wrong'); colErrors++; optEl.querySelectorAll('button').forEach(b=>{ if(b.textContent===item.answer) b.classList.add('correct'); }); document.getElementById('col-feedback').textContent=`Answer: ${item.answer}`; document.getElementById('col-feedback').className='quiz-feedback bad'; }
+      document.getElementById('col-score').textContent=colScore;
+      document.getElementById('col-errors').textContent=colErrors;
+      document.getElementById('col-next').classList.remove('hidden');
+    };
+    optEl.appendChild(btn);
+  });
+}
+function nextColloc(){ colIdx++; showColloc(); }
+function endColloc(){
+  document.getElementById('col-play').classList.add('hidden');
+  document.getElementById('col-result').classList.remove('hidden');
+  const pct=Math.round(colScore/colItems.length*100);
+  document.getElementById('col-final').textContent=`${colScore}/${colItems.length}`;
+  document.getElementById('col-sub').textContent=`${pct}% correct`;
+  document.getElementById('col-emoji').textContent=pct>=80?'🏆':pct>=50?'👍':'📖';
+}
+
+// QUIZ
+let quizItems=[],quizIdx=0,quizCorrect=0,quizAnswered=false,quizMistakes=[];
+function initQuiz(onlyErrors=false){
+  document.getElementById('quiz-result').classList.add('hidden');
+  document.getElementById('quiz-play').classList.remove('hidden');
+  quizItems=shuffle(onlyErrors&&quizMistakes.length?quizMistakes:vocab).slice(0,onlyErrors?quizMistakes.length:15);
+  quizMistakes=[]; quizIdx=0; quizCorrect=0;
+  renderDots(); showQuiz();
+}
+function renderDots(){
+  document.getElementById('quiz-dots').innerHTML=quizItems.map((_,i)=>`<div class="dot ${i===0?'active':''}" id="dot-${i}"></div>`).join('');
+}
+function showQuiz(){
+  if(quizIdx>=quizItems.length){ endQuiz(); return; }
+  const v=quizItems[quizIdx]; quizAnswered=false;
+  const dir=Math.random()>0.5;
+  document.getElementById('quiz-dir').textContent=dir?'English → Russian':'Russian → English';
+  document.getElementById('quiz-word').textContent=dir?v.en:v.ru;
+  document.getElementById('quiz-ctx').textContent=dir?v.pos:'';
+  document.getElementById('quiz-feedback').textContent='';
+  document.getElementById('quiz-feedback').className='quiz-feedback';
+  document.getElementById('quiz-next-btn').style.display='none';
+  document.getElementById('quiz-counter').textContent=`Question ${quizIdx+1} of ${quizItems.length}`;
+  document.getElementById('quiz-bar').style.width=(quizIdx/quizItems.length*100)+'%';
+  document.querySelectorAll('.dot').forEach((d,i)=>{ d.className='dot'+(i<quizIdx?' done':i===quizIdx?' active':''); });
+  const wrong=shuffle(vocab.filter(x=>x.en!==v.en)).slice(0,3);
+  const opts=shuffle([v,...wrong]);
+  const optEl=document.getElementById('quiz-options'); optEl.innerHTML='';
+  opts.forEach(o=>{
+    const btn=document.createElement('button'); btn.className='quiz-option';
+    btn.textContent=dir?o.ru:o.en;
+    btn.onclick=()=>{
+      if(quizAnswered) return; quizAnswered=true;
+      const correct=o.en===v.en; btn.classList.add(correct?'correct':'wrong');
+      if(!correct){ quizMistakes.push(v); optEl.querySelectorAll('button').forEach(b=>{ if(b.textContent===(dir?v.ru:v.en)) b.classList.add('correct'); }); document.getElementById('quiz-feedback').textContent=`Answer: ${dir?v.ru:v.en}`; document.getElementById('quiz-feedback').className='quiz-feedback bad'; }
+      else { quizCorrect++; document.getElementById('quiz-feedback').textContent='✓ Correct!'; document.getElementById('quiz-feedback').className='quiz-feedback good'; }
+      document.getElementById('quiz-next-btn').style.display='inline-block';
+    };
+    optEl.appendChild(btn);
+  });
+}
+function nextQuiz(){ quizIdx++; showQuiz(); }
+function endQuiz(){
+  document.getElementById('quiz-play').classList.add('hidden');
+  document.getElementById('quiz-result').classList.remove('hidden');
+  const pct=Math.round(quizCorrect/quizItems.length*100);
+  document.getElementById('quiz-final-score').textContent=`${quizCorrect}/${quizItems.length}`;
+  document.getElementById('quiz-final-sub').textContent=`${pct}% correct`;
+  document.getElementById('quiz-emoji').textContent=pct>=80?'🏆':pct>=50?'👍':'📖';
+}
+
+// FILL
+const fillTasks = [
+  { sentence:"The café is ___ the bookstore and the florist.", answer:"between", hint:"preposition" },
+  { sentence:"The shop is on the ___ of Church Street.", answer:"corner", hint:"where two streets meet" },
+  { sentence:"Please wait for me ___ front of the supermarket.", answer:"in", hint:"in ___ of" },
+  { sentence:"Turn left at the next ___, then turn right.", answer:"street", hint:"road in a town" },
+  { sentence:"The pharmacy is next ___ the bakery.", answer:"to", hint:"next ___ = beside" },
+  { sentence:"Is there a ___ near here? I need to get some money.", answer:"bank", hint:"keeps your money" },
+  { sentence:"Get off at the next bus ___.", answer:"stop", hint:"where buses stop" },
+  { sentence:"Can you help me? I can't ___ my keys.", answer:"find", hint:"looking but not getting" },
+  { sentence:"Don't ___ to lock the door.", answer:"forget", hint:"opposite of remember" },
+  { sentence:"It's your ___ to wash the dishes.", answer:"turn", hint:"take turns" },
+  { sentence:"Whose ___ is it to wash the dishes?", answer:"turn", hint:"take turns" },
+  { sentence:"I can't use this chair, it's ___.", answer:"broken", hint:"damaged, doesn't work" },
+  { sentence:"He found the room completely ___.", answer:"empty", hint:"nothing inside — opposite of full" },
+  { sentence:"Please ___ on the heating, it's cold in here.", answer:"turn", hint:"turn on/off" },
+  { sentence:"Can you ___ up the toys from the floor?", answer:"pick", hint:"phrasal verb: pick ___" },
+  { sentence:"I share a ___ with my brother.", answer:"room", hint:"space in a building" },
+  { sentence:"Put the butter back in the ___.", answer:"fridge", hint:"keeps food cold" },
+  { sentence:"He put the books back on the ___.", answer:"shelf", hint:"flat board on a wall" },
+  { sentence:"We need to ___ the living room before the guests arrive.", answer:"tidy", hint:"make neat and organised" },
+  { sentence:"The ___ in the hotel was not very good.", answer:"food", hint:"what you eat" },
+  { sentence:"Why don't you ___ round after work?", answer:"come", hint:"phrasal verb: come ___" },
+  { sentence:"She ___ the street to meet her friend.", answer:"crossed", hint:"went from one side to the other" },
+  { sentence:"I sent a letter ___ my aunt.", answer:"to", hint:"send something ___ someone" },
+  { sentence:"Public ___ in the city is very efficient.", answer:"transport", hint:"buses, trains, etc." },
+  { sentence:"I love ___. We go every Saturday.", answer:"swimming", hint:"moving in water" },
+  { sentence:"Remember to pack your ___.", answer:"toothbrush", hint:"for cleaning teeth" },
+];
+
+let fillIdx=0,fillCorrect=0,fillItems=[];
+function initFill(){
+  fillItems=shuffle(fillTasks); fillIdx=0; fillCorrect=0;
+  document.getElementById('fill-result').classList.add('hidden');
+  document.getElementById('fill-play').classList.remove('hidden');
+  showFill();
+}
+function showFill(){
+  if(fillIdx>=fillItems.length){ endFill(); return; }
+  const t=fillItems[fillIdx];
+  document.getElementById('fill-situation').innerHTML=t.sentence.replace('___','<span class="fill-blank">___</span>');
+  document.getElementById('fill-hint').textContent=`💡 Hint: ${t.hint}`;
+  document.getElementById('fill-input').value='';
+  document.getElementById('fill-input').className='fill-input';
+  document.getElementById('fill-feedback').textContent='';
+  document.getElementById('fill-feedback').className='fill-feedback';
+  document.getElementById('fill-counter').textContent=`Sentence ${fillIdx+1} of ${fillItems.length}`;
+  document.getElementById('fill-bar').style.width=(fillIdx/fillItems.length*100)+'%';
+  document.getElementById('fill-skip').classList.remove('hidden');
+  document.getElementById('fill-next').classList.add('hidden');
+  document.getElementById('fill-input').disabled=false;
+  setTimeout(()=>document.getElementById('fill-input').focus(),100);
+}
+function normalize(s){ return s.toLowerCase().trim().replace(/[!?\.,]/g,''); }
+function checkFill(){
+  const t=fillItems[fillIdx];
+  const val=document.getElementById('fill-input').value;
+  if(!val.trim()) return;
+  const correct=normalize(val)===normalize(t.answer);
+  document.getElementById('fill-input').classList.add(correct?'correct':'wrong');
+  document.getElementById('fill-input').disabled=true;
+  if(correct){ fillCorrect++; document.getElementById('fill-feedback').textContent='✓ Correct!'; document.getElementById('fill-feedback').className='fill-feedback good'; }
+  else { document.getElementById('fill-feedback').textContent=`✗ Answer: ${t.answer}`; document.getElementById('fill-feedback').className='fill-feedback bad'; }
+  document.getElementById('fill-skip').classList.add('hidden');
+  document.getElementById('fill-next').classList.remove('hidden');
+}
+function skipFill(){
+  const t=fillItems[fillIdx];
+  document.getElementById('fill-feedback').textContent=`Answer: ${t.answer}`;
+  document.getElementById('fill-feedback').className='fill-feedback bad';
+  document.getElementById('fill-input').disabled=true;
+  document.getElementById('fill-skip').classList.add('hidden');
+  document.getElementById('fill-next').classList.remove('hidden');
+}
+function nextFill(){ fillIdx++; showFill(); }
+function endFill(){
+  document.getElementById('fill-play').classList.add('hidden');
+  document.getElementById('fill-result').classList.remove('hidden');
+  const pct=Math.round(fillCorrect/fillItems.length*100);
+  document.getElementById('fill-final-score').textContent=`${fillCorrect}/${fillItems.length}`;
+  document.getElementById('fill-final-sub').textContent=`${pct}% correct`;
+  document.getElementById('fill-emoji').textContent=pct>=80?'🌟':pct>=50?'📝':'📖';
+}
+
+renderCards();
+</script>
+</body>
+</html>
