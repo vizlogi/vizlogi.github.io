@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>50 фраз итальянского — с нуля за 15 минут</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0f0d0b;
+  --surface: #1a1714;
+  --border: #2e2820;
+  --gold: #d4a843;
+  --gold-light: #f0c96a;
+  --cream: #f5ede0;
+  --muted: #7a6a58;
+  --green: #4a8a5a;
+  --red: #c0533a;
+  --text: #e8ddd0;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* subtle texture */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(212,168,67,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 40% at 90% 90%, rgba(192,83,58,0.08) 0%, transparent 50%);
+  pointer-events: none; z-index: 0;
+}
+
+.wrapper {
+  position: relative; z-index: 1;
+  max-width: 700px; margin: 0 auto;
+  padding: 0 16px 80px;
+}
+
+/* ===== HERO ===== */
+.hero {
+  text-align: center;
+  padding: 60px 20px 40px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 40px;
+}
+.hero-flag { font-size: 3rem; margin-bottom: 16px; display: block; }
+.hero-eyebrow {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 16px;
+  display: block;
+}
+.hero h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.2rem, 7vw, 3.6rem);
+  font-weight: 700;
+  line-height: 1.08;
+  color: var(--cream);
+  margin-bottom: 18px;
+}
+.hero h1 em {
+  color: var(--gold);
+  font-style: italic;
+}
+.hero-sub {
+  font-size: 0.95rem;
+  color: var(--muted);
+  line-height: 1.6;
+  max-width: 440px;
+  margin: 0 auto 28px;
+}
+.hero-promise {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(212,168,67,0.1);
+  border: 1px solid rgba(212,168,67,0.25);
+  border-radius: 99px;
+  padding: 8px 18px;
+  font-size: 0.82rem;
+  color: var(--gold-light);
+  font-weight: 500;
+}
+
+/* ===== TABS ===== */
+.tabs {
+  display: flex; gap: 6px; justify-content: center;
+  margin-bottom: 28px; flex-wrap: wrap;
+}
+.tab-btn {
+  padding: 8px 18px;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  border-radius: 99px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem; font-weight: 600;
+  color: var(--muted);
+  cursor: pointer; transition: all 0.2s;
+  letter-spacing: 0.02em;
+}
+.tab-btn:hover { border-color: var(--gold); color: var(--gold); }
+.tab-btn.active {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: #0f0d0b;
+}
+
+/* ===== SECTION LABEL ===== */
+.section-label {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 14px; margin-top: 32px;
+}
+.section-label-icon { font-size: 1.1rem; }
+.section-label-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.05rem;
+  font-style: italic;
+  color: var(--gold);
+  letter-spacing: 0.04em;
+}
+.section-label::after {
+  content: ''; flex: 1; height: 1px;
+  background: linear-gradient(90deg, var(--border), transparent);
+}
+
+/* ===== CARDS ===== */
+#section-cards { display: block; }
+#section-match, #section-quiz { display: none; }
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(195px, 1fr));
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  padding: 18px 15px;
+  cursor: pointer;
+  transition: transform 0.15s, border-color 0.2s, box-shadow 0.2s;
+  position: relative;
+  min-height: 88px;
+  display: flex; flex-direction: column;
+  align-items: flex-start; justify-content: center;
+  user-select: none;
+}
+.card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(212,168,67,0.4);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.3);
+}
+.card .it {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.15rem; font-weight: 600;
+  color: var(--cream);
+  line-height: 1.3;
+}
+.card .ru {
+  font-size: 0.82rem; color: var(--green);
+  margin-top: 8px; opacity: 0;
+  transition: opacity 0.25s;
+  font-weight: 500;
+}
+.card.flipped .ru { opacity: 1; }
+.card.flipped { border-color: rgba(74,138,90,0.4); }
+.card .note {
+  font-size: 0.68rem; color: var(--muted);
+  margin-top: 4px; opacity: 0; transition: opacity 0.25s;
+  font-style: italic; line-height: 1.4;
+}
+.card.flipped .note { opacity: 1; }
+.card .tap-hint {
+  position: absolute; top: 10px; right: 12px;
+  font-size: 0.62rem; color: #3a3228;
+  transition: opacity 0.2s;
+}
+.card.flipped .tap-hint { opacity: 0; }
+
+/* number badge */
+.card .num {
+  position: absolute; top: -8px; left: -6px;
+  width: 22px; height: 22px;
+  background: var(--gold);
+  border-radius: 50%;
+  font-size: 0.62rem; font-weight: 700;
+  color: #0f0d0b;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ===== MATCH ===== */
+.game-header { text-align: center; margin-bottom: 22px; }
+.game-header h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.8rem; color: var(--cream);
+}
+.game-header p { color: var(--muted); font-size: 0.85rem; margin-top: 4px; }
+
+.score-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--surface); border-radius: 12px; padding: 12px 18px;
+  border: 1.5px solid var(--border); margin-bottom: 16px;
+}
+.score-num { font-family: 'Cormorant Garamond', serif; font-size: 1.7rem; color: var(--gold); }
+.score-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+
+.match-board { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px; }
+.match-col { display: flex; flex-direction: column; gap: 7px; }
+.match-item {
+  background: var(--surface); border: 1.5px solid var(--border);
+  border-radius: 10px; padding: 11px 12px; cursor: pointer;
+  font-size: 0.88rem; text-align: center; transition: all 0.18s;
+  min-height: 44px; display: flex; align-items: center; justify-content: center;
+  line-height: 1.3;
+}
+.match-item.it-word { font-family: 'Cormorant Garamond', serif; color: var(--cream); font-size: 1rem; }
+.match-item.ru-word { color: var(--muted); font-size: 0.82rem; }
+.match-item:hover:not(.matched):not(.wrong) { border-color: var(--gold); color: var(--gold); }
+.match-item.selected { border-color: var(--gold); background: rgba(212,168,67,0.08); color: var(--gold); }
+.match-item.matched { border-color: rgba(74,138,90,0.5); background: rgba(74,138,90,0.08); color: var(--green); opacity: 0.6; cursor: default; }
+.match-item.wrong { border-color: #c05050; background: rgba(192,80,80,0.08); animation: shake 0.38s; }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+
+/* ===== QUIZ ===== */
+.quiz-progress { height: 3px; background: var(--border); border-radius: 99px; margin-bottom: 24px; overflow: hidden; }
+.quiz-progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--gold-light)); border-radius: 99px; transition: width 0.4s; }
+.quiz-card {
+  background: var(--surface); border-radius: 18px; padding: 32px 24px;
+  text-align: center; border: 1.5px solid var(--border); margin-bottom: 16px;
+}
+.quiz-q-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); margin-bottom: 14px; }
+.quiz-question { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.6rem,5vw,2.4rem); color: var(--cream); margin-bottom: 6px; }
+.quiz-sub { font-size: 0.78rem; color: var(--muted); font-style: italic; }
+.quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px; }
+.quiz-option {
+  padding: 13px 10px; background: var(--surface);
+  border: 1.5px solid var(--border); border-radius: 12px;
+  font-size: 0.88rem; cursor: pointer; transition: all 0.18s;
+  font-family: 'Inter', sans-serif; color: var(--text); line-height: 1.3;
+}
+.quiz-option:hover:not(.correct):not(.wrong) { border-color: var(--gold); color: var(--gold); }
+.quiz-option.correct { border-color: var(--green); background: rgba(74,138,90,0.12); color: #7acc8a; font-weight: 600; }
+.quiz-option.wrong { border-color: #c05050; background: rgba(192,80,80,0.08); color: #c07070; }
+.quiz-feedback { text-align: center; font-size: 0.88rem; margin-top: 10px; min-height: 22px; font-weight: 600; }
+.quiz-feedback.good { color: var(--green); }
+.quiz-feedback.bad { color: #c07070; }
+.quiz-counter { font-size: 0.8rem; color: var(--muted); text-align: center; margin-bottom: 10px; }
+.progress-dots { display: flex; gap: 5px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); transition: all 0.3s; }
+.dot.done { background: var(--green); }
+.dot.active { background: var(--gold); transform: scale(1.4); }
+
+/* ===== BUTTONS ===== */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 28px;
+  background: var(--gold); color: #0f0d0b;
+  border: none; border-radius: 99px;
+  font-family: 'Inter', sans-serif; font-size: 0.9rem; font-weight: 700;
+  cursor: pointer; transition: all 0.2s;
+  box-shadow: 0 4px 20px rgba(212,168,67,0.3);
+  text-decoration: none;
+}
+.btn:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 6px 28px rgba(212,168,67,0.4); }
+.btn.ghost {
+  background: transparent; color: var(--gold);
+  border: 1.5px solid rgba(212,168,67,0.4);
+  box-shadow: none;
+}
+.btn.ghost:hover { border-color: var(--gold); background: rgba(212,168,67,0.08); }
+.btn-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 14px; }
+
+/* ===== RESULT ===== */
+.result-screen { text-align: center; padding: 40px 16px; }
+.result-emoji { font-size: 3.5rem; margin-bottom: 12px; }
+.result-title { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; color: var(--cream); margin-bottom: 6px; }
+.result-score { font-family: 'Cormorant Garamond', serif; font-size: 3rem; color: var(--gold); }
+.result-sub { color: var(--muted); margin-bottom: 8px; font-size: 0.9rem; }
+
+/* ===== TELEGRAM CTA ===== */
+.tg-cta {
+  margin-top: 56px;
+  background: linear-gradient(135deg, #1a1714 0%, #131110 100%);
+  border: 1px solid rgba(212,168,67,0.2);
+  border-radius: 22px;
+  padding: 36px 28px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.tg-cta::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(212,168,67,0.07) 0%, transparent 60%);
+  pointer-events: none;
+}
+.tg-cta-icon { font-size: 2.8rem; margin-bottom: 14px; display: block; }
+.tg-cta h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  color: var(--cream);
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+.tg-cta h3 em { color: var(--gold); font-style: italic; }
+.tg-cta p { color: var(--muted); font-size: 0.88rem; line-height: 1.6; margin-bottom: 24px; max-width: 400px; margin-left: auto; margin-right: auto; }
+.tg-cta-list {
+  list-style: none; text-align: left;
+  display: inline-block;
+  margin-bottom: 28px;
+}
+.tg-cta-list li {
+  font-size: 0.85rem; color: var(--text);
+  padding: 4px 0;
+  display: flex; align-items: flex-start; gap: 10px;
+}
+.tg-cta-list li::before {
+  content: '✦'; color: var(--gold); font-size: 0.6rem;
+  flex-shrink: 0; margin-top: 3px;
+}
+.tg-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 14px 32px;
+  background: #229ED9;
+  color: white;
+  border: none; border-radius: 99px;
+  font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 700;
+  cursor: pointer; transition: all 0.2s;
+  box-shadow: 0 4px 20px rgba(34,158,217,0.35);
+  text-decoration: none;
+}
+.tg-btn:hover { background: #1a8fc4; transform: translateY(-2px); box-shadow: 0 6px 28px rgba(34,158,217,0.45); }
+.tg-btn svg { width: 22px; height: 22px; fill: white; flex-shrink: 0; }
+.tg-note { font-size: 0.72rem; color: var(--muted); margin-top: 14px; }
+
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- HERO -->
+  <header class="hero">
+    <span class="hero-flag">🇮🇹</span>
+    <span class="hero-eyebrow">Бесплатный тренажёр</span>
+    <h1>50 фраз итальянского<br><em>с нуля</em></h1>
+    <p class="hero-sub">Самые нужные слова и выражения — те, с которых реально начинается итальянский. Нажми на карточку, проверь себя в тесте.</p>
+    <div class="hero-promise">⏱ Уходит 15 минут · Никакой грамматики · Только живые фразы</div>
+  </header>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showSection('cards')">📚 Карточки</button>
+    <button class="tab-btn" onclick="showSection('match')">🔗 Соединить</button>
+    <button class="tab-btn" onclick="showSection('quiz')">🎯 Проверь себя</button>
+  </div>
+
+  <!-- ==================== CARDS ==================== -->
+  <div id="section-cards">
+
+    <div class="section-label">
+      <span class="section-label-icon">👋</span>
+      <span class="section-label-text">Привет и пока</span>
+    </div>
+    <div class="cards-grid" id="grid-hello"></div>
+
+    <div class="section-label">
+      <span class="section-label-icon">🙋</span>
+      <span class="section-label-text">Знакомство — как вас зовут?</span>
+    </div>
+    <div class="cards-grid" id="grid-meet"></div>
+
+    <div class="section-label">
+      <span class="section-label-icon">😊</span>
+      <span class="section-label-text">Как дела?</span>
+    </div>
+    <div class="cards-grid" id="grid-how"></div>
+
+    <div class="section-label">
+      <span class="section-label-icon">🗣️</span>
+      <span class="section-label-text">Выжить в разговоре</span>
+    </div>
+    <div class="cards-grid" id="grid-survive"></div>
+
+    <div class="section-label">
+      <span class="section-label-icon">🙏</span>
+      <span class="section-label-text">Вежливость — must know</span>
+    </div>
+    <div class="cards-grid" id="grid-polite"></div>
+
+    <div class="section-label">
+      <span class="section-label-icon">❓</span>
+      <span class="section-label-text">Первые вопросы</span>
+    </div>
+    <div class="cards-grid" id="grid-questions"></div>
+
+    <p style="text-align:center;color:#3a3228;font-size:0.78rem;margin-top:24px;font-style:italic;">Нажми на карточку — увидишь перевод и подсказку</p>
+  </div>
+
+  <!-- ==================== MATCH ==================== -->
+  <div id="section-match">
+    <div class="game-header">
+      <h2>Соединить пары</h2>
+      <p>Слева — итальянский, справа — русский. Выбери пару.</p>
+    </div>
+    <div class="score-bar">
+      <div><div class="score-num" id="match-score">0</div><div class="score-label">Верно</div></div>
+      <div><div class="score-num" id="match-total">0</div><div class="score-label">Всего пар</div></div>
+      <div><div class="score-num" id="match-errors">0</div><div class="score-label">Ошибок</div></div>
+    </div>
+    <div class="match-board">
+      <div class="match-col" id="match-left"></div>
+      <div class="match-col" id="match-right"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn ghost" onclick="initMatch()">🔄 Новый раунд</button>
+    </div>
+    <div id="match-result" class="result-screen hidden">
+      <div class="result-emoji">🎉</div>
+      <div class="result-title">Tutto bene!</div>
+      <div class="result-sub">Все пары найдены — ты уже говоришь по-итальянски 😄</div>
+      <div class="btn-row"><button class="btn ghost" onclick="initMatch()">Ещё раунд</button></div>
+    </div>
+  </div>
+
+  <!-- ==================== QUIZ ==================== -->
+  <div id="section-quiz">
+    <div class="game-header">
+      <h2>Проверь себя</h2>
+      <p>Выбери правильный перевод — или вспомни итальянский по-русскому.</p>
+    </div>
+    <div class="quiz-progress"><div class="quiz-progress-fill" id="quiz-bar"></div></div>
+    <div class="progress-dots" id="quiz-dots"></div>
+    <div class="quiz-counter" id="quiz-counter"></div>
+    <div id="quiz-play">
+      <div class="quiz-card">
+        <div class="quiz-q-label" id="quiz-dir">Итальянский → Русский</div>
+        <div class="quiz-question" id="quiz-word">—</div>
+        <div class="quiz-sub" id="quiz-ctx"></div>
+      </div>
+      <div class="quiz-options" id="quiz-options"></div>
+      <div class="quiz-feedback" id="quiz-feedback"></div>
+      <div class="btn-row">
+        <button class="btn ghost" id="quiz-next-btn" onclick="nextQuiz()" style="display:none">Следующий →</button>
+      </div>
+    </div>
+    <div id="quiz-result" class="result-screen hidden">
+      <div class="result-emoji" id="quiz-emoji">🏆</div>
+      <div class="result-title" id="quiz-result-title">Risultato!</div>
+      <div class="result-score" id="quiz-final-score"></div>
+      <div class="result-sub" id="quiz-final-sub"></div>
+      <div class="btn-row">
+        <button class="btn" onclick="initQuiz()">Пройти ещё раз</button>
+        <button class="btn ghost" onclick="initQuiz(true)">Только ошибки</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== TELEGRAM CTA ==================== -->
+  <div class="tg-cta">
+    <span class="tg-cta-icon">✉️</span>
+    <h3>Хочешь выучить<br><em>настоящий итальянский?</em></h3>
+    <p>Это был только старт. В моём Телеграм — уроки, разборы, живые диалоги и ответы на вопросы. Для тех, кто хочет не просто знать слова, а говорить.</p>
+    <ul class="tg-cta-list">
+      <li>Уроки и карточки каждую неделю — бесплатно</li>
+      <li>Разбор типичных ошибок русскоязычных учеников</li>
+      <li>Живые диалоги и произношение</li>
+      <li>Можно задать вопрос и получить ответ</li>
+    </ul>
+    <a href="https://t.me/bakolz" class="tg-btn" target="_blank">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M11.944 0A12 12 0 1 0 23.888 12 12.016 12.016 0 0 0 11.944 0zm3.09 17.536-5.028-2.49-1.414 1.38-.01-4.48 8.12-7.327c.354-.313-.076-.456-.548-.143l-10.01 6.285-4.32-1.355c-.937-.288-.953-.937.195-1.387l16.88-6.507c.78-.284 1.463.19 1.207 1.388z"/></svg>
+      Запись на занятия!
+    </a>
+    <p class="tg-note">Бесплатно · Без спама · Отписаться можно в любой момент</p>
+  </div>
+
+</div><!-- /wrapper -->
+
+<script>
+const vocab = [
+  // HELLO
+  { it: "ciao", ru: "привет / пока", note: "неформально — с друзьями", cat: "hello", n: 1 },
+  { it: "buongiorno", ru: "доброе утро / добрый день", note: "до ~17:00, формально и неформально", cat: "hello", n: 2 },
+  { it: "buona sera", ru: "добрый вечер", note: "после ~17:00", cat: "hello", n: 3 },
+  { it: "buona notte", ru: "спокойной ночи", note: "прощаясь на ночь", cat: "hello", n: 4 },
+  { it: "arrivederci", ru: "до свидания", note: "нейтрально и вежливо", cat: "hello", n: 5 },
+  { it: "a presto!", ru: "до скорого!", note: "когда скоро увидитесь", cat: "hello", n: 6 },
+  { it: "a domani!", ru: "до завтра!", note: "если встретитесь завтра", cat: "hello", n: 7 },
+
+  // MEET
+  { it: "mi chiamo...", ru: "меня зовут...", note: "mi chiamo Marco / Sofia", cat: "meet", n: 8 },
+  { it: "come ti chiami?", ru: "как тебя зовут?", note: "неформально, к другу", cat: "meet", n: 9 },
+  { it: "come si chiama?", ru: "как вас зовут?", note: "вежливо, к незнакомому", cat: "meet", n: 10 },
+  { it: "piacere!", ru: "приятно познакомиться!", note: "при знакомстве — как рукопожатие", cat: "meet", n: 11 },
+  { it: "di dove sei?", ru: "откуда ты?", note: "неформально", cat: "meet", n: 12 },
+  { it: "sono russo/a", ru: "я русский / русская", note: "russo — м.р., russa — ж.р.", cat: "meet", n: 13 },
+
+  // HOW ARE YOU
+  { it: "come stai?", ru: "как ты?", note: "к другу, неформально", cat: "how", n: 14 },
+  { it: "come sta?", ru: "как вы?", note: "к незнакомому, вежливо", cat: "how", n: 15 },
+  { it: "bene, grazie!", ru: "хорошо, спасибо!", note: "стандартный ответ", cat: "how", n: 16 },
+  { it: "benissimo!", ru: "отлично! / великолепно!", note: "если всё прекрасно", cat: "how", n: 17 },
+  { it: "così così", ru: "так себе / ни то ни сё", note: "честный ответ на «come stai»", cat: "how", n: 18 },
+  { it: "non c'è male", ru: "неплохо", note: "буквально «нет ничего плохого»", cat: "how", n: 19 },
+  { it: "sto male", ru: "мне плохо", note: "если нехорошо", cat: "how", n: 20 },
+
+  // SURVIVE
+  { it: "non capisco", ru: "я не понимаю", note: "самая нужная фраза 😄", cat: "survive", n: 21 },
+  { it: "non parlo italiano", ru: "я не говорю по-итальянски", note: "честно и спасает!", cat: "survive", n: 22 },
+  { it: "parli inglese?", ru: "ты говоришь по-английски?", note: "может выручить в туризме", cat: "survive", n: 23 },
+  { it: "può ripetere?", ru: "вы можете повторить?", note: "вежливая просьба", cat: "survive", n: 24 },
+  { it: "più lentamente, per favore", ru: "медленнее, пожалуйста", note: "когда говорят слишком быстро", cat: "survive", n: 25 },
+  { it: "come si dice...?", ru: "как сказать...?", note: "come si dice «кошка»?", cat: "survive", n: 26 },
+  { it: "che cosa significa?", ru: "что это значит?", note: "если встретили незнакомое слово", cat: "survive", n: 27 },
+
+  // POLITE
+  { it: "per favore", ru: "пожалуйста", note: "при просьбе — в конце фразы", cat: "polite", n: 28 },
+  { it: "grazie", ru: "спасибо", note: "работает всегда", cat: "polite", n: 29 },
+  { it: "grazie mille", ru: "большое спасибо", note: "буквально «тысяча спасибо»", cat: "polite", n: 30 },
+  { it: "prego", ru: "пожалуйста (в ответ)", note: "ответ на grazie", cat: "polite", n: 31 },
+  { it: "scusi", ru: "простите (вежл.)", note: "к незнакомому — обратить внимание", cat: "polite", n: 32 },
+  { it: "mi dispiace", ru: "мне жаль / извините", note: "выразить сожаление", cat: "polite", n: 33 },
+  { it: "sì / no", ru: "да / нет", note: "самые короткие слова 😄", cat: "polite", n: 34 },
+
+  // QUESTIONS
+  { it: "dov'è...?", ru: "где находится...?", note: "dov'è il bagno? — где туалет?", cat: "questions", n: 35 },
+  { it: "quanto costa?", ru: "сколько стоит?", note: "в магазине или кафе", cat: "questions", n: 36 },
+  { it: "c'è...?", ru: "есть ли...?", note: "c'è il wifi? — есть вай-фай?", cat: "questions", n: 37 },
+  { it: "a che ora...?", ru: "в котором часу...?", note: "a che ora apre? — в котором открывается?", cat: "questions", n: 38 },
+  { it: "posso avere...?", ru: "можно мне...?", note: "posso avere il conto? — счёт, пожалуйста", cat: "questions", n: 39 },
+  { it: "mi può aiutare?", ru: "вы можете мне помочь?", note: "вежливая просьба о помощи", cat: "questions", n: 40 },
+  { it: "vorrei...", ru: "я бы хотел(а)...", note: "vorrei un caffè — хотел бы кофе", cat: "questions", n: 41 },
+  { it: "quanti anni hai?", ru: "сколько тебе лет?", note: "ho 30 anni — мне 30 лет", cat: "questions", n: 42 },
+  { it: "che lavoro fai?", ru: "кем ты работаешь?", note: "частый вопрос при знакомстве", cat: "questions", n: 43 },
+  { it: "parli italiano?", ru: "ты говоришь по-итальянски?", note: "un po' — немного 🙂", cat: "questions", n: 44 },
+
+  // BONUS
+  { it: "perfetto!", ru: "отлично! / идеально!", note: "универсальная реакция", cat: "polite", n: 45 },
+  { it: "bravo / brava!", ru: "молодец!", note: "bravo — м.р., brava — ж.р.", cat: "polite", n: 46 },
+  { it: "anch'io", ru: "я тоже", note: "«anche io» в разговоре сокращается", cat: "survive", n: 47 },
+  { it: "un momento", ru: "одну минуту / секунду", note: "когда нужно время", cat: "survive", n: 48 },
+  { it: "non lo so", ru: "не знаю", note: "буквально «я это не знаю»", cat: "survive", n: 49 },
+  { it: "benvenuto / benvenuta!", ru: "добро пожаловать!", note: "-o мужчина, -a женщина", cat: "hello", n: 50 },
+];
+
+const catMap = {
+  hello: "grid-hello",
+  meet: "grid-meet",
+  how: "grid-how",
+  survive: "grid-survive",
+  polite: "grid-polite",
+  questions: "grid-questions"
+};
+
+function renderCards() {
+  Object.values(catMap).forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = '';
+  });
+  vocab.forEach(v => {
+    const el = document.createElement('div');
+    el.className = 'card';
+    el.innerHTML = `
+      <div class="num">${v.n}</div>
+      <div class="tap-hint">нажми</div>
+      <div class="it">${v.it}</div>
+      <div class="ru">${v.ru}</div>
+      <div class="note">${v.note}</div>
+    `;
+    el.onclick = () => el.classList.toggle('flipped');
+    const grid = document.getElementById(catMap[v.cat]);
+    if (grid) grid.appendChild(el);
+  });
+}
+
+function showSection(name) {
+  ['cards','match','quiz'].forEach(s => {
+    document.getElementById('section-'+s).style.display = s===name?'block':'none';
+  });
+  document.querySelectorAll('.tab-btn').forEach((b,i) => {
+    b.classList.toggle('active', ['cards','match','quiz'][i]===name);
+  });
+  if (name==='match') initMatch();
+  if (name==='quiz') initQuiz();
+}
+
+function shuffle(a) { return [...a].sort(()=>Math.random()-0.5); }
+
+// ===== MATCH =====
+let matchSel=null, matchScore=0, matchErrors=0;
+
+function initMatch() {
+  const pool = shuffle(vocab).slice(0,8);
+  matchScore=0; matchErrors=0;
+  document.getElementById('match-score').textContent=0;
+  document.getElementById('match-errors').textContent=0;
+  document.getElementById('match-total').textContent=pool.length;
+  document.getElementById('match-result').classList.add('hidden');
+  matchSel=null;
+  const L=document.getElementById('match-left'), R=document.getElementById('match-right');
+  L.innerHTML=''; R.innerHTML='';
+  shuffle(pool).forEach(v=>{
+    const el=document.createElement('div');
+    el.className='match-item it-word'; el.textContent=v.it;
+    el.dataset.key=v.it; el.dataset.side='it';
+    el.onclick=()=>handleMatch(el); L.appendChild(el);
+  });
+  shuffle(pool).forEach(v=>{
+    const el=document.createElement('div');
+    el.className='match-item ru-word'; el.textContent=v.ru;
+    el.dataset.key=v.it; el.dataset.side='ru';
+    el.onclick=()=>handleMatch(el); R.appendChild(el);
+  });
+}
+
+function handleMatch(el) {
+  if (el.classList.contains('matched')||el.classList.contains('wrong')) return;
+  if (!matchSel) {
+    document.querySelectorAll('.match-item').forEach(e=>e.classList.remove('selected'));
+    el.classList.add('selected'); matchSel=el; return;
+  }
+  if (el===matchSel) { el.classList.remove('selected'); matchSel=null; return; }
+  if (el.dataset.side===matchSel.dataset.side) {
+    document.querySelectorAll('.match-item').forEach(e=>e.classList.remove('selected'));
+    el.classList.add('selected'); matchSel=el; return;
+  }
+  if (el.dataset.key===matchSel.dataset.key) {
+    el.classList.add('matched'); matchSel.classList.add('matched');
+    el.classList.remove('selected'); matchSel.classList.remove('selected');
+    matchScore++; document.getElementById('match-score').textContent=matchScore; matchSel=null;
+    if (matchScore===parseInt(document.getElementById('match-total').textContent))
+      setTimeout(()=>document.getElementById('match-result').classList.remove('hidden'),500);
+  } else {
+    el.classList.add('wrong'); matchSel.classList.add('wrong');
+    matchErrors++; document.getElementById('match-errors').textContent=matchErrors;
+    const a=el,b=matchSel; matchSel=null;
+    setTimeout(()=>{a.classList.remove('wrong','selected');b.classList.remove('wrong','selected');},700);
+  }
+}
+
+// ===== QUIZ =====
+let quizItems=[],quizIdx=0,quizCorrect=0,quizAnswered=false,quizMistakes=[];
+
+function initQuiz(onlyErrors=false) {
+  document.getElementById('quiz-result').classList.add('hidden');
+  document.getElementById('quiz-play').classList.remove('hidden');
+  const pool = onlyErrors && quizMistakes.length ? quizMistakes : vocab;
+  quizItems = shuffle(pool).slice(0, Math.min(pool.length, 15));
+  quizMistakes=[]; quizIdx=0; quizCorrect=0;
+  renderDots(); showQuiz();
+}
+
+function renderDots() {
+  document.getElementById('quiz-dots').innerHTML=quizItems.map((_,i)=>
+    `<div class="dot ${i===0?'active':''}" id="dot-${i}"></div>`).join('');
+}
+
+function showQuiz() {
+  if (quizIdx>=quizItems.length) { endQuiz(); return; }
+  const v=quizItems[quizIdx]; quizAnswered=false;
+  const dir=Math.random()>0.5;
+  document.getElementById('quiz-dir').textContent=dir?'Итальянский → Русский':'Русский → Итальянский';
+  document.getElementById('quiz-word').textContent=dir?v.it:v.ru;
+  document.getElementById('quiz-ctx').textContent=dir?v.note:'';
+  document.getElementById('quiz-feedback').textContent='';
+  document.getElementById('quiz-feedback').className='quiz-feedback';
+  document.getElementById('quiz-next-btn').style.display='none';
+  document.getElementById('quiz-counter').textContent=`Вопрос ${quizIdx+1} из ${quizItems.length}`;
+  document.getElementById('quiz-bar').style.width=(quizIdx/quizItems.length*100)+'%';
+  document.querySelectorAll('.dot').forEach((d,i)=>{
+    d.className='dot'+(i<quizIdx?' done':i===quizIdx?' active':'');
+  });
+  const wrong=shuffle(vocab.filter(x=>x.it!==v.it)).slice(0,3);
+  const opts=shuffle([v,...wrong]);
+  const optEl=document.getElementById('quiz-options');
+  optEl.innerHTML='';
+  opts.forEach(o=>{
+    const btn=document.createElement('button');
+    btn.className='quiz-option';
+    btn.textContent=dir?o.ru:o.it;
+    btn.onclick=()=>{
+      if (quizAnswered) return; quizAnswered=true;
+      const correct=o.it===v.it;
+      btn.classList.add(correct?'correct':'wrong');
+      if (!correct) {
+        quizMistakes.push(v);
+        optEl.querySelectorAll('button').forEach(b=>{if(b.textContent===(dir?v.ru:v.it))b.classList.add('correct');});
+        document.getElementById('quiz-feedback').textContent=`Правильно: ${dir?v.ru:v.it}`;
+        document.getElementById('quiz-feedback').className='quiz-feedback bad';
+      } else {
+        quizCorrect++;
+        document.getElementById('quiz-feedback').textContent='✓ Benissimo!';
+        document.getElementById('quiz-feedback').className='quiz-feedback good';
+      }
+      document.getElementById('quiz-next-btn').style.display='inline-flex';
+    };
+    optEl.appendChild(btn);
+  });
+}
+
+function nextQuiz() { quizIdx++; showQuiz(); }
+
+function endQuiz() {
+  document.getElementById('quiz-play').classList.add('hidden');
+  document.getElementById('quiz-result').classList.remove('hidden');
+  const pct=Math.round(quizCorrect/quizItems.length*100);
+  document.getElementById('quiz-final-score').textContent=`${quizCorrect}/${quizItems.length}`;
+  document.getElementById('quiz-final-sub').textContent=`${pct}% правильных ответов`;
+  const emoji = pct>=80?'🏆':pct>=50?'👍':'📖';
+  const title = pct>=80?'Fantastico!':pct>=50?'Molto bene!':'Ancora un po\'!';
+  document.getElementById('quiz-emoji').textContent=emoji;
+  document.getElementById('quiz-result-title').textContent=title;
+}
+
+renderCards();
+</script>
+</body>
+</html>
