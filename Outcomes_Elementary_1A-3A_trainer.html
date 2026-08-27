@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Outcomes Elementary — Units 1A–3A</title>
+<style>
+:root{
+  --bg:#f6f7f9; --card:#ffffff; --ink:#1a1d21; --muted:#6b7280;
+  --line:#e3e6ea; --accent:#1f6feb; --accent-soft:#e8f0fe;
+  --ok:#137a4c; --ok-soft:#e4f4ec; --bad:#b3261e; --bad-soft:#fdeceb;
+  --chip:#f0f2f5;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#14171a; --card:#1c2024; --ink:#e9edf1; --muted:#9aa4ae;
+    --line:#2b3138; --accent:#5b9dff; --accent-soft:#1b2b45;
+    --ok:#4cc38a; --ok-soft:#12301f; --bad:#ff6b6b; --bad-soft:#3a1a1a;
+    --chip:#252b31;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Arial,sans-serif;
+  line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:860px;margin:0 auto;padding:0 16px 80px}
+header{padding:28px 0 14px}
+h1{font-size:22px;margin:0 0 4px;letter-spacing:-.01em}
+.sub{color:var(--muted);font-size:14px;margin:0}
+.scorebar{display:flex;align-items:center;gap:12px;margin-top:16px}
+.track{flex:1;height:8px;background:var(--chip);border-radius:99px;overflow:hidden}
+.fill{height:100%;width:0;background:var(--accent);transition:width .35s ease}
+.scoretxt{font-size:13px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+
+nav{position:sticky;top:0;z-index:5;background:var(--bg);padding:10px 0;margin-bottom:8px;
+  border-bottom:1px solid var(--line)}
+.tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;border:1px solid var(--line);background:var(--card);color:var(--muted);
+  padding:7px 13px;border-radius:99px;font-size:13px;cursor:pointer;white-space:nowrap;
+  font-weight:500;transition:.15s}
+.tab:hover{color:var(--ink)}
+.tab.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.tab.done::after{content:" ✓"}
+
+.sechead{margin:22px 0 6px}
+.sechead h2{font-size:19px;margin:0 0 2px}
+.sechead p{margin:0;color:var(--muted);font-size:14px}
+
+details.bank{background:var(--accent-soft);border:1px solid var(--line);border-radius:12px;
+  padding:12px 14px;margin:14px 0 4px}
+details.bank summary{cursor:pointer;font-weight:600;font-size:14px;list-style:none}
+details.bank summary::-webkit-details-marker{display:none}
+details.bank summary::before{content:"▸ ";color:var(--accent)}
+details.bank[open] summary::before{content:"▾ "}
+details.bank ul{margin:10px 0 0;padding-left:18px}
+details.bank li{margin:3px 0;font-size:14.5px}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:16px 18px;margin:14px 0}
+.card h3{font-size:15px;margin:0 0 2px}
+.card .instr{color:var(--muted);font-size:13px;margin:0 0 12px}
+
+ol.items{margin:0;padding-left:22px}
+ol.items>li{margin:0 0 11px;font-size:15.5px}
+input.gap{border:none;border-bottom:2px solid var(--accent);background:transparent;
+  color:var(--ink);font:inherit;font-size:15px;width:118px;padding:1px 4px;outline:none;text-align:center}
+input.gap:focus{background:var(--accent-soft)}
+input.gap.ok{border-color:var(--ok);background:var(--ok-soft);color:var(--ok)}
+input.gap.bad{border-color:var(--bad);background:var(--bad-soft);color:var(--bad)}
+.solution{color:var(--ok);font-size:13.5px;margin-left:6px;font-weight:600}
+
+.opts{display:flex;flex-wrap:wrap;gap:7px;margin-top:7px}
+.opt{border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;
+  font-size:14.5px;padding:6px 12px;border-radius:9px;cursor:pointer;transition:.12s;text-align:left}
+.opt:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.opt:disabled{cursor:default;opacity:.65}
+.opt.ok{background:var(--ok-soft);border-color:var(--ok);color:var(--ok);opacity:1;font-weight:600}
+.opt.bad{background:var(--bad-soft);border-color:var(--bad);color:var(--bad);opacity:1}
+
+.match{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px}
+.mcol{display:flex;flex-direction:column;gap:7px}
+.mitem{border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;
+  font-size:14.5px;padding:8px 11px;border-radius:9px;cursor:pointer;text-align:left;transition:.12s}
+.mitem:hover:not(:disabled){border-color:var(--accent)}
+.mitem.sel{border-color:var(--accent);background:var(--accent-soft);color:var(--accent);font-weight:600}
+.mitem.ok{background:var(--ok-soft);border-color:var(--ok);color:var(--ok);cursor:default;font-weight:600}
+.mitem.shake{animation:sh .3s}
+@keyframes sh{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+
+.orderline{min-height:40px;border:1px dashed var(--line);border-radius:10px;padding:7px 9px;
+  display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0}
+.orderline.ok{border:1px solid var(--ok);background:var(--ok-soft)}
+.orderline.bad{border:1px solid var(--bad);background:var(--bad-soft)}
+.word{background:var(--chip);border:1px solid var(--line);color:var(--ink);font:inherit;font-size:14.5px;
+  padding:5px 10px;border-radius:8px;cursor:pointer}
+.word:hover{border-color:var(--accent)}
+.word.used{opacity:.25;pointer-events:none}
+.pool{display:flex;flex-wrap:wrap;gap:6px}
+.target{font-size:14px;color:var(--ok);font-weight:600;margin-top:4px}
+
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+button.act{border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;
+  font-size:13.5px;font-weight:500;padding:8px 15px;border-radius:9px;cursor:pointer;transition:.12s}
+button.act:hover{border-color:var(--accent);color:var(--accent)}
+button.act.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+button.act.primary:hover{opacity:.9;color:#fff}
+
+.result{margin-top:10px;font-size:14px;font-weight:600;color:var(--muted)}
+footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);
+  color:var(--muted);font-size:12.5px}
+.hidden{display:none}
+@media(max-width:560px){
+  .match{grid-template-columns:1fr}
+  input.gap{width:92px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>Outcomes Elementary — Units 1A → 3A</h1>
+  <p class="sub">Тренажёр по лексике, чанкам и грамматике. Проверка сразу, ответы можно открыть.</p>
+  <div class="scorebar">
+    <div class="track"><div class="fill" id="fill"></div></div>
+    <div class="scoretxt" id="scoretxt">0 / 0</div>
+  </div>
+</header>
+
+<nav><div class="tabs" id="tabs"></div></nav>
+<main id="main"></main>
+
+<footer>
+  Outcomes 3rd edition, Elementary (A1–A2) · Units 1A–3A · самопроверяемый тренажёр.
+  Прогресс не сохраняется — при перезагрузке страницы всё обнуляется.
+</footer>
+</div>
+
+<script>
+/* ------------------------------------------------------------------ */
+/*  ДАННЫЕ. Всё содержимое ниже — правь текст прямо здесь.            */
+/* ------------------------------------------------------------------ */
+const DATA = [
+{
+  id:"1A", title:"1A · Nice to meet you", sub:"Знакомство, страны и национальности, verb to be",
+  bank:[
+    "Hi, I'm Marta. — Nice to meet you. / Nice to meet you too.",
+    "Where are you from? — I'm from Poland. Whereabouts?",
+    "What do you do? — I'm a nurse. / I work for a bank.",
+    "How are you? — Fine, thanks. And you? / Not bad.",
+    "This is my friend Ana. She's a teacher."
+  ],
+  blocks:[
+    {type:"gap", title:"Verb to be", instr:"Впиши am / is / are (или короткую форму).",
+     items:[
+       {before:"Hi, I ", after:" Marta. Nice to meet you.", ans:["am","'m","m"]},
+       {before:"Where ", after:" you from?", ans:["are"]},
+       {before:"My wife ", after:" from Brazil.", ans:["is","'s","s"]},
+       {before:"We ", after:" both teachers.", ans:["are","'re","re"]},
+       {before:"", after:" they students here?", ans:["are"]},
+       {before:"Sorry, I ", after:" not from here.", ans:["am","'m","m"]}
+     ]},
+    {type:"mc", title:"Страны и национальности", instr:"Выбери правильный вариант.",
+     items:[
+       {q:"He's from Spain. He's ___.", opts:["Spanish","Spainish","Spain"], correct:0},
+       {q:"She's from Japan. She's ___.", opts:["Japan","Japanish","Japanese"], correct:2},
+       {q:"They're from Turkey. They're ___.", opts:["Turkish","Turkey","Turkeyan"], correct:0},
+       {q:"I work in a hospital. I'm ___.", opts:["a nurse","a waiter","a shop assistant"], correct:0},
+       {q:"“What do you do?” — “___”", opts:["I'm fine, thanks.","I work for a bank.","I'm from Rome."], correct:1}
+     ]},
+    {type:"match", title:"Country → nationality", instr:"Нажми слово слева, потом пару справа.",
+     pairs:[["Brazil","Brazilian"],["Germany","German"],["France","French"],
+            ["China","Chinese"],["Italy","Italian"],["Poland","Polish"]]},
+    {type:"order", title:"Собери фразу", instr:"Нажимай слова по порядку.",
+     items:["Where are you from","This is my friend Ana","Nice to meet you too","What do you do"]}
+  ]
+},
+{
+  id:"1B", title:"1B · Family", sub:"Семья, have got, possessive 's, возраст",
+  bank:[
+    "Have you got any brothers or sisters? — I've got two sisters.",
+    "I haven't got any children.",
+    "How old is she? — She's twenty-five.",
+    "What's your sister's name? — Her name's Kate.",
+    "My brother's married. / He's got two kids."
+  ],
+  blocks:[
+    {type:"gap", title:"have got / possessive 's", instr:"Впиши недостающее слово или окончание.",
+     items:[
+       {before:"I ", after:" got two brothers.", ans:["have","'ve","ve"]},
+       {before:"She ", after:" got any children.", ans:["hasn't","has not","hasnt"]},
+       {before:"", after:" you got any brothers or sisters?", ans:["have"]},
+       {before:"How old ", after:" your daughter?", ans:["is","'s","s"]},
+       {before:"This is my sister", after:" car.", ans:["'s","s"]},
+       {before:"My parents ", after:" got a house near Lisbon.", ans:["have","'ve","ve"]}
+     ]},
+    {type:"mc", title:"Кто это?", instr:"Выбери правильное слово.",
+     items:[
+       {q:"My mother's brother is my ___.", opts:["uncle","nephew","cousin"], correct:0},
+       {q:"My brother's daughter is my ___.", opts:["aunt","niece","granddaughter"], correct:1},
+       {q:"My wife's mother is my ___.", opts:["stepmother","grandmother","mother-in-law"], correct:2},
+       {q:"“Have you got any children?” — “___”", opts:["Yes, two — a boy and a girl.","Yes, I am.","No, I don't have."], correct:0},
+       {q:"My sister isn't married. She's ___.", opts:["single","alone","only"], correct:0}
+     ]},
+    {type:"match", title:"Пары слов", instr:"Соедини мужское и женское.",
+     pairs:[["husband","wife"],["son","daughter"],["uncle","aunt"],
+            ["nephew","niece"],["grandfather","grandmother"],["brother","sister"]]},
+    {type:"order", title:"Собери фразу", instr:"Нажимай слова по порядку.",
+     items:["Have you got any brothers or sisters","I haven't got any children","How old is your son","My brother is married"]}
+  ]
+},
+{
+  id:"1C", title:"1C · Conversation", sub:"Small talk, spelling, числа, прощание",
+  bank:[
+    "Sorry, how do you spell that? — K-O-W-A-L-S-K-I.",
+    "Can you say that again, please? / Sorry, I don't understand.",
+    "What's your phone number? — It's 07700 900 123.",
+    "See you later. / See you on Monday. / Have a nice day!",
+    "Thanks a lot. — No problem. / You're welcome."
+  ],
+  blocks:[
+    {type:"gap", title:"Полезные фразы", instr:"Впиши одно слово.",
+     items:[
+       {before:"Sorry, how ", after:" you spell that?", ans:["do"]},
+       {before:"Can you say that ", after:", please?", ans:["again"]},
+       {before:"Sorry, I don't ", after:".", ans:["understand","know"]},
+       {before:"Have a ", after:" day!", ans:["nice","good","great"]},
+       {before:"My phone number ", after:" 07700 900 123.", ans:["is","'s","s"]},
+       {before:"See you ", after:"!", ans:["later","tomorrow","soon","then"]}
+     ]},
+    {type:"mc", title:"Что ответить?", instr:"Выбери естественный ответ.",
+     items:[
+       {q:"“How are you?” — “___”", opts:["I'm 25.","Fine, thanks. And you?","You're welcome."], correct:1},
+       {q:"“Thanks a lot!” — “___”", opts:["No problem.","Yes, please.","Nice to meet you."], correct:0},
+       {q:"“Sorry, I don't understand.” — “___”", opts:["Me too.","No, thanks.","OK, I'll say it again."], correct:2},
+       {q:"“What's your surname?” — “___”", opts:["Kowalski. K-O-W-A-L-S-K-I.","I'm from Poland.","It's nice, thanks."], correct:0},
+       {q:"You leave the shop. The assistant says: “___”", opts:["How do you do?","Have a nice day!","See you never."], correct:1}
+     ]},
+    {type:"match", title:"Диалог: реплика → ответ", instr:"Соедини реплики.",
+     pairs:[["Nice to meet you.","Nice to meet you too."],
+            ["How are you?","Not bad, thanks."],
+            ["What's your name?","I'm Ana."],
+            ["Thank you!","You're welcome."],
+            ["See you tomorrow.","Yeah, see you."]]},
+    {type:"order", title:"Собери фразу", instr:"Нажимай слова по порядку.",
+     items:["How do you spell that","Can you say that again please","What is your phone number","Sorry I don't understand"]}
+  ]
+},
+{
+  id:"2A", title:"2A · Shops and prices", sub:"Магазины, цены, Can I have…?, this / these",
+  bank:[
+    "How much is it? / How much are these?",
+    "Can I have a coffee, please? — Here you are.",
+    "Have you got any bread? — Sorry, we haven't.",
+    "Can I help you? — No thanks, I'm just looking.",
+    "It's £4.50. / They're two for five euros."
+  ],
+  blocks:[
+    {type:"gap", title:"How much / Can I have…", instr:"Впиши одно слово.",
+     items:[
+       {before:"How much ", after:" this jacket?", ans:["is","'s","s"]},
+       {before:"How much ", after:" these shoes?", ans:["are"]},
+       {before:"", after:" I have a bottle of water, please?", ans:["can","could"]},
+       {before:"Have you got ", after:" bread?", ans:["any"]},
+       {before:"I'd ", after:" a coffee, please.", ans:["like"]},
+       {before:"Excuse me, how much are ", after:" bags over there?", ans:["those"]}
+     ]},
+    {type:"mc", title:"Где это купить?", instr:"Выбери правильный магазин или ответ.",
+     items:[
+       {q:"Where can you buy bread? ___", opts:["At the chemist's.","At the bakery.","At the post office."], correct:1},
+       {q:"Where can you buy medicine? ___", opts:["At the chemist's.","At the butcher's.","At the newsagent's."], correct:0},
+       {q:"“Can I help you?” — “___”", opts:["No thanks, I'm just looking.","Yes, I can.","I don't know."], correct:0},
+       {q:"“How much is it?” — “___”", opts:["It's very good.","They're new.","It's twelve fifty."], correct:2},
+       {q:"Sorry, we ___ got any milk today.", opts:["haven't","don't","aren't"], correct:0}
+     ]},
+    {type:"match", title:"Shop → what you buy there", instr:"Соедини магазин и товар.",
+     pairs:[["bakery","bread and cakes"],["chemist's","medicine"],["butcher's","meat"],
+            ["newsagent's","newspapers"],["market","fruit and vegetables"],["post office","stamps"]]},
+    {type:"order", title:"Собери фразу", instr:"Нажимай слова по порядку.",
+     items:["How much is it","Can I have a coffee please","Have you got any bread","I am just looking thanks"]}
+  ]
+},
+{
+  id:"2B", title:"2B · Clothes and sizes", sub:"Одежда, размеры, примерка, коллокации",
+  bank:[
+    "Can I try it on? — Of course, the changing rooms are over there.",
+    "Have you got this in a bigger size?",
+    "It's too small for me. / They don't fit.",
+    "What size are you? — Medium. / I'm a 40.",
+    "That jacket really suits you."
+  ],
+  blocks:[
+    {type:"gap", title:"В магазине одежды", instr:"Впиши одно слово.",
+     items:[
+       {before:"Can I try it ", after:", please?", ans:["on"]},
+       {before:"Have you got this ", after:" a bigger size?", ans:["in"]},
+       {before:"These trousers are ", after:" small for me.", ans:["too"]},
+       {before:"What size ", after:" you?", ans:["are"]},
+       {before:"They don't ", after:" me — they're too tight.", ans:["fit","suit"]},
+       {before:"I'm ", after:" for a black jacket.", ans:["looking"]}
+     ]},
+    {type:"mc", title:"Выбери вариант", instr:"Один правильный ответ.",
+     items:[
+       {q:"“What size are you?” — “___”", opts:["I'm 34 years old.","Medium.","Two, please."], correct:1},
+       {q:"These shoes are too big. Have you got a ___ size?", opts:["shorter","smaller","less"], correct:1},
+       {q:"That dress really ___ you!", opts:["suits","fits on","goes"], correct:0},
+       {q:"I need a new ___ of jeans.", opts:["couple","piece","pair"], correct:2},
+       {q:"It's a bit expensive. Have you got anything ___?", opts:["cheaper","more cheap","cheapest"], correct:0}
+     ]},
+    {type:"match", title:"Коллокации", instr:"Соедини начало и конец фразы.",
+     pairs:[["try","it on"],["pay","by card"],["look","for a black jacket"],
+            ["go","shopping"],["have","a look"]]},
+    {type:"order", title:"Собери фразу", instr:"Нажимай слова по порядку.",
+     items:["Can I try it on","Have you got a bigger size","It is too small for me","That jacket really suits you"]}
+  ]
+},
+{
+  id:"2C", title:"2C · Paying", sub:"На кассе: I'll take it, pay by card, change",
+  bank:[
+    "I'll take it. / I'll take these two.",
+    "Can I pay by card? — Of course.",
+    "Anything else? — No, that's it, thanks.",
+    "That's 22 euros altogether. — Here you are.",
+    "Here's your change and your receipt. Do you need a bag?"
+  ],
+  blocks:[
+    {type:"gap", title:"На кассе", instr:"Впиши одно слово.",
+     items:[
+       {before:"OK, I ", after:" take it.", ans:["'ll","will","ll"]},
+       {before:"Can I pay ", after:" card?", ans:["by"]},
+       {before:"Here's your ", after:" — five euros twenty.", ans:["change"]},
+       {before:"That's 30 euros ", after:".", ans:["altogether","in total","all together"]},
+       {before:"Anything ", after:"?", ans:["else"]},
+       {before:"Do you need a ", after:"?", ans:["bag","receipt"]}
+     ]},
+    {type:"mc", title:"Диалог на кассе", instr:"Выбери естественный ответ.",
+     items:[
+       {q:"“Anything else?” — “___”", opts:["No, that's it, thanks.","No, nothing more.","Yes, I am."], correct:0},
+       {q:"“Can I pay by card?” — “___”", opts:["Yes, you can pay.","Of course. Just there, please.","No, card is bad."], correct:1},
+       {q:"“That's fifteen twenty.” — “___”", opts:["Here you are.","Take it.","Give me, please."], correct:0},
+       {q:"“Would you like a receipt?” — “___”", opts:["No, it's fine, thanks.","Yes, I would like it very much.","I don't understand a receipt."], correct:0},
+       {q:"Sorry, we only take ___.", opts:["money cash","cash","the cash money"], correct:1}
+     ]},
+    {type:"match", title:"Реплика → ответ", instr:"Соедини.",
+     pairs:[["Can I help you?","Yes, how much is this?"],
+            ["Anything else?","No, that's everything."],
+            ["How would you like to pay?","By card, please."],
+            ["Do you need a bag?","No, it's OK, thanks."],
+            ["Here's your change.","Thanks. Bye!"]]},
+    {type:"order", title:"Собери фразу", instr:"Нажимай слова по порядку.",
+     items:["Can I pay by card","I will take it thanks","Do you need a bag","That is twenty euros altogether"]}
+  ]
+},
+{
+  id:"3A", title:"3A · Food and eating out", sub:"Еда, ресторан, there is/are, some/any, much/many",
+  bank:[
+    "There's a nice Italian place near here.",
+    "Are you ready to order? — Yes, I'd like the fish, please.",
+    "What's in it? — It's chicken with rice and vegetables.",
+    "I don't eat meat — I'm a vegetarian.",
+    "Can we have the bill, please?"
+  ],
+  blocks:[
+    {type:"gap", title:"there is / are, some / any, much / many", instr:"Впиши одно слово.",
+     items:[
+       {before:"", after:" is some cheese in the fridge.", ans:["there"]},
+       {before:"", after:" are a lot of good restaurants near here.", ans:["there"]},
+       {before:"Have we got ", after:" eggs?", ans:["any"]},
+       {before:"I'd like ", after:" water, please.", ans:["some"]},
+       {before:"How ", after:" sugar do you want in your tea?", ans:["much"]},
+       {before:"How ", after:" people are coming tonight?", ans:["many"]}
+     ]},
+    {type:"mc", title:"В ресторане", instr:"Выбери правильный вариант.",
+     items:[
+       {q:"“Are you ready to order?” — “___”", opts:["Yes, I'd like the fish, please.","Yes, I order the fish.","Yes, give me fish."], correct:0},
+       {q:"Can we have the ___, please?", opts:["account","bill","money"], correct:1},
+       {q:"I don't eat meat — I'm a ___.", opts:["vegetable","vegetarian","vegan meat"], correct:1},
+       {q:"There isn't ___ milk left.", opts:["some","any","many"], correct:1},
+       {q:"“How's your steak?” — “___”", opts:["It's delicious, thanks.","It's very tasteful.","I like eat it."], correct:0}
+     ]},
+    {type:"match", title:"Food → group", instr:"Соедини продукт и категорию.",
+     pairs:[["banana","fruit"],["onion","vegetable"],["prawns","seafood"],
+            ["beef","meat"],["yoghurt","dairy"],["pasta","carbs"]]},
+    {type:"order", title:"Собери фразу", instr:"Нажимай слова по порядку.",
+     items:["Can we have the bill please","I would like the soup please","There is a nice place near here","What is in it"]}
+  ]
+},
+{
+  id:"TEST", title:"Mixed test", sub:"Всё вместе: 1A → 3A. Хорошо заходит как повторение в начале урока",
+  bank:[],
+  blocks:[
+    {type:"mc", title:"Часть 1 — выбор варианта", instr:"10 вопросов на всё пройденное.",
+     items:[
+       {q:"Where ___ your parents from?", opts:["is","are","be"], correct:1},
+       {q:"She's from Poland. She's ___.", opts:["Polish","Poland","Polandish"], correct:0},
+       {q:"___ you got any brothers?", opts:["Do","Are","Have"], correct:2},
+       {q:"This is my ___ husband.", opts:["sister","sister's","sisters"], correct:1},
+       {q:"How much ___ these apples?", opts:["is","are","do"], correct:1},
+       {q:"Can I try it ___?", opts:["on","in","up"], correct:0},
+       {q:"I'll pay ___ card.", opts:["with","by","on"], correct:1},
+       {q:"There isn't ___ bread left.", opts:["some","any","many"], correct:1},
+       {q:"How ___ people work here?", opts:["much","many","lot"], correct:1},
+       {q:"“Anything else?” — “___”", opts:["No, that's it, thanks.","No, I have all.","Nothing more for me, please."], correct:0}
+     ]},
+    {type:"gap", title:"Часть 2 — впиши слово", instr:"По одному слову в каждый пропуск.",
+     items:[
+       {before:"Nice to ", after:" you.", ans:["meet"]},
+       {before:"How do you ", after:" that?", ans:["spell"]},
+       {before:"I ", after:" got two kids.", ans:["have","'ve","ve"]},
+       {before:"Can I ", after:" a coffee, please?", ans:["have"]},
+       {before:"Have you got this in a bigger ", after:"?", ans:["size"]},
+       {before:"Can we have the ", after:", please?", ans:["bill"]}
+     ]},
+    {type:"order", title:"Часть 3 — собери фразы", instr:"Нажимай слова по порядку.",
+     items:["Where are you from","Have you got any children","How much are these","I would like the chicken please"]}
+  ]
+}
+];
+
+/* ------------------------------------------------------------------ */
+/*  ЛОГИКА                                                             */
+/* ------------------------------------------------------------------ */
+const norm = s => (s||"").toString().toLowerCase()
+  .replace(/[‘’ʼ`]/g,"'")
+  .replace(/[.,!?;:]/g,"")
+  .replace(/\s+/g," ").trim();
+
+const shuffle = a => { a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]];} return a; };
+
+let TOTAL = 0, DONE = 0;
+const doneSet = new Set();
+const sectionTotals = {}, sectionDone = {};
+
+DATA.forEach(sec=>{
+  let n=0;
+  sec.blocks.forEach(b=>{
+    if(b.type==="gap"||b.type==="mc"||b.type==="order") n += b.items.length;
+    if(b.type==="match") n += b.pairs.length;
+  });
+  sectionTotals[sec.id]=n; sectionDone[sec.id]=0; TOTAL+=n;
+});
+
+function credit(secId, key){
+  if(doneSet.has(key)) return;
+  doneSet.add(key); DONE++; sectionDone[secId]++;
+  updateScore();
+}
+function updateScore(){
+  document.getElementById("fill").style.width = (DONE/TOTAL*100)+"%";
+  document.getElementById("scoretxt").textContent = DONE+" / "+TOTAL;
+  DATA.forEach(sec=>{
+    const t=document.querySelector('.tab[data-id="'+sec.id+'"]');
+    if(t) t.classList.toggle("done", sectionDone[sec.id]===sectionTotals[sec.id]);
+  });
+}
+
+/* --- рендер блоков --- */
+function renderGap(sec, block, bi){
+  const card=document.createElement("div"); card.className="card";
+  card.innerHTML='<h3>'+block.title+'</h3><p class="instr">'+block.instr+'</p>';
+  const ol=document.createElement("ol"); ol.className="items";
+  block.items.forEach((it,i)=>{
+    const li=document.createElement("li");
+    const key=sec.id+"-"+bi+"-"+i;
+    li.append(document.createTextNode(it.before));
+    const inp=document.createElement("input");
+    inp.className="gap"; inp.type="text"; inp.autocapitalize="off"; inp.spellcheck=false;
+    inp.setAttribute("aria-label","пропуск "+(i+1));
+    li.append(inp);
+    li.append(document.createTextNode(it.after));
+    const sol=document.createElement("span"); sol.className="solution hidden";
+    sol.textContent="→ "+it.ans[0];
+    li.append(sol);
+    const check=()=>{
+      const v=norm(inp.value);
+      if(!v){inp.className="gap";return;}
+      if(it.ans.some(a=>norm(a)===v)){ inp.className="gap ok"; inp.disabled=true; credit(sec.id,key); }
+      else { inp.className="gap bad"; }
+    };
+    inp.addEventListener("blur",check);
+    inp.addEventListener("keydown",e=>{ if(e.key==="Enter"){e.preventDefault();check();
+      const all=[...ol.querySelectorAll("input:not([disabled])")]; const nx=all[all.indexOf(inp)+1]||all[0]; if(nx)nx.focus();}});
+    inp.addEventListener("input",()=>{ if(inp.classList.contains("bad")) inp.className="gap"; });
+    li.dataset.reveal="1"; li._reveal=()=>{ sol.classList.remove("hidden"); };
+    ol.append(li);
+  });
+  card.append(ol);
+  addBtns(card, ol, block, sec);
+  return card;
+}
+
+function renderMc(sec, block, bi){
+  const card=document.createElement("div"); card.className="card";
+  card.innerHTML='<h3>'+block.title+'</h3><p class="instr">'+block.instr+'</p>';
+  const ol=document.createElement("ol"); ol.className="items";
+  block.items.forEach((it,i)=>{
+    const li=document.createElement("li");
+    const key=sec.id+"-"+bi+"-"+i;
+    const q=document.createElement("div"); q.textContent=it.q; li.append(q);
+    const box=document.createElement("div"); box.className="opts";
+    const order=shuffle(it.opts.map((o,idx)=>({o,idx})));
+    const btns=[];
+    order.forEach(({o,idx})=>{
+      const b=document.createElement("button"); b.className="opt"; b.type="button"; b.textContent=o;
+      b.addEventListener("click",()=>{
+        if(idx===it.correct){
+          b.classList.add("ok"); btns.forEach(x=>x.disabled=true); credit(sec.id,key);
+        } else { b.classList.add("bad"); b.disabled=true; }
+      });
+      btns.push(b); box.append(b);
+    });
+    li._reveal=()=>{ btns.forEach(b=>{ if(b.textContent===it.opts[it.correct]) b.classList.add("ok"); b.disabled=true; }); };
+    li.append(box); ol.append(li);
+  });
+  card.append(ol);
+  addBtns(card, ol, block, sec);
+  return card;
+}
+
+function renderMatch(sec, block, bi){
+  const card=document.createElement("div"); card.className="card";
+  card.innerHTML='<h3>'+block.title+'</h3><p class="instr">'+block.instr+'</p>';
+  const grid=document.createElement("div"); grid.className="match";
+  const colL=document.createElement("div"); colL.className="mcol";
+  const colR=document.createElement("div"); colR.className="mcol";
+  let sel=null;
+  const lefts=shuffle(block.pairs), rights=shuffle(block.pairs);
+  lefts.forEach(p=>{
+    const b=document.createElement("button"); b.className="mitem"; b.type="button"; b.textContent=p[0]; b.dataset.k=p[0];
+    b.addEventListener("click",()=>{
+      if(b.classList.contains("ok"))return;
+      colL.querySelectorAll(".mitem").forEach(x=>x.classList.remove("sel"));
+      b.classList.add("sel"); sel=b;
+    });
+    colL.append(b);
+  });
+  rights.forEach(p=>{
+    const b=document.createElement("button"); b.className="mitem"; b.type="button"; b.textContent=p[1]; b.dataset.k=p[0];
+    b.addEventListener("click",()=>{
+      if(!sel || b.classList.contains("ok"))return;
+      if(sel.dataset.k===b.dataset.k){
+        sel.classList.remove("sel"); sel.classList.add("ok"); b.classList.add("ok");
+        credit(sec.id, sec.id+"-"+bi+"-"+b.dataset.k); sel=null;
+      } else {
+        b.classList.add("shake"); setTimeout(()=>b.classList.remove("shake"),320);
+      }
+    });
+    colR.append(b);
+  });
+  grid.append(colL,colR); card.append(grid);
+  const holder=document.createElement("div");
+  holder._reveal=()=>{
+    colL.querySelectorAll(".mitem").forEach(l=>l.classList.add("ok"));
+    colR.querySelectorAll(".mitem").forEach(r=>r.classList.add("ok"));
+  };
+  addBtns(card, {_kids:[holder]}, block, sec);
+  return card;
+}
+
+function renderOrder(sec, block, bi){
+  const card=document.createElement("div"); card.className="card";
+  card.innerHTML='<h3>'+block.title+'</h3><p class="instr">'+block.instr+'</p>';
+  const ol=document.createElement("ol"); ol.className="items";
+  block.items.forEach((sentence,i)=>{
+    const key=sec.id+"-"+bi+"-"+i;
+    const li=document.createElement("li");
+    const words=sentence.split(" ");
+    const line=document.createElement("div"); line.className="orderline";
+    const pool=document.createElement("div"); pool.className="pool";
+    const target=document.createElement("div"); target.className="target hidden"; target.textContent="→ "+sentence;
+    let picked=[];
+    const evaluate=()=>{
+      if(picked.length!==words.length){ line.className="orderline"; return; }
+      if(norm(picked.join(" "))===norm(sentence)){
+        line.className="orderline ok"; credit(sec.id,key);
+        pool.querySelectorAll(".word").forEach(w=>w.classList.add("used"));
+      } else { line.className="orderline bad"; }
+    };
+    const redraw=()=>{
+      line.innerHTML="";
+      picked.forEach((w,idx)=>{
+        const c=document.createElement("button"); c.className="word"; c.type="button"; c.textContent=w;
+        c.addEventListener("click",()=>{
+          if(line.classList.contains("ok"))return;
+          picked.splice(idx,1); redrawPool(); redraw(); evaluate();
+        });
+        line.append(c);
+      });
+    };
+    const chips=[];
+    shuffle(words.map((w,idx)=>({w,idx}))).forEach(({w,idx})=>{
+      const b=document.createElement("button"); b.className="word"; b.type="button"; b.textContent=w; b.dataset.idx=idx;
+      b.addEventListener("click",()=>{
+        if(line.classList.contains("ok"))return;
+        b.classList.add("used"); picked.push(w); redraw(); evaluate();
+      });
+      chips.push(b); pool.append(b);
+    });
+    const redrawPool=()=>{
+      // вернуть в пул все фишки, которых нет в собранной строке
+      const need=picked.slice();
+      chips.forEach(c=>{
+        const j=need.indexOf(c.textContent);
+        if(j>-1){ need.splice(j,1); c.classList.add("used"); }
+        else c.classList.remove("used");
+      });
+    };
+    li.append(line, pool, target);
+    li._reveal=()=>{ target.classList.remove("hidden"); };
+    ol.append(li);
+  });
+  card.append(ol);
+  addBtns(card, ol, block, sec);
+  return card;
+}
+
+function addBtns(card, container, block, sec){
+  const row=document.createElement("div"); row.className="btnrow";
+  const rev=document.createElement("button"); rev.className="act"; rev.type="button"; rev.textContent="Показать ответы";
+  rev.addEventListener("click",()=>{
+    const kids = container._kids || container.querySelectorAll("li");
+    [...kids].forEach(li=>li._reveal&&li._reveal());
+    rev.disabled=true; rev.textContent="Ответы открыты";
+  });
+  row.append(rev); card.append(row);
+}
+
+/* --- рендер секций --- */
+const tabs=document.getElementById("tabs"), main=document.getElementById("main");
+const panels={};
+
+DATA.forEach((sec,si)=>{
+  const t=document.createElement("button");
+  t.className="tab"+(si===0?" active":""); t.type="button"; t.dataset.id=sec.id; t.textContent=sec.id==="TEST"?"★ Test":sec.id;
+  t.addEventListener("click",()=>{
+    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+    t.classList.add("active");
+    Object.values(panels).forEach(p=>p.classList.add("hidden"));
+    panels[sec.id].classList.remove("hidden");
+    window.scrollTo({top:0,behavior:"smooth"});
+  });
+  tabs.append(t);
+
+  const panel=document.createElement("section");
+  panel.className=si===0?"":"hidden";
+  const head=document.createElement("div"); head.className="sechead";
+  head.innerHTML="<h2>"+sec.title+"</h2><p>"+sec.sub+"</p>";
+  panel.append(head);
+
+  if(sec.bank.length){
+    const d=document.createElement("details"); d.className="bank"; d.open=true;
+    d.innerHTML="<summary>Фразы урока</summary><ul>"+sec.bank.map(x=>"<li>"+x+"</li>").join("")+"</ul>";
+    panel.append(d);
+  }
+  sec.blocks.forEach((b,bi)=>{
+    if(b.type==="gap")   panel.append(renderGap(sec,b,bi));
+    if(b.type==="mc")    panel.append(renderMc(sec,b,bi));
+    if(b.type==="match") panel.append(renderMatch(sec,b,bi));
+    if(b.type==="order") panel.append(renderOrder(sec,b,bi));
+  });
+  panels[sec.id]=panel; main.append(panel);
+});
+updateScore();
+</script>
+</body>
+</html>
