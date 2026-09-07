@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Italiano — Lezione 6: Tanti auguri!</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #fdf6ec;
+    --terracotta: #c0533a;
+    --gold: #d4a843;
+    --olive: #5a6e3c;
+    --ink: #2c2118;
+    --sand: #e8d9c0;
+    --mist: #f5ede0;
+    --shadow: rgba(44,33,24,0.15);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 40% at 10% 20%, rgba(192,83,58,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 50% at 90% 80%, rgba(212,168,67,0.08) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .wrapper { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 24px 16px 60px; }
+  header { text-align: center; margin-bottom: 36px; }
+  .flag { font-size: 2.4rem; margin-bottom: 8px; }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 6vw, 3rem);
+    color: var(--terracotta);
+    line-height: 1.1;
+  }
+  header .sub { font-style: italic; color: var(--gold); font-size: 1.1rem; margin-top: 4px; }
+  header p { color: #8a7060; font-size: 0.95rem; margin-top: 6px; }
+  .tabs { display: flex; gap: 8px; justify-content: center; margin-bottom: 28px; flex-wrap: wrap; }
+  .tab-btn {
+    padding: 9px 22px;
+    border: 2px solid var(--sand);
+    background: white;
+    border-radius: 50px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #8a7060;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.03em;
+  }
+  .tab-btn:hover { border-color: var(--terracotta); color: var(--terracotta); }
+  .tab-btn.active { background: var(--terracotta); border-color: var(--terracotta); color: white; box-shadow: 0 4px 14px rgba(192,83,58,0.3); }
+  .section { display: none; }
+  .section.active { display: block; }
+  .cat-filter { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 20px; }
+  .cat-chip {
+    padding: 6px 14px;
+    border: 1.5px solid var(--sand);
+    background: white;
+    border-radius: 50px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #8a7060;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .cat-chip:hover { border-color: var(--gold); color: var(--gold); }
+  .cat-chip.active { background: var(--gold); border-color: var(--gold); color: white; }
+  .hint-box {
+    background: white;
+    border: 1.5px dashed var(--sand);
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 24px;
+    text-align: center;
+    font-size: 0.82rem;
+    color: #8a7060;
+    line-height: 1.6;
+  }
+  .hint-box b { color: var(--terracotta); }
+  .category-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.9rem;
+    font-style: italic;
+    color: var(--gold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    margin-top: 32px;
+    border-top: 1px dashed var(--sand);
+    padding-top: 22px;
+  }
+  .category-label:first-child { margin-top: 0; border-top: 0; padding-top: 0; }
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 14px;
+  }
+  .card {
+    background: white;
+    border-radius: 14px;
+    padding: 18px 14px 24px;
+    cursor: pointer;
+    box-shadow: 0 2px 10px var(--shadow);
+    border: 1.5px solid var(--sand);
+    transition: transform 0.15s, box-shadow 0.15s;
+    position: relative;
+    min-height: 160px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    overflow: hidden;
+    text-align: center;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px var(--shadow); }
+  .card > .face { display: none; width: 100%; text-align: center; }
+  .card[data-state="0"] > .face-front { display: flex; flex-direction: column; align-items: center; }
+  .card[data-state="1"] > .face-def { display: flex; flex-direction: column; align-items: center; }
+  .card[data-state="2"] > .face-tr { display: flex; flex-direction: column; align-items: center; }
+  .face-front .it {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    color: var(--terracotta);
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  .face-front .hint-txt {
+    font-size: 0.72rem;
+    color: #c8b8a0;
+    font-style: italic;
+    margin-top: 12px;
+  }
+  .face-def .label, .face-tr .label {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+  .face-def .def-txt {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.92rem;
+    color: var(--ink);
+    line-height: 1.35;
+    font-style: italic;
+    margin-bottom: 8px;
+  }
+  .face-def .ex-txt {
+    font-size: 0.78rem;
+    color: var(--olive);
+    line-height: 1.4;
+    font-weight: 600;
+  }
+  .face-def .ex-txt::before { content: "\2192 "; color: var(--gold); }
+  .face-tr .ru-txt {
+    font-size: 1.15rem;
+    color: var(--olive);
+    font-weight: 700;
+    line-height: 1.3;
+  }
+  .face-tr .it-small {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.85rem;
+    color: var(--terracotta);
+    font-style: italic;
+    margin-top: 6px;
+  }
+  .card-state {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 4px;
+  }
+  .state-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--sand);
+    transition: background 0.2s;
+  }
+  .card[data-state="0"] .state-dot:nth-child(1),
+  .card[data-state="1"] .state-dot:nth-child(2),
+  .card[data-state="2"] .state-dot:nth-child(3) { background: var(--terracotta); }
+  .game-header { text-align: center; margin-bottom: 24px; }
+  .game-header h2 { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--terracotta); }
+  .game-header p { color: #8a7060; font-size: 0.88rem; margin-top: 4px; }
+  .match-board { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+  .match-col { display: flex; flex-direction: column; gap: 8px; }
+  .match-item {
+    background: white;
+    border: 2px solid var(--sand);
+    border-radius: 10px;
+    padding: 12px 14px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    text-align: center;
+    transition: all 0.2s;
+    min-height: 46px;
+    display: flex; align-items: center; justify-content: center;
+    line-height: 1.3;
+  }
+  .match-item.it-word { font-family: 'Playfair Display', serif; color: var(--terracotta); font-size: 0.95rem; font-weight: 700; }
+  .match-item.ru-word { color: var(--olive); }
+  .match-item:hover:not(.matched):not(.wrong) { border-color: var(--gold); background: var(--mist); }
+  .match-item.selected { border-color: var(--terracotta); background: rgba(192,83,58,0.08); }
+  .match-item.matched { border-color: var(--olive); background: rgba(90,110,60,0.1); color: var(--olive); opacity: 0.6; cursor: default; }
+  .match-item.wrong { border-color: #e05050; background: rgba(224,80,80,0.08); animation: shake 0.4s; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+  .score-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    background: white; border-radius: 12px; padding: 12px 18px;
+    border: 1.5px solid var(--sand);
+    margin-bottom: 16px;
+  }
+  .score-num { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--terracotta); }
+  .score-label { font-size: 0.78rem; color: #8a7060; text-transform: uppercase; letter-spacing: 0.06em; }
+  .btn {
+    display: inline-block;
+    padding: 11px 28px;
+    background: var(--terracotta);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 14px rgba(192,83,58,0.25);
+  }
+  .btn:hover { background: #a8422b; transform: translateY(-1px); }
+  .btn.secondary { background: white; color: var(--terracotta); border: 2px solid var(--terracotta); box-shadow: none; }
+  .btn-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+  .quiz-card {
+    background: white;
+    border-radius: 16px;
+    padding: 28px 22px;
+    border: 1.5px solid var(--sand);
+    box-shadow: 0 4px 16px var(--shadow);
+    text-align: center;
+    margin-bottom: 18px;
+  }
+  .quiz-dir {
+    font-size: 0.78rem;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+  .quiz-word {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.75rem;
+    color: var(--terracotta);
+    line-height: 1.2;
+    margin-bottom: 6px;
+  }
+  .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  .quiz-option {
+    background: white;
+    border: 2px solid var(--sand);
+    border-radius: 10px;
+    padding: 14px 12px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--ink);
+    line-height: 1.4;
+  }
+  .quiz-option:hover { border-color: var(--gold); background: var(--mist); }
+  .quiz-option.correct { border-color: var(--olive); background: rgba(90,110,60,0.15); color: var(--olive); font-weight: 700; }
+  .quiz-option.wrong { border-color: #e05050; background: rgba(224,80,80,0.12); color: #c03030; }
+  .quiz-feedback {
+    text-align: center;
+    font-size: 0.95rem;
+    min-height: 24px;
+    margin: 8px 0 14px;
+    font-weight: 600;
+  }
+  .quiz-feedback.good { color: var(--olive); }
+  .quiz-feedback.bad { color: #c03030; }
+  .quiz-progress { background: var(--sand); height: 6px; border-radius: 4px; overflow: hidden; margin-bottom: 8px; }
+  .quiz-progress-bar { background: var(--terracotta); height: 100%; transition: width 0.3s; }
+  .quiz-counter { text-align: center; font-size: 0.78rem; color: #8a7060; margin-bottom: 16px; letter-spacing: 0.04em; }
+  .dots { display: flex; gap: 4px; justify-content: center; margin-bottom: 14px; flex-wrap: wrap; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--sand); }
+  .dot.active { background: var(--terracotta); }
+  .dot.done { background: var(--olive); }
+  .fill-card {
+    background: white;
+    border-radius: 16px;
+    padding: 28px 22px;
+    border: 1.5px solid var(--sand);
+    box-shadow: 0 4px 16px var(--shadow);
+    margin-bottom: 18px;
+  }
+  .fill-situation {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    line-height: 1.5;
+    color: var(--ink);
+    margin-bottom: 8px;
+    text-align: center;
+  }
+  .fill-translation {
+    font-size: 0.82rem;
+    color: #8a7060;
+    font-style: italic;
+    text-align: center;
+    margin-bottom: 18px;
+    line-height: 1.5;
+  }
+  .fill-input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid var(--sand);
+    border-radius: 10px;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--terracotta);
+    text-align: center;
+    background: var(--mist);
+    transition: all 0.2s;
+  }
+  .fill-input:focus { outline: none; border-color: var(--gold); background: white; }
+  .fill-input.correct { border-color: var(--olive); background: rgba(90,110,60,0.08); color: var(--olive); }
+  .fill-input.wrong { border-color: #e05050; background: rgba(224,80,80,0.08); }
+  .fill-feedback { text-align: center; font-size: 0.95rem; min-height: 24px; margin-top: 12px; font-weight: 600; }
+  .fill-feedback.good { color: var(--olive); }
+  .fill-feedback.bad { color: #c03030; }
+  .result-screen {
+    text-align: center;
+    background: white;
+    border-radius: 16px;
+    padding: 40px 24px;
+    border: 1.5px solid var(--sand);
+    box-shadow: 0 4px 16px var(--shadow);
+  }
+  .result-emoji { font-size: 3.5rem; margin-bottom: 8px; }
+  .result-score {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    color: var(--terracotta);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .result-sub { color: #8a7060; font-size: 0.95rem; margin-bottom: 20px; }
+  .hidden { display: none !important; }
+  @media (max-width: 480px) {
+    .quiz-options { grid-template-columns: 1fr; }
+    .quiz-word { font-size: 1.4rem; }
+    .cards-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <div class="flag">🇮🇹</div>
+    <h1>Lezione 6</h1>
+    <div class="sub">Tanti auguri!</div>
+    <p><span id="totalCount">140</span> слов · пожелания, праздники, рутина</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="cards" onclick="switchTab('cards')">📇 Карточки</button>
+    <button class="tab-btn" data-tab="match" onclick="switchTab('match')">🎴 Найди пару</button>
+    <button class="tab-btn" data-tab="quiz" onclick="switchTab('quiz')">🎯 Тест</button>
+    <button class="tab-btn" data-tab="fill" onclick="switchTab('fill')">✍️ Впиши слово</button>
+  </div>
+
+  <div id="section-cards" class="section active">
+    <div class="hint-box">
+      <b>Нажимай на карточку:</b> 1) слово → 2) определение и пример по-итальянски → 3) перевод
+    </div>
+    <div class="cat-filter" id="cat-filter"></div>
+    <div id="cards-container"></div>
+    <div class="btn-row" style="margin-top:28px;">
+      <button class="btn secondary" onclick="resetAllCards()">↺ Сбросить все карточки</button>
+    </div>
+  </div>
+
+  <div id="section-match" class="section">
+    <div class="game-header">
+      <h2>Найди пару</h2>
+      <p>Сопоставьте итальянское слово с переводом</p>
+    </div>
+    <div class="score-bar">
+      <div>
+        <div class="score-label">Найдено пар</div>
+        <div><span class="score-num" id="match-score">0</span> <span style="color:#8a7060;">/ <span id="match-total">10</span></span></div>
+      </div>
+      <div>
+        <div class="score-label">Ошибок</div>
+        <div class="score-num" id="match-errors">0</div>
+      </div>
+    </div>
+    <div class="match-board" id="match-board"></div>
+    <div id="match-result" class="result-screen hidden">
+      <div class="result-emoji" id="match-emoji">🎉</div>
+      <div class="result-score" id="match-final">10/10</div>
+      <div class="result-sub" id="match-sub">Все пары найдены!</div>
+      <button class="btn" onclick="initMatch()">Играть снова</button>
+    </div>
+    <div class="btn-row">
+      <button class="btn secondary" onclick="initMatch()">🔄 Новая партия</button>
+    </div>
+  </div>
+
+  <div id="section-quiz" class="section">
+    <div class="game-header">
+      <h2>Тест</h2>
+      <p>Выберите правильный перевод (20 вопросов)</p>
+    </div>
+    <div id="quiz-play">
+      <div class="dots" id="quiz-dots"></div>
+      <div class="quiz-progress"><div class="quiz-progress-bar" id="quiz-bar" style="width:0%"></div></div>
+      <div class="quiz-counter" id="quiz-counter">Вопрос 1</div>
+      <div class="quiz-card">
+        <div class="quiz-dir" id="quiz-dir"></div>
+        <div class="quiz-word" id="quiz-word"></div>
+      </div>
+      <div class="quiz-options" id="quiz-options"></div>
+      <div class="quiz-feedback" id="quiz-feedback"></div>
+      <div class="btn-row">
+        <button class="btn" id="quiz-next-btn" onclick="nextQuiz()" style="display:none;">Дальше →</button>
+      </div>
+    </div>
+    <div id="quiz-result" class="result-screen hidden">
+      <div class="result-emoji" id="quiz-emoji">🏆</div>
+      <div class="result-score" id="quiz-final-score">20/20</div>
+      <div class="result-sub" id="quiz-final-sub"></div>
+      <div class="btn-row">
+        <button class="btn" onclick="initQuiz(false)">Играть снова</button>
+        <button class="btn secondary" id="quiz-mistakes-btn" onclick="initQuiz(true)" style="display:none;">Только ошибки</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="section-fill" class="section">
+    <div class="game-header">
+      <h2>Впиши пропущенное слово</h2>
+      <p>Прочитайте предложение и впишите итальянское слово</p>
+    </div>
+    <div id="fill-play">
+      <div class="quiz-progress"><div class="quiz-progress-bar" id="fill-bar" style="width:0%"></div></div>
+      <div class="quiz-counter" id="fill-counter">Задание 1</div>
+      <div class="fill-card">
+        <div class="fill-situation" id="fill-situation"></div>
+        <div class="fill-translation" id="fill-translation"></div>
+        <input type="text" class="fill-input" id="fill-input" placeholder="введите слово..." autocomplete="off" onkeydown="if(event.key==='Enter') checkFill()">
+        <div class="fill-feedback" id="fill-feedback"></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn" id="fill-check" onclick="checkFill()">Проверить</button>
+        <button class="btn secondary" id="fill-skip" onclick="skipFill()">Подсказать</button>
+        <button class="btn" id="fill-next" onclick="nextFill()" style="display:none;">Дальше →</button>
+      </div>
+    </div>
+    <div id="fill-result" class="result-screen hidden">
+      <div class="result-emoji" id="fill-emoji">🌟</div>
+      <div class="result-score" id="fill-final-score">15/15</div>
+      <div class="result-sub" id="fill-final-sub"></div>
+      <button class="btn" onclick="initFill()">Играть снова</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const vocab = [
+  // 1. Пожелания
+  {it:"tanti auguri", ru:"поздравляю (много пожеланий)", cat:"auguri", def:"Espressione per fare gli auguri a qualcuno.", ex:"Tanti auguri per il tuo compleanno!"},
+  {it:"in bocca al lupo!", ru:"ни пуха, ни пера! (удачи)", cat:"auguri", def:"Modo di dire per augurare buona fortuna.", ex:"Domani ho l'esame. — In bocca al lupo!"},
+  {it:"crepi il lupo!", ru:"к чёрту! (ответ на «in bocca al lupo»)", cat:"auguri", def:"Risposta tradizionale a 'in bocca al lupo'.", ex:"In bocca al lupo! — Crepi il lupo!"},
+  {it:"viva il lupo!", ru:"да здравствует волк! (современный ответ)", cat:"auguri", def:"Risposta moderna e alternativa a 'in bocca al lupo'.", ex:"In bocca al lupo! — Viva il lupo!"},
+  {it:"buona fortuna", ru:"удачи!", cat:"auguri", def:"Frase per augurare successo a qualcuno.", ex:"Buona fortuna con il nuovo lavoro!"},
+  {it:"sfortuna", ru:"неудача, невезение", cat:"auguri", def:"Il contrario di fortuna.", ex:"Che sfortuna, ho perso il treno!"},
+  {it:"congratulazioni!", ru:"поздравляю!", cat:"auguri", def:"Parola per festeggiare un successo.", ex:"Congratulazioni per la laurea!"},
+  {it:"buon viaggio!", ru:"счастливого пути!", cat:"auguri", def:"Augurio per chi parte in viaggio.", ex:"Parto domani. — Buon viaggio!"},
+  {it:"buon anno!", ru:"с новым годом!", cat:"auguri", def:"Augurio per il 1° gennaio.", ex:"Buon anno a tutti!"},
+  {it:"buon Natale!", ru:"с рождеством!", cat:"auguri", def:"Augurio del 25 dicembre.", ex:"Buon Natale e buone feste!"},
+  {it:"buon appetito!", ru:"приятного аппетита!", cat:"auguri", def:"Frase che si dice prima di mangiare.", ex:"A tavola! Buon appetito!"},
+  {it:"bella notizia", ru:"хорошая новость", cat:"auguri", def:"Un'informazione positiva.", ex:"Ho una bella notizia: aspetto un bambino!"},
+
+  // 2. Итальянские праздники
+  {it:"Natale", ru:"Рождество", cat:"feste", def:"La festa cristiana del 25 dicembre.", ex:"A Natale sto con la famiglia."},
+  {it:"Capodanno", ru:"Новый год (1 января)", cat:"feste", def:"Il primo giorno dell'anno, il 1° gennaio.", ex:"A Capodanno c'è la festa più grande."},
+  {it:"San Silvestro", ru:"канун Нового года (31 декабря)", cat:"feste", def:"La sera del 31 dicembre.", ex:"Il cenone di San Silvestro è tradizionale."},
+  {it:"befana", ru:"Бефана (6 января)", cat:"feste", def:"Una vecchia che porta regali ai bambini il 6 gennaio.", ex:"La befana viene di notte con le calze."},
+  {it:"festa della Liberazione", ru:"День освобождения (25 апреля)", cat:"feste", def:"Festa nazionale del 25 aprile.", ex:"Il 25 aprile è la festa della Liberazione."},
+  {it:"festa dei Lavoratori", ru:"День труда (1 мая)", cat:"feste", def:"Festa del 1° maggio per i lavoratori.", ex:"Il 1° maggio è la festa dei Lavoratori."},
+  {it:"festa della Repubblica", ru:"День республики (2 июня)", cat:"feste", def:"Festa nazionale italiana del 2 giugno.", ex:"La festa della Repubblica è il 2 giugno."},
+  {it:"Ferragosto", ru:"Феррагосто (15 августа)", cat:"feste", def:"Festa italiana del 15 agosto, tutti in vacanza.", ex:"A Ferragosto Roma è vuota."},
+  {it:"cenone", ru:"праздничный ужин", cat:"feste", def:"Una cena speciale e grande per una festa.", ex:"Il cenone di Capodanno è molto lungo."},
+  {it:"spumante", ru:"игристое вино", cat:"feste", def:"Un vino con le bollicine per festeggiare.", ex:"A Capodanno beviamo lo spumante."},
+  {it:"Cin Cin", ru:"За здоровье! (тост)", cat:"feste", def:"Si dice mentre si toccano i bicchieri per un brindisi.", ex:"Cin Cin! Alla nostra amicizia!"},
+  {it:"lenticchie", ru:"чечевица (едят на Новый год)", cat:"feste", def:"Piccoli legumi mangiati a Capodanno per fortuna.", ex:"A Capodanno si mangiano le lenticchie."},
+
+  // 3. Ежедневная рутина
+  {it:"svegliarsi", ru:"просыпаться", cat:"rutina", def:"Aprire gli occhi, uscire dal sonno.", ex:"Mi sveglio alle 7."},
+  {it:"alzarsi", ru:"вставать (из кровати)", cat:"rutina", def:"Uscire dal letto.", ex:"Mi alzo alle 7 e mezza."},
+  {it:"farsi la doccia", ru:"принимать душ", cat:"rutina", def:"Lavarsi sotto l'acqua che scende.", ex:"Ogni mattina mi faccio la doccia."},
+  {it:"farsi il bagno", ru:"принимать ванну", cat:"rutina", def:"Lavarsi nella vasca piena d'acqua.", ex:"La sera mi faccio il bagno."},
+  {it:"farsi la barba", ru:"бриться", cat:"rutina", def:"Togliere i peli dal viso.", ex:"Mio padre si fa la barba ogni giorno."},
+  {it:"lavarsi", ru:"умываться, мыться", cat:"rutina", def:"Pulirsi con acqua e sapone.", ex:"Mi lavo le mani prima di mangiare."},
+  {it:"vestirsi", ru:"одеваться", cat:"rutina", def:"Mettersi i vestiti.", ex:"Mi vesto in fretta la mattina."},
+  {it:"pettinarsi", ru:"причёсываться", cat:"rutina", def:"Sistemare i capelli con il pettine.", ex:"Mi pettino davanti allo specchio."},
+  {it:"prepararsi", ru:"готовиться, собираться", cat:"rutina", def:"Farsi pronto per uscire.", ex:"Mi preparo per la festa."},
+  {it:"mettersi", ru:"надевать (одежду)", cat:"rutina", def:"Vestirsi con qualcosa specifico.", ex:"Mi metto una giacca perché fa freddo."},
+  {it:"pranzare", ru:"обедать", cat:"rutina", def:"Mangiare a mezzogiorno.", ex:"Pranzo sempre all'una."},
+  {it:"riposarsi", ru:"отдыхать", cat:"rutina", def:"Fare una pausa, non lavorare.", ex:"La domenica mi riposo."},
+  {it:"andare a letto", ru:"идти в постель", cat:"rutina", def:"Andare a dormire, coricarsi.", ex:"Vado a letto alle 11."},
+  {it:"andare a dormire", ru:"идти спать", cat:"rutina", def:"Sinonimo di andare a letto.", ex:"I bambini vanno a dormire alle 9."},
+  {it:"curarsi", ru:"заботиться о себе", cat:"rutina", def:"Prendersi cura di sé stesso.", ex:"Mi curo molto della salute."},
+
+  // 4. Мода и внешний вид
+  {it:"moda", ru:"мода", cat:"moda", def:"Lo stile di vestiti popolare in un periodo.", ex:"Milano è la capitale della moda."},
+  {it:"stilista", ru:"модельер, стилист", cat:"moda", def:"Una persona che crea vestiti alla moda.", ex:"Armani è uno stilista famoso."},
+  {it:"vestito", ru:"костюм, платье", cat:"moda", def:"Un capo di abbigliamento intero.", ex:"Metto il vestito nuovo per la festa."},
+  {it:"pantaloni", ru:"брюки", cat:"moda", def:"Vestito per le gambe.", ex:"Ho comprato dei pantaloni neri."},
+  {it:"presentabile", ru:"презентабельный", cat:"moda", def:"Vestito in modo adatto, che fa buona impressione.", ex:"Devo essere presentabile per il lavoro."},
+  {it:"famoso", ru:"знаменитый", cat:"moda", def:"Conosciuto da molte persone.", ex:"Roberto Baggio è un calciatore famoso."},
+  {it:"tradizione", ru:"традиция", cat:"moda", def:"Un'abitudine che passa da una generazione all'altra.", ex:"La pasta fatta in casa è una tradizione italiana."},
+
+  // 5. Учёба
+  {it:"esame", ru:"экзамен", cat:"studio", def:"Un test importante a scuola o all'università.", ex:"Domani ho l'esame di matematica."},
+  {it:"matematica", ru:"математика", cat:"studio", def:"La scienza dei numeri.", ex:"La matematica è la mia materia preferita."},
+  {it:"prova", ru:"проверка, тест", cat:"studio", def:"Un piccolo esame o test.", ex:"Facciamo una prova prima dell'esame."},
+  {it:"compito", ru:"задание, домашняя работа", cat:"studio", def:"Il lavoro che gli studenti fanno a casa.", ex:"Devo fare i compiti di italiano."},
+  {it:"libro", ru:"книга", cat:"studio", def:"Un oggetto con pagine da leggere.", ex:"Leggo un libro interessante."},
+  {it:"dizionario", ru:"словарь", cat:"studio", def:"Un libro con il significato delle parole.", ex:"Guardo la parola sul dizionario."},
+  {it:"frase", ru:"фраза, предложение", cat:"studio", def:"Un gruppo di parole che formano un pensiero.", ex:"Scrivi una frase in italiano."},
+  {it:"discorso", ru:"речь, разговор", cat:"studio", def:"Quello che una persona dice in modo lungo.", ex:"Il presidente fa un discorso in TV."},
+  {it:"parolaccia", ru:"ругательство", cat:"studio", def:"Una parola brutta, non educata.", ex:"Non dire parolacce!"},
+  {it:"ragionamento", ru:"рассуждение", cat:"studio", def:"Il modo di pensare per arrivare a una conclusione.", ex:"Il tuo ragionamento è corretto."},
+
+  // 6. Общение и жесты
+  {it:"gesto", ru:"жест", cat:"comunicare", def:"Un movimento con le mani per dire qualcosa.", ex:"Gli italiani fanno molti gesti."},
+  {it:"gesticolare", ru:"жестикулировать", cat:"comunicare", def:"Fare gesti con le mani mentre si parla.", ex:"Mia nonna gesticola sempre."},
+  {it:"dialetto", ru:"диалект", cat:"comunicare", def:"Una lingua parlata solo in una zona.", ex:"In Sicilia parlano un dialetto diverso."},
+  {it:"senza parole", ru:"без слов, безмолвно", cat:"comunicare", def:"Rimanere sorpresi, non sapere cosa dire.", ex:"Sono senza parole per la sorpresa!"},
+  {it:"rendere più chiaro", ru:"сделать понятнее", cat:"comunicare", def:"Spiegare meglio qualcosa.", ex:"Puoi rendere più chiaro il problema?"},
+  {it:"attenzione", ru:"внимание", cat:"comunicare", def:"Concentrazione su qualcosa.", ex:"Fai attenzione al traffico!"},
+  {it:"riconoscere", ru:"узнавать", cat:"comunicare", def:"Sapere chi è una persona quando la vedi.", ex:"Riconosco quella voce."},
+  {it:"accompagnare", ru:"сопровождать, провожать", cat:"comunicare", def:"Andare con qualcuno da qualche parte.", ex:"Accompagno mia figlia a scuola."},
+  {it:"raccontare", ru:"рассказывать", cat:"comunicare", def:"Dire una storia o cosa è successo.", ex:"Ti racconto la mia giornata."},
+  {it:"sembrare", ru:"казаться", cat:"comunicare", def:"Dare un'impressione, apparire come.", ex:"Sembra che piova."},
+  {it:"ci vediamo", ru:"увидимся", cat:"comunicare", def:"Frase per salutare quando ci si rivede presto.", ex:"A domani, ci vediamo!"},
+  {it:"non importa", ru:"не важно", cat:"comunicare", def:"Non è un problema, non ha importanza.", ex:"Non importa, non ti preoccupare."},
+  {it:"influenzare", ru:"влиять", cat:"comunicare", def:"Cambiare le idee o le azioni di qualcuno.", ex:"La moda influenza tutti."},
+
+  // 7. Время и частота
+  {it:"tutte le mattine", ru:"каждое утро", cat:"tempo", def:"Ogni mattina, sempre.", ex:"Tutte le mattine bevo il caffè."},
+  {it:"tutto l'anno", ru:"весь год", cat:"tempo", def:"Per dodici mesi, sempre.", ex:"Il museo è aperto tutto l'anno."},
+  {it:"due volte a settimana", ru:"два раза в неделю", cat:"tempo", def:"In una settimana, due volte.", ex:"Vado in palestra due volte a settimana."},
+  {it:"fino a tardi", ru:"допоздна", cat:"tempo", def:"Fino a un'ora molto tarda.", ex:"Ieri ho studiato fino a tardi."},
+  {it:"fino alle…", ru:"до (какого-то часа)", cat:"tempo", def:"Fino a un'ora specifica.", ex:"Lavoro fino alle sei."},
+  {it:"verso le…", ru:"около (какого-то часа)", cat:"tempo", def:"Circa a quell'ora, non esattamente.", ex:"Torno a casa verso le otto."},
+  {it:"fra… e…", ru:"между… и…", cat:"tempo", def:"In un intervallo di tempo.", ex:"Mangio fra le 12 e le 13."},
+  {it:"continuamente", ru:"постоянно, непрерывно", cat:"tempo", def:"Senza fermarsi, sempre.", ex:"Piove continuamente da ieri."},
+  {it:"alba", ru:"рассвет", cat:"tempo", def:"Il momento quando il sole nasce.", ex:"Mi alzo prima dell'alba."},
+  {it:"giornata tipo", ru:"обычный день", cat:"tempo", def:"Una giornata normale, come tutte le altre.", ex:"Descrivi la tua giornata tipo."},
+
+  // 8. Полезные глаголы
+  {it:"dare", ru:"давать", cat:"verbi", def:"Passare qualcosa a qualcuno.", ex:"Ti do il mio numero."},
+  {it:"aprire", ru:"открывать", cat:"verbi", def:"Il contrario di chiudere.", ex:"Apri la porta, per favore."},
+  {it:"sapere", ru:"знать (факты, уметь)", cat:"verbi", def:"Avere informazioni in testa.", ex:"So parlare italiano."},
+  {it:"cuocere", ru:"готовить (варить, жарить)", cat:"verbi", def:"Preparare il cibo con il fuoco o il forno.", ex:"Cuocio la pasta per 10 minuti."},
+  {it:"vedere", ru:"видеть", cat:"verbi", def:"Guardare con gli occhi.", ex:"Vedo Marco al bar."},
+  {it:"sentire", ru:"слышать, чувствовать", cat:"verbi", def:"Percepire suoni o sensazioni.", ex:"Non ti sento, parla più forte."},
+  {it:"decidere", ru:"решать", cat:"verbi", def:"Fare una scelta.", ex:"Non so decidere cosa prendere."},
+  {it:"scegliere", ru:"выбирать", cat:"verbi", def:"Prendere una cosa fra molte.", ex:"Scelgo la pizza margherita."},
+  {it:"tornare", ru:"возвращаться", cat:"verbi", def:"Andare di nuovo dove si era.", ex:"Torno a casa alle sette."},
+  {it:"riportare", ru:"отдавать назад, приносить обратно", cat:"verbi", def:"Portare indietro qualcosa.", ex:"Devo riportare il libro in biblioteca."},
+  {it:"considerare", ru:"рассматривать, считать", cat:"verbi", def:"Pensare a qualcosa, valutarlo.", ex:"Considero la tua proposta."},
+  {it:"interessare", ru:"интересовать", cat:"verbi", def:"Attirare l'attenzione o la curiosità.", ex:"Mi interessa la storia italiana."},
+  {it:"approfondire", ru:"углублять, изучать глубже", cat:"verbi", def:"Studiare qualcosa più in dettaglio.", ex:"Voglio approfondire l'italiano."},
+  {it:"lamentarsi", ru:"жаловаться", cat:"verbi", def:"Dire che qualcosa non va bene.", ex:"Non lamentarti sempre!"},
+  {it:"preparare", ru:"готовить (что-то)", cat:"verbi", def:"Fare qualcosa in anticipo per essere pronto.", ex:"Preparo la cena per gli amici."},
+  {it:"trovare", ru:"находить", cat:"verbi", def:"Vedere quello che si cercava.", ex:"Ho trovato le chiavi!"},
+  {it:"riprodurre", ru:"воспроизводить", cat:"verbi", def:"Fare di nuovo una cosa già fatta.", ex:"L'artista riproduce il quadro famoso."},
+  {it:"rendere", ru:"делать (кого-то каким-то)", cat:"verbi", def:"Fare diventare qualcuno o qualcosa in un certo modo.", ex:"La musica mi rende felice."},
+  {it:"tornare a…", ru:"возвращаться к…", cat:"verbi", def:"Ricominciare a fare qualcosa.", ex:"Torno a leggere il mio libro."},
+
+  // 9. Прилагательные и наречия
+  {it:"importante", ru:"важный", cat:"agg", def:"Che ha molta importanza, che conta.", ex:"È importante studiare ogni giorno."},
+  {it:"vero", ru:"настоящий, правдивый", cat:"agg", def:"Reale, non falso.", ex:"È una storia vera."},
+  {it:"verissimo", ru:"совершенно верно, точно", cat:"agg", def:"Molto vero, assolutamente giusto.", ex:"Verissimo, hai ragione!"},
+  {it:"semplice", ru:"простой", cat:"agg", def:"Facile, non complicato.", ex:"È un esercizio semplice."},
+  {it:"tipico", ru:"типичный", cat:"agg", def:"Caratteristico di un posto o cosa.", ex:"La pizza è un piatto tipico italiano."},
+  {it:"normale", ru:"обычный, нормальный", cat:"agg", def:"Comune, come sempre.", ex:"È una giornata normale."},
+  {it:"ovvio", ru:"очевидный", cat:"agg", def:"Chiaro, che tutti capiscono facilmente.", ex:"È ovvio che ho ragione!"},
+  {it:"uguale", ru:"одинаковый, равный", cat:"agg", def:"Che è la stessa cosa.", ex:"Le due case sono uguali."},
+  {it:"meno", ru:"меньше", cat:"agg", def:"Il contrario di più.", ex:"Oggi ho meno tempo di ieri."},
+  {it:"davvero", ru:"действительно, правда", cat:"agg", def:"Veramente, sul serio.", ex:"Davvero non lo sapevi?"},
+  {it:"pieno di", ru:"полный чего-то", cat:"agg", def:"Che contiene molto di qualcosa.", ex:"La stanza è piena di libri."},
+  {it:"direttamente", ru:"напрямую, прямо", cat:"agg", def:"Senza fermarsi, senza intermediari.", ex:"Vado direttamente a casa."},
+  {it:"infatti", ru:"действительно, и правда", cat:"agg", def:"Conferma quello che si è detto.", ex:"Non risponde, infatti è al cinema."},
+  {it:"almeno", ru:"по крайней мере, хотя бы", cat:"agg", def:"Come minimo.", ex:"Studio almeno un'ora al giorno."},
+  {it:"anzi", ru:"наоборот, даже", cat:"agg", def:"Al contrario, di più.", ex:"Non sono stanco, anzi, ho tanta energia!"},
+  {it:"appunto", ru:"именно, вот-вот", cat:"agg", def:"Esattamente, proprio così.", ex:"Sì, appunto, hai capito!"},
+  {it:"più", ru:"больше, более", cat:"agg", def:"Una quantità maggiore.", ex:"Voglio più pasta, per favore."},
+  {it:"oppure", ru:"или", cat:"agg", def:"Parola per unire due possibilità, sinonimo di 'o'.", ex:"Vuoi il tè oppure il caffè?"},
+
+  // 10. Местоимения (притяжательные)
+  {it:"suo", ru:"его / её", cat:"pron", def:"Che appartiene a lui o a lei.", ex:"Questa è la sua macchina."},
+  {it:"tuo", ru:"твой", cat:"pron", def:"Che appartiene a te.", ex:"Dov'è il tuo libro?"},
+  {it:"nostro", ru:"наш", cat:"pron", def:"Che appartiene a noi.", ex:"Questa è la nostra casa."},
+  {it:"loro", ru:"их", cat:"pron", def:"Che appartiene a loro.", ex:"I loro figli sono grandi."},
+  {it:"vostro", ru:"ваш", cat:"pron", def:"Che appartiene a voi.", ex:"Come si chiama il vostro cane?"},
+
+  // 11. Разное
+  {it:"amore", ru:"любовь", cat:"altro", def:"Il sentimento forte tra due persone.", ex:"L'amore è tutto."},
+  {it:"insieme", ru:"вместе", cat:"altro", def:"L'uno con l'altro.", ex:"Andiamo insieme al cinema."},
+  {it:"età", ru:"возраст", cat:"altro", def:"Quanti anni ha una persona.", ex:"Qual è la tua età?"},
+  {it:"fiore", ru:"цветок", cat:"altro", def:"La parte colorata e bella della pianta.", ex:"Ti regalo un fiore."},
+  {it:"negozio", ru:"магазин", cat:"altro", def:"Il posto dove si comprano le cose.", ex:"Il negozio è chiuso."},
+  {it:"videogioco", ru:"видеоигра", cat:"altro", def:"Un gioco elettronico.", ex:"Mio figlio gioca ai videogiochi."},
+  {it:"partita", ru:"матч, партия", cat:"altro", def:"Un gioco tra due squadre o persone.", ex:"Guardiamo la partita in TV."},
+  {it:"bicicletta", ru:"велосипед", cat:"altro", def:"Un veicolo a due ruote che si muove con i pedali.", ex:"Vado al lavoro in bicicletta."},
+  {it:"espresso", ru:"эспрессо", cat:"altro", def:"Il tipico caffè italiano corto e forte.", ex:"Un espresso, per favore."},
+  {it:"vita quotidiana", ru:"повседневная жизнь", cat:"altro", def:"La vita di tutti i giorni.", ex:"La mia vita quotidiana è tranquilla."},
+  {it:"uso", ru:"использование, обычай", cat:"altro", def:"Il modo di fare qualcosa; un'abitudine.", ex:"È un uso italiano."},
+  {it:"simbolo", ru:"символ", cat:"altro", def:"Una cosa che rappresenta un'altra.", ex:"La bandiera è il simbolo dell'Italia."},
+  {it:"situazione", ru:"ситуация", cat:"altro", def:"Come stanno le cose in un momento.", ex:"È una situazione difficile."},
+  {it:"ossessione", ru:"навязчивая идея", cat:"altro", def:"Un pensiero che non ti lascia mai.", ex:"Ha l'ossessione della pulizia."},
+  {it:"svago", ru:"досуг, развлечение", cat:"altro", def:"Un'attività per divertirsi.", ex:"Leggere è il mio svago preferito."},
+  {it:"maggiorenne", ru:"совершеннолетний", cat:"altro", def:"Una persona di 18 anni o più.", ex:"Sei maggiorenne? Puoi votare."},
+  {it:"da solo", ru:"один, самостоятельно", cat:"altro", def:"Senza altre persone.", ex:"Mangio da solo stasera."},
+  {it:"la maggior parte", ru:"большинство", cat:"altro", def:"Più della metà.", ex:"La maggior parte degli italiani beve caffè."},
+  {it:"bisogna", ru:"нужно, необходимо", cat:"altro", def:"È necessario fare qualcosa.", ex:"Bisogna studiare per imparare."},
+  {it:"fare parte di", ru:"быть частью, входить в", cat:"altro", def:"Essere membro di un gruppo.", ex:"Faccio parte di un club sportivo."},
+  {it:"all'estero", ru:"за границей", cat:"altro", def:"In un altro paese, non in Italia.", ex:"Studio all'estero da un anno."},
+  {it:"giocare a calcetto", ru:"играть в мини-футбол", cat:"altro", def:"Fare una partita di calcio in campo piccolo.", ex:"Il sabato gioco a calcetto con gli amici."},
+  {it:"a tavola", ru:"за стол! / за столом", cat:"altro", def:"Espressione per chiamare a mangiare.", ex:"A tavola! La cena è pronta!"},
+  {it:"occasione", ru:"случай, повод", cat:"altro", def:"Un momento o evento speciale.", ex:"Per l'occasione ho comprato un vestito nuovo."},
+];
+
+const categories = {
+  auguri: "🎉 Пожелания и поздравления",
+  feste: "🎊 Итальянские праздники",
+  rutina: "🌅 Ежедневная рутина",
+  moda: "👗 Мода и внешний вид",
+  studio: "📚 Учёба",
+  comunicare: "💬 Общение и жесты",
+  tempo: "⏰ Время и частота",
+  verbi: "🎯 Полезные глаголы",
+  agg: "✨ Прилагательные и наречия",
+  pron: "👥 Притяжательные местоимения",
+  altro: "🏠 Разное"
+};
+
+document.getElementById('totalCount').textContent = vocab.length;
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('section-' + name).classList.add('active');
+  if (name === 'match' && !matchInitialized) initMatch();
+  if (name === 'quiz' && !quizInitialized) initQuiz(false);
+  if (name === 'fill' && !fillInitialized) initFill();
+}
+
+let activeFilter = 'all';
+
+function renderFilters() {
+  const el = document.getElementById('cat-filter');
+  let html = '<div class="cat-chip ' + (activeFilter==='all'?'active':'') + '" onclick="setFilter(\'all\')">Все (' + vocab.length + ')</div>';
+  Object.keys(categories).forEach(cat => {
+    const count = vocab.filter(v => v.cat === cat).length;
+    html += '<div class="cat-chip ' + (activeFilter===cat?'active':'') + '" onclick="setFilter(\'' + cat + '\')">' + categories[cat] + ' (' + count + ')</div>';
+  });
+  el.innerHTML = html;
+}
+
+function setFilter(cat) {
+  activeFilter = cat;
+  renderFilters();
+  renderCards();
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function renderCards() {
+  const container = document.getElementById('cards-container');
+  let html = '';
+  const cats = activeFilter === 'all' ? Object.keys(categories) : [activeFilter];
+  cats.forEach(cat => {
+    const items = vocab.filter(v => v.cat === cat);
+    if (!items.length) return;
+    html += '<div class="category-label">' + categories[cat] + '</div>';
+    html += '<div class="cards-grid">';
+    items.forEach(v => {
+      html += '<div class="card" data-state="0" onclick="advanceCard(this)">' +
+        '<div class="face face-front">' +
+          '<div class="it">' + escapeHtml(v.it) + '</div>' +
+          '<div class="hint-txt">нажми →</div>' +
+        '</div>' +
+        '<div class="face face-def">' +
+          '<div class="label">Definizione</div>' +
+          '<div class="def-txt">' + escapeHtml(v.def) + '</div>' +
+          '<div class="ex-txt">' + escapeHtml(v.ex) + '</div>' +
+        '</div>' +
+        '<div class="face face-tr">' +
+          '<div class="label">Перевод</div>' +
+          '<div class="ru-txt">' + escapeHtml(v.ru) + '</div>' +
+          '<div class="it-small">' + escapeHtml(v.it) + '</div>' +
+        '</div>' +
+        '<div class="card-state"><span class="state-dot"></span><span class="state-dot"></span><span class="state-dot"></span></div>' +
+        '</div>';
+    });
+    html += '</div>';
+  });
+  container.innerHTML = html;
+}
+
+function advanceCard(el) {
+  let cur = parseInt(el.dataset.state);
+  cur = (cur + 1) > 2 ? 0 : cur + 1;
+  el.dataset.state = cur;
+}
+
+function resetAllCards() {
+  document.querySelectorAll('.card').forEach(c => c.dataset.state = "0");
+}
+
+// MATCH
+let matchInitialized = false;
+let matchSelected = null;
+let matchScore = 0;
+let matchErrors = 0;
+const MATCH_PAIRS = 10;
+
+function initMatch() {
+  matchInitialized = true;
+  matchScore = 0; matchErrors = 0;
+  matchSelected = null;
+  document.getElementById('match-score').textContent = 0;
+  document.getElementById('match-errors').textContent = 0;
+  document.getElementById('match-total').textContent = MATCH_PAIRS;
+  document.getElementById('match-result').classList.add('hidden');
+
+  const picks = shuffle(vocab).slice(0, MATCH_PAIRS);
+  const board = document.getElementById('match-board');
+  board.innerHTML = '';
+  const leftCol = document.createElement('div'); leftCol.className = 'match-col';
+  const rightCol = document.createElement('div'); rightCol.className = 'match-col';
+  const itShuffled = shuffle(picks);
+  const ruShuffled = shuffle(picks);
+
+  itShuffled.forEach(v => {
+    const el = document.createElement('div');
+    el.className = 'match-item it-word';
+    el.dataset.key = v.it;
+    el.dataset.side = 'it';
+    el.textContent = v.it;
+    el.onclick = () => handleMatch(el);
+    leftCol.appendChild(el);
+  });
+  ruShuffled.forEach(v => {
+    const el = document.createElement('div');
+    el.className = 'match-item ru-word';
+    el.dataset.key = v.it;
+    el.dataset.side = 'ru';
+    el.textContent = v.ru;
+    el.onclick = () => handleMatch(el);
+    rightCol.appendChild(el);
+  });
+  board.appendChild(leftCol);
+  board.appendChild(rightCol);
+}
+
+function handleMatch(el) {
+  if (el.classList.contains('matched') || el.classList.contains('wrong')) return;
+  if (!matchSelected) {
+    document.querySelectorAll('.match-item').forEach(e => e.classList.remove('selected'));
+    el.classList.add('selected');
+    matchSelected = el;
+    return;
+  }
+  if (el === matchSelected) { el.classList.remove('selected'); matchSelected = null; return; }
+  if (el.dataset.side === matchSelected.dataset.side) {
+    document.querySelectorAll('.match-item').forEach(e => e.classList.remove('selected'));
+    el.classList.add('selected');
+    matchSelected = el;
+    return;
+  }
+  if (el.dataset.key === matchSelected.dataset.key) {
+    el.classList.add('matched'); matchSelected.classList.add('matched');
+    el.classList.remove('selected'); matchSelected.classList.remove('selected');
+    matchScore++;
+    document.getElementById('match-score').textContent = matchScore;
+    matchSelected = null;
+    if (matchScore === MATCH_PAIRS) {
+      setTimeout(() => {
+        const r = document.getElementById('match-result');
+        r.classList.remove('hidden');
+        document.getElementById('match-final').textContent = matchScore + '/' + MATCH_PAIRS;
+        document.getElementById('match-sub').textContent = matchErrors === 0 ? 'Без ошибок! Bravissimo!' : 'Ошибок: ' + matchErrors;
+        document.getElementById('match-emoji').textContent = matchErrors === 0 ? '🏆' : matchErrors <= 3 ? '🎉' : '👍';
+      }, 500);
+    }
+  } else {
+    el.classList.add('wrong'); matchSelected.classList.add('wrong');
+    matchErrors++;
+    document.getElementById('match-errors').textContent = matchErrors;
+    const a = el, b = matchSelected;
+    matchSelected = null;
+    setTimeout(() => { a.classList.remove('wrong','selected'); b.classList.remove('wrong','selected'); }, 700);
+  }
+}
+
+// QUIZ
+let quizInitialized = false;
+let quizItems = [], quizIdx = 0, quizCorrect = 0, quizAnswered = false;
+let quizMistakes = [];
+const QUIZ_LEN = 20;
+
+function initQuiz(onlyErrors) {
+  quizInitialized = true;
+  document.getElementById('quiz-result').classList.add('hidden');
+  document.getElementById('quiz-play').classList.remove('hidden');
+  const source = onlyErrors && quizMistakes.length ? quizMistakes : vocab;
+  quizItems = shuffle(source).slice(0, Math.min(QUIZ_LEN, source.length));
+  quizMistakes = [];
+  quizIdx = 0; quizCorrect = 0;
+  renderDots();
+  showQuiz();
+}
+
+function renderDots() {
+  const el = document.getElementById('quiz-dots');
+  let html = '';
+  for (let i = 0; i < quizItems.length; i++) {
+    html += '<div class="dot ' + (i===0?'active':'') + '"></div>';
+  }
+  el.innerHTML = html;
+}
+
+function showQuiz() {
+  if (quizIdx >= quizItems.length) { endQuiz(); return; }
+  const v = quizItems[quizIdx];
+  quizAnswered = false;
+  const dir = Math.random() > 0.5;
+  document.getElementById('quiz-dir').textContent = dir ? 'Italiano → Русский' : 'Русский → Italiano';
+  document.getElementById('quiz-word').textContent = dir ? v.it : v.ru;
+  document.getElementById('quiz-feedback').textContent = '';
+  document.getElementById('quiz-feedback').className = 'quiz-feedback';
+  document.getElementById('quiz-next-btn').style.display = 'none';
+  document.getElementById('quiz-counter').textContent = 'Вопрос ' + (quizIdx+1) + ' из ' + quizItems.length;
+  document.getElementById('quiz-bar').style.width = (quizIdx/quizItems.length*100)+'%';
+  document.querySelectorAll('.dot').forEach((d,i) => {
+    d.className = 'dot' + (i<quizIdx?' done':i===quizIdx?' active':'');
+  });
+  const wrong = shuffle(vocab.filter(x=>x.it!==v.it)).slice(0,3);
+  const opts = shuffle([v].concat(wrong));
+  const optEl = document.getElementById('quiz-options');
+  optEl.innerHTML = '';
+  opts.forEach(o => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-option';
+    btn.textContent = dir ? o.ru : o.it;
+    btn.onclick = function() {
+      if (quizAnswered) return;
+      quizAnswered = true;
+      const correct = o.it === v.it;
+      btn.classList.add(correct ? 'correct' : 'wrong');
+      if (!correct) {
+        quizMistakes.push(v);
+        optEl.querySelectorAll('button').forEach(b => {
+          if (b.textContent === (dir?v.ru:v.it)) b.classList.add('correct');
+        });
+        document.getElementById('quiz-feedback').textContent = 'Правильно: ' + (dir?v.ru:v.it);
+        document.getElementById('quiz-feedback').className = 'quiz-feedback bad';
+      } else {
+        quizCorrect++;
+        document.getElementById('quiz-feedback').textContent = '✓ Bravo!';
+        document.getElementById('quiz-feedback').className = 'quiz-feedback good';
+      }
+      document.getElementById('quiz-next-btn').style.display = 'inline-block';
+    };
+    optEl.appendChild(btn);
+  });
+}
+
+function nextQuiz() { quizIdx++; showQuiz(); }
+
+function endQuiz() {
+  document.getElementById('quiz-play').classList.add('hidden');
+  document.getElementById('quiz-result').classList.remove('hidden');
+  const pct = Math.round(quizCorrect/quizItems.length*100);
+  document.getElementById('quiz-final-score').textContent = quizCorrect + '/' + quizItems.length;
+  document.getElementById('quiz-final-sub').textContent = pct + '% правильных ответов';
+  document.getElementById('quiz-emoji').textContent = pct>=80?'🏆':pct>=50?'👍':'📖';
+  document.getElementById('quiz-mistakes-btn').style.display = quizMistakes.length ? 'inline-block' : 'none';
+}
+
+// FILL
+const fillTasks = [
+  { situation: "Domani ho l'esame di matematica. — ___ al lupo!", translation: "Завтра у меня экзамен по математике. — Ни пуха!", answer: "in bocca" },
+  { situation: "In bocca al lupo! — ___ il lupo!", translation: "Ни пуха! — К чёрту!", answer: "crepi" },
+  { situation: "Ho una ___ notizia: aspetto un bambino!", translation: "У меня хорошая новость: я жду ребёнка!", answer: "bella" },
+  { situation: "___ per la laurea!", translation: "Поздравляю с дипломом!", answer: "congratulazioni" },
+  { situation: "Parto per Roma. — ___ viaggio!", translation: "Уезжаю в Рим. — Счастливого пути!", answer: "buon" },
+  { situation: "Il 25 dicembre è ___ .", translation: "25 декабря — Рождество.", answer: "Natale" },
+  { situation: "Il 1° gennaio è ___ .", translation: "1 января — Новый год.", answer: "Capodanno" },
+  { situation: "A ___ si mangiano le lenticchie per fortuna.", translation: "На Новый год едят чечевицу на удачу.", answer: "Capodanno" },
+  { situation: "Alzo il bicchiere: ___! Alla salute!", translation: "Поднимаю бокал: За здоровье!", answer: "Cin Cin" },
+  { situation: "La mattina mi ___ alle 7 e apro gli occhi.", translation: "Утром я просыпаюсь в 7 и открываю глаза.", answer: "sveglio" },
+  { situation: "Poi mi ___ dal letto.", translation: "Потом я встаю из кровати.", answer: "alzo" },
+  { situation: "Mi faccio la ___ sotto l'acqua calda.", translation: "Я принимаю душ под тёплой водой.", answer: "doccia" },
+  { situation: "Mi ___ i capelli con il pettine.", translation: "Я причёсываю волосы расчёской.", answer: "pettino" },
+  { situation: "Fa freddo, mi ___ la giacca.", translation: "Холодно, надеваю куртку.", answer: "metto" },
+  { situation: "A mezzogiorno ___ in mensa.", translation: "В полдень обедаю в столовой.", answer: "pranzo" },
+  { situation: "La sera vado a ___ alle 11.", translation: "Вечером ложусь спать в 11.", answer: "letto" },
+  { situation: "Milano è la capitale della ___ .", translation: "Милан — столица моды.", answer: "moda" },
+  { situation: "Armani è uno ___ famoso.", translation: "Армани — известный модельер.", answer: "stilista" },
+  { situation: "Devo essere ___ per il colloquio di lavoro.", translation: "Я должен быть презентабельным на собеседовании.", answer: "presentabile" },
+  { situation: "Domani ho un ___ importante di italiano.", translation: "Завтра у меня важный экзамен по итальянскому.", answer: "esame" },
+  { situation: "Cerco la parola nel ___ .", translation: "Ищу слово в словаре.", answer: "dizionario" },
+  { situation: "Non dire ___! Sono parole brutte.", translation: "Не ругайся! Это плохие слова.", answer: "parolacce" },
+  { situation: "Gli italiani ___ molto con le mani.", translation: "Итальянцы много жестикулируют руками.", answer: "gesticolano" },
+  { situation: "Fai ___ al traffico quando attraversi!", translation: "Будь внимателен к движению, когда переходишь!", answer: "attenzione" },
+  { situation: "A domani, ci ___!", translation: "До завтра, увидимся!", answer: "vediamo" },
+  { situation: "Non ___, non è un problema!", translation: "Не важно, это не проблема!", answer: "importa" },
+  { situation: "Vado in palestra due ___ a settimana.", translation: "Хожу в спортзал два раза в неделю.", answer: "volte" },
+  { situation: "Ieri ho studiato fino a ___ .", translation: "Вчера я учился допоздна.", answer: "tardi" },
+  { situation: "Torno a casa ___ le otto.", translation: "Возвращаюсь домой около восьми.", answer: "verso" },
+  { situation: "Non so cosa mangiare, non riesco a ___ .", translation: "Не знаю, что съесть, не могу решить.", answer: "decidere" },
+  { situation: "___ la pizza margherita, mi piace di più.", translation: "Выберу пиццу маргариту, она мне нравится больше.", answer: "scelgo" },
+  { situation: "Ho ___ le chiavi che avevo perso!", translation: "Я нашёл ключи, которые потерял!", answer: "trovato" },
+  { situation: "È ___ studiare tutti i giorni per imparare.", translation: "Важно учиться каждый день, чтобы выучить.", answer: "importante" },
+  { situation: "Sì, hai ragione, ___!", translation: "Да, ты прав, точно!", answer: "verissimo" },
+  { situation: "___, non voglio andare, voglio restare!", translation: "Наоборот, не хочу уходить, хочу остаться!", answer: "anzi" },
+  { situation: "Voglio ___ pasta, per favore.", translation: "Хочу больше пасты, пожалуйста.", answer: "più" },
+  { situation: "Vivo ___, senza compagni di stanza.", translation: "Живу один, без соседей по комнате.", answer: "da solo" },
+  { situation: "Andiamo ___ al cinema stasera.", translation: "Пойдём вместе в кино вечером.", answer: "insieme" },
+  { situation: "Studio ___ da un anno, in Spagna.", translation: "Учусь за границей уже год, в Испании.", answer: "all'estero" },
+];
+
+let fillInitialized = false;
+let fillIdx = 0, fillCorrect = 0, fillItems = [];
+const FILL_LEN = 15;
+
+function initFill() {
+  fillInitialized = true;
+  fillItems = shuffle(fillTasks).slice(0, FILL_LEN);
+  fillIdx = 0; fillCorrect = 0;
+  document.getElementById('fill-result').classList.add('hidden');
+  document.getElementById('fill-play').classList.remove('hidden');
+  showFill();
+}
+
+function showFill() {
+  if (fillIdx >= fillItems.length) { endFill(); return; }
+  const t = fillItems[fillIdx];
+  document.getElementById('fill-situation').textContent = t.situation;
+  document.getElementById('fill-translation').textContent = t.translation;
+  document.getElementById('fill-input').value = '';
+  document.getElementById('fill-input').className = 'fill-input';
+  document.getElementById('fill-input').disabled = false;
+  document.getElementById('fill-feedback').textContent = '';
+  document.getElementById('fill-feedback').className = 'fill-feedback';
+  document.getElementById('fill-counter').textContent = 'Задание ' + (fillIdx+1) + ' из ' + fillItems.length;
+  document.getElementById('fill-bar').style.width = (fillIdx/fillItems.length*100)+'%';
+  document.getElementById('fill-check').style.display = 'inline-block';
+  document.getElementById('fill-skip').style.display = 'inline-block';
+  document.getElementById('fill-next').style.display = 'none';
+  setTimeout(() => document.getElementById('fill-input').focus(), 100);
+}
+
+function normalize(s) {
+  return s.toLowerCase().trim().replace(/[!?\.,;:]/g,'').replace(/\s+/g,' ');
+}
+
+function checkFill() {
+  const t = fillItems[fillIdx];
+  const val = document.getElementById('fill-input').value;
+  if (!val.trim()) return;
+  const correct = normalize(val) === normalize(t.answer);
+  document.getElementById('fill-input').classList.add(correct ? 'correct' : 'wrong');
+  document.getElementById('fill-input').disabled = true;
+  if (correct) {
+    fillCorrect++;
+    document.getElementById('fill-feedback').textContent = '✓ Bravo!';
+    document.getElementById('fill-feedback').className = 'fill-feedback good';
+  } else {
+    document.getElementById('fill-feedback').textContent = '✗ Правильно: ' + t.answer;
+    document.getElementById('fill-feedback').className = 'fill-feedback bad';
+  }
+  document.getElementById('fill-check').style.display = 'none';
+  document.getElementById('fill-skip').style.display = 'none';
+  document.getElementById('fill-next').style.display = 'inline-block';
+}
+
+function skipFill() {
+  const t = fillItems[fillIdx];
+  document.getElementById('fill-feedback').textContent = 'Правильный ответ: ' + t.answer;
+  document.getElementById('fill-feedback').className = 'fill-feedback bad';
+  document.getElementById('fill-input').disabled = true;
+  document.getElementById('fill-check').style.display = 'none';
+  document.getElementById('fill-skip').style.display = 'none';
+  document.getElementById('fill-next').style.display = 'inline-block';
+}
+
+function nextFill() { fillIdx++; showFill(); }
+
+function endFill() {
+  document.getElementById('fill-play').classList.add('hidden');
+  document.getElementById('fill-result').classList.remove('hidden');
+  const pct = Math.round(fillCorrect/fillItems.length*100);
+  document.getElementById('fill-final-score').textContent = fillCorrect + '/' + fillItems.length;
+  document.getElementById('fill-final-sub').textContent = pct + '% правильных ответов';
+  document.getElementById('fill-emoji').textContent = pct>=80?'🌟':pct>=50?'📝':'🇮🇹';
+}
+
+renderFilters();
+renderCards();
+</script>
+</body>
+</html>
