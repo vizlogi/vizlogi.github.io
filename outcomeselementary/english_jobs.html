@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English — Unit 1: Jobs</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #fdf6ec;
+    --terracotta: #c0533a;
+    --gold: #d4a843;
+    --olive: #5a6e3c;
+    --ink: #2c2118;
+    --sand: #e8d9c0;
+    --mist: #f5ede0;
+    --shadow: rgba(44,33,24,0.15);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 40% at 10% 20%, rgba(192,83,58,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 50% at 90% 80%, rgba(212,168,67,0.08) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .wrapper { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 24px 16px 60px; }
+  header { text-align: center; margin-bottom: 36px; }
+  .flag { font-size: 2.4rem; margin-bottom: 8px; }
+  header h1 { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 6vw, 3rem); color: var(--terracotta); line-height: 1.1; }
+  header .sub { font-style: italic; color: var(--gold); font-size: 1.1rem; margin-top: 4px; }
+  header p { color: #8a7060; font-size: 0.95rem; margin-top: 6px; }
+  .tabs { display: flex; gap: 8px; justify-content: center; margin-bottom: 28px; flex-wrap: wrap; }
+  .tab-btn { padding: 9px 22px; border: 2px solid var(--sand); background: white; border-radius: 50px; font-family: 'Nunito', sans-serif; font-size: 0.88rem; font-weight: 700; color: #8a7060; cursor: pointer; transition: all 0.2s; letter-spacing: 0.03em; }
+  .tab-btn:hover { border-color: var(--terracotta); color: var(--terracotta); }
+  .tab-btn.active { background: var(--terracotta); border-color: var(--terracotta); color: white; box-shadow: 0 4px 14px rgba(192,83,58,0.3); }
+  .section { display: none; }
+  .section.active { display: block; }
+  .cat-filter { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 20px; }
+  .cat-chip { padding: 6px 14px; border: 1.5px solid var(--sand); background: white; border-radius: 50px; font-size: 0.78rem; font-weight: 600; color: #8a7060; cursor: pointer; transition: all 0.2s; }
+  .cat-chip:hover { border-color: var(--gold); color: var(--gold); }
+  .cat-chip.active { background: var(--gold); border-color: var(--gold); color: white; }
+  .hint-box { background: white; border: 1.5px dashed var(--sand); border-radius: 12px; padding: 12px 16px; margin-bottom: 24px; text-align: center; font-size: 0.82rem; color: #8a7060; line-height: 1.6; }
+  .hint-box b { color: var(--terracotta); }
+  .category-label { font-family: 'Playfair Display', serif; font-size: 0.9rem; font-style: italic; color: var(--gold); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 14px; margin-top: 32px; border-top: 1px dashed var(--sand); padding-top: 22px; }
+  .category-label:first-child { margin-top: 0; border-top: 0; padding-top: 0; }
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
+  .card { background: white; border-radius: 14px; padding: 18px 14px 30px; cursor: pointer; box-shadow: 0 2px 10px var(--shadow); border: 1.5px solid var(--sand); transition: transform 0.15s, box-shadow 0.15s; position: relative; min-height: 175px; display: flex; flex-direction: column; align-items: center; justify-content: center; user-select: none; text-align: center; overflow: hidden; }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px var(--shadow); }
+  .card > .face { display: none; width: 100%; text-align: center; }
+  .card[data-state="0"] > .face-front { display: flex; flex-direction: column; align-items: center; }
+  .card[data-state="1"] > .face-def { display: flex; flex-direction: column; align-items: center; }
+  .card[data-state="2"] > .face-tr { display: flex; flex-direction: column; align-items: center; }
+  .card-expand { position: absolute; top: 8px; right: 8px; background: rgba(212,168,67,0.15); border: 1px solid var(--sand); border-radius: 8px; width: 30px; height: 30px; padding: 0; cursor: pointer; font-size: 0.9rem; color: var(--gold); display: flex; align-items: center; justify-content: center; transition: all 0.15s; z-index: 2; }
+  .card-expand:hover { background: var(--gold); color: white; border-color: var(--gold); transform: scale(1.05); }
+  .face-front .en { font-family: 'Playfair Display', serif; font-size: 1.25rem; color: var(--terracotta); font-weight: 700; line-height: 1.2; }
+  .face-front .pron { font-size: 0.75rem; color: var(--gold); font-style: italic; margin-top: 4px; }
+  .face-front .type { font-size: 0.7rem; color: #c8b8a0; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 2px; }
+  .face-front .hint-txt { font-size: 0.72rem; color: #c8b8a0; font-style: italic; margin-top: 10px; }
+  .face-def .label, .face-tr .label { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; font-weight: 700; }
+  .face-def .def-txt { font-family: 'Playfair Display', serif; font-size: 0.9rem; color: var(--ink); line-height: 1.35; font-style: italic; margin-bottom: 8px; padding: 0 4px; }
+  .face-def .ex-txt { font-size: 0.78rem; color: var(--olive); line-height: 1.4; font-weight: 600; padding: 0 4px; }
+  .face-def .ex-txt::before { content: "\201E"; color: var(--gold); }
+  .face-def .ex-txt::after { content: "\201D"; color: var(--gold); }
+  .face-tr .ru-txt { font-size: 1.1rem; color: var(--olive); font-weight: 700; line-height: 1.3; }
+  .face-tr .it-small { font-family: 'Playfair Display', serif; font-size: 0.85rem; color: var(--terracotta); font-style: italic; margin-top: 6px; }
+  .card-state { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); display: flex; gap: 4px; }
+  .state-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--sand); transition: background 0.2s; }
+  .card[data-state="0"] .state-dot:nth-child(1),
+  .card[data-state="1"] .state-dot:nth-child(2),
+  .card[data-state="2"] .state-dot:nth-child(3) { background: var(--terracotta); }
+  /* Modal */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(44,33,24,0.5); z-index: 100; display: none; align-items: flex-start; justify-content: center; padding: 20px; overflow-y: auto; }
+  .modal-overlay.open { display: flex; }
+  .modal-content { background: white; border-radius: 18px; max-width: 640px; width: 100%; padding: 32px 28px 28px; position: relative; box-shadow: 0 12px 40px rgba(44,33,24,0.25); margin: auto; }
+  .modal-close { position: absolute; top: 12px; right: 12px; background: var(--mist); border: none; width: 34px; height: 34px; border-radius: 50%; cursor: pointer; font-size: 1rem; color: var(--ink); display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+  .modal-close:hover { background: var(--terracotta); color: white; }
+  .modal-head { border-bottom: 1px dashed var(--sand); padding-bottom: 16px; margin-bottom: 16px; }
+  .modal-word { font-family: 'Playfair Display', serif; font-size: 1.9rem; color: var(--terracotta); font-weight: 700; line-height: 1.1; }
+  .modal-meta { font-size: 0.85rem; color: var(--gold); font-style: italic; margin-top: 4px; }
+  .modal-meta .type-badge { display: inline-block; background: var(--mist); color: #8a7060; padding: 2px 10px; border-radius: 12px; font-size: 0.72rem; font-style: normal; text-transform: uppercase; letter-spacing: 0.06em; margin-left: 6px; font-weight: 700; }
+  .modal-ru { font-size: 1.05rem; color: var(--olive); font-weight: 700; margin-top: 10px; }
+  .modal-section { margin-bottom: 18px; }
+  .modal-section-title { font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); font-weight: 700; margin-bottom: 8px; }
+  .modal-def { font-family: 'Playfair Display', serif; font-style: italic; color: var(--ink); font-size: 0.95rem; line-height: 1.5; }
+  .modal-collocates { display: flex; flex-wrap: wrap; gap: 6px; }
+  .colloc-chip { background: var(--mist); color: var(--terracotta); padding: 5px 11px; border-radius: 8px; font-size: 0.83rem; font-weight: 600; font-family: 'Playfair Display', serif; font-style: italic; }
+  .modal-examples { list-style: none; padding: 0; }
+  .modal-examples li { padding: 8px 0 8px 16px; border-left: 3px solid var(--sand); margin-bottom: 6px; font-size: 0.9rem; color: var(--olive); font-weight: 500; line-height: 1.5; }
+  .modal-examples li::before { content: ""; }
+  .modal-related { display: flex; flex-direction: column; gap: 8px; }
+  .related-item { background: var(--mist); border-radius: 10px; padding: 10px 14px; font-size: 0.88rem; }
+  .related-item .rel-form { font-size: 0.7rem; text-transform: uppercase; color: var(--gold); font-weight: 700; letter-spacing: 0.08em; }
+  .related-item .rel-word { font-family: 'Playfair Display', serif; color: var(--terracotta); font-weight: 700; font-style: italic; margin-left: 4px; }
+  .related-item .rel-ex { color: var(--olive); margin-top: 3px; font-size: 0.82rem; font-style: italic; }
+  /* Games */
+  .game-header { text-align: center; margin-bottom: 24px; }
+  .game-header h2 { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--terracotta); }
+  .game-header p { color: #8a7060; font-size: 0.88rem; margin-top: 4px; }
+  .match-board { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+  .match-col { display: flex; flex-direction: column; gap: 8px; }
+  .match-item { background: white; border: 2px solid var(--sand); border-radius: 10px; padding: 12px 14px; cursor: pointer; font-size: 0.9rem; text-align: center; transition: all 0.2s; min-height: 46px; display: flex; align-items: center; justify-content: center; line-height: 1.3; }
+  .match-item.en-word { font-family: 'Playfair Display', serif; color: var(--terracotta); font-size: 0.95rem; font-weight: 700; }
+  .match-item.ru-word { color: var(--olive); }
+  .match-item:hover:not(.matched):not(.wrong) { border-color: var(--gold); background: var(--mist); }
+  .match-item.selected { border-color: var(--terracotta); background: rgba(192,83,58,0.08); }
+  .match-item.matched { border-color: var(--olive); background: rgba(90,110,60,0.1); color: var(--olive); opacity: 0.6; cursor: default; }
+  .match-item.wrong { border-color: #e05050; background: rgba(224,80,80,0.08); animation: shake 0.4s; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+  .score-bar { display: flex; align-items: center; justify-content: space-between; background: white; border-radius: 12px; padding: 12px 18px; border: 1.5px solid var(--sand); margin-bottom: 16px; }
+  .score-num { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--terracotta); }
+  .score-label { font-size: 0.78rem; color: #8a7060; text-transform: uppercase; letter-spacing: 0.06em; }
+  .btn { display: inline-block; padding: 11px 28px; background: var(--terracotta); color: white; border: none; border-radius: 50px; font-family: 'Nunito', sans-serif; font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 14px rgba(192,83,58,0.25); }
+  .btn:hover { background: #a8422b; transform: translateY(-1px); }
+  .btn.secondary { background: white; color: var(--terracotta); border: 2px solid var(--terracotta); box-shadow: none; }
+  .btn-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+  .quiz-card { background: white; border-radius: 16px; padding: 28px 22px; border: 1.5px solid var(--sand); box-shadow: 0 4px 16px var(--shadow); text-align: center; margin-bottom: 18px; }
+  .quiz-dir { font-size: 0.78rem; color: var(--gold); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 10px; font-weight: 700; }
+  .quiz-word { font-family: 'Playfair Display', serif; font-size: 1.75rem; color: var(--terracotta); line-height: 1.2; margin-bottom: 6px; }
+  .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  .quiz-option { background: white; border: 2px solid var(--sand); border-radius: 10px; padding: 14px 12px; font-family: 'Nunito', sans-serif; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; color: var(--ink); line-height: 1.4; }
+  .quiz-option:hover { border-color: var(--gold); background: var(--mist); }
+  .quiz-option.correct { border-color: var(--olive); background: rgba(90,110,60,0.15); color: var(--olive); font-weight: 700; }
+  .quiz-option.wrong { border-color: #e05050; background: rgba(224,80,80,0.12); color: #c03030; }
+  .quiz-feedback { text-align: center; font-size: 0.95rem; min-height: 24px; margin: 8px 0 14px; font-weight: 600; }
+  .quiz-feedback.good { color: var(--olive); }
+  .quiz-feedback.bad { color: #c03030; }
+  .quiz-progress { background: var(--sand); height: 6px; border-radius: 4px; overflow: hidden; margin-bottom: 8px; }
+  .quiz-progress-bar { background: var(--terracotta); height: 100%; transition: width 0.3s; }
+  .quiz-counter { text-align: center; font-size: 0.78rem; color: #8a7060; margin-bottom: 16px; letter-spacing: 0.04em; }
+  .dots { display: flex; gap: 4px; justify-content: center; margin-bottom: 14px; flex-wrap: wrap; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--sand); }
+  .dot.active { background: var(--terracotta); }
+  .dot.done { background: var(--olive); }
+  .fill-card { background: white; border-radius: 16px; padding: 28px 22px; border: 1.5px solid var(--sand); box-shadow: 0 4px 16px var(--shadow); margin-bottom: 18px; }
+  .fill-situation { font-family: 'Playfair Display', serif; font-size: 1.15rem; line-height: 1.5; color: var(--ink); margin-bottom: 8px; text-align: center; }
+  .fill-translation { font-size: 0.82rem; color: #8a7060; font-style: italic; text-align: center; margin-bottom: 18px; line-height: 1.5; }
+  .fill-input { width: 100%; padding: 14px 16px; border: 2px solid var(--sand); border-radius: 10px; font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--terracotta); text-align: center; background: var(--mist); transition: all 0.2s; }
+  .fill-input:focus { outline: none; border-color: var(--gold); background: white; }
+  .fill-input.correct { border-color: var(--olive); background: rgba(90,110,60,0.08); color: var(--olive); }
+  .fill-input.wrong { border-color: #e05050; background: rgba(224,80,80,0.08); }
+  .fill-feedback { text-align: center; font-size: 0.95rem; min-height: 24px; margin-top: 12px; font-weight: 600; }
+  .fill-feedback.good { color: var(--olive); }
+  .fill-feedback.bad { color: #c03030; }
+  .result-screen { text-align: center; background: white; border-radius: 16px; padding: 40px 24px; border: 1.5px solid var(--sand); box-shadow: 0 4px 16px var(--shadow); }
+  .result-emoji { font-size: 3.5rem; margin-bottom: 8px; }
+  .result-score { font-family: 'Playfair Display', serif; font-size: 3rem; color: var(--terracotta); line-height: 1; margin-bottom: 6px; }
+  .result-sub { color: #8a7060; font-size: 0.95rem; margin-bottom: 20px; }
+  .hidden { display: none !important; }
+  @media (max-width: 480px) {
+    .quiz-options { grid-template-columns: 1fr; }
+    .quiz-word { font-size: 1.4rem; }
+    .cards-grid { grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); }
+    .modal-content { padding: 26px 18px 20px; }
+    .modal-word { font-size: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <div class="flag">🇬🇧</div>
+    <h1>Unit 1</h1>
+    <div class="sub">Jobs</div>
+    <p><span id="totalCount">88</span> слов · работа, карьера, бизнес</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="cards" onclick="switchTab('cards')">📇 Карточки</button>
+    <button class="tab-btn" data-tab="match" onclick="switchTab('match')">🎴 Найди пару</button>
+    <button class="tab-btn" data-tab="quiz" onclick="switchTab('quiz')">🎯 Тест</button>
+    <button class="tab-btn" data-tab="fill" onclick="switchTab('fill')">✍️ Впиши слово</button>
+  </div>
+
+  <div id="section-cards" class="section active">
+    <div class="hint-box">
+      <b>Нажимай на карточку:</b> 1) слово → 2) определение и пример по-английски → 3) перевод.<br>
+      <b>📖 Подробнее</b> — полное определение, все примеры, коллокации, родственные формы
+    </div>
+    <div class="cat-filter" id="cat-filter"></div>
+    <div id="cards-container"></div>
+    <div class="btn-row" style="margin-top:28px;">
+      <button class="btn secondary" onclick="resetAllCards()">↺ Сбросить все карточки</button>
+    </div>
+  </div>
+
+  <div id="section-match" class="section">
+    <div class="game-header"><h2>Найди пару</h2><p>Сопоставьте английское слово с переводом</p></div>
+    <div class="score-bar">
+      <div><div class="score-label">Найдено пар</div><div><span class="score-num" id="match-score">0</span> <span style="color:#8a7060;">/ <span id="match-total">10</span></span></div></div>
+      <div><div class="score-label">Ошибок</div><div class="score-num" id="match-errors">0</div></div>
+    </div>
+    <div class="match-board" id="match-board"></div>
+    <div id="match-result" class="result-screen hidden">
+      <div class="result-emoji" id="match-emoji">🎉</div>
+      <div class="result-score" id="match-final">10/10</div>
+      <div class="result-sub" id="match-sub">Все пары найдены!</div>
+      <button class="btn" onclick="initMatch()">Играть снова</button>
+    </div>
+    <div class="btn-row"><button class="btn secondary" onclick="initMatch()">🔄 Новая партия</button></div>
+  </div>
+
+  <div id="section-quiz" class="section">
+    <div class="game-header"><h2>Тест</h2><p>Выберите правильный перевод (20 вопросов)</p></div>
+    <div id="quiz-play">
+      <div class="dots" id="quiz-dots"></div>
+      <div class="quiz-progress"><div class="quiz-progress-bar" id="quiz-bar" style="width:0%"></div></div>
+      <div class="quiz-counter" id="quiz-counter">Вопрос 1</div>
+      <div class="quiz-card"><div class="quiz-dir" id="quiz-dir"></div><div class="quiz-word" id="quiz-word"></div></div>
+      <div class="quiz-options" id="quiz-options"></div>
+      <div class="quiz-feedback" id="quiz-feedback"></div>
+      <div class="btn-row"><button class="btn" id="quiz-next-btn" onclick="nextQuiz()" style="display:none;">Дальше →</button></div>
+    </div>
+    <div id="quiz-result" class="result-screen hidden">
+      <div class="result-emoji" id="quiz-emoji">🏆</div>
+      <div class="result-score" id="quiz-final-score">20/20</div>
+      <div class="result-sub" id="quiz-final-sub"></div>
+      <div class="btn-row">
+        <button class="btn" onclick="initQuiz(false)">Играть снова</button>
+        <button class="btn secondary" id="quiz-mistakes-btn" onclick="initQuiz(true)" style="display:none;">Только ошибки</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="section-fill" class="section">
+    <div class="game-header"><h2>Впиши пропущенное слово</h2><p>Прочитайте предложение и впишите английское слово</p></div>
+    <div id="fill-play">
+      <div class="quiz-progress"><div class="quiz-progress-bar" id="fill-bar" style="width:0%"></div></div>
+      <div class="quiz-counter" id="fill-counter">Задание 1</div>
+      <div class="fill-card">
+        <div class="fill-situation" id="fill-situation"></div>
+        <div class="fill-translation" id="fill-translation"></div>
+        <input type="text" class="fill-input" id="fill-input" placeholder="введите слово..." autocomplete="off" onkeydown="if(event.key==='Enter') checkFill()">
+        <div class="fill-feedback" id="fill-feedback"></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn" id="fill-check" onclick="checkFill()">Проверить</button>
+        <button class="btn secondary" id="fill-skip" onclick="skipFill()">Подсказать</button>
+        <button class="btn" id="fill-next" onclick="nextFill()" style="display:none;">Дальше →</button>
+      </div>
+    </div>
+    <div id="fill-result" class="result-screen hidden">
+      <div class="result-emoji" id="fill-emoji">🌟</div>
+      <div class="result-score" id="fill-final-score">15/15</div>
+      <div class="result-sub" id="fill-final-sub"></div>
+      <button class="btn" onclick="initFill()">Играть снова</button>
+    </div>
+  </div>
+
+</div>
+
+<div id="detail-modal" class="modal-overlay" onclick="closeDetail()">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeDetail()">✕</button>
+    <div class="modal-head">
+      <div class="modal-word" id="m-word"></div>
+      <div class="modal-meta"><span id="m-pron"></span> <span class="type-badge" id="m-type"></span></div>
+      <div class="modal-ru" id="m-ru"></div>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">Definition</div>
+      <div class="modal-def" id="m-def"></div>
+    </div>
+    <div class="modal-section" id="m-colloc-section">
+      <div class="modal-section-title">Collocates</div>
+      <div class="modal-collocates" id="m-colloc"></div>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-title">Examples</div>
+      <ul class="modal-examples" id="m-examples"></ul>
+    </div>
+    <div class="modal-section" id="m-related-section">
+      <div class="modal-section-title">Related forms</div>
+      <div class="modal-related" id="m-related"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const vocab = [];
+const categories = {
+  people: "👔 Люди на работе",
+  business: "🏢 Компании и бизнес",
+  conditions: "💼 Условия работы",
+  money: "💰 Деньги и зарплата",
+  hunting: "📝 Поиск работы",
+  actions: "🎯 Действия на работе",
+  comm: "💬 Общение",
+  learning: "📚 Учёба и развитие",
+  adj: "✨ Прилагательные и состояния",
+  life: "🏠 Жизнь и дом",
+  useful: "🔧 Полезные слова"
+};
+
+// Vocab data injected here
+</script>
+<script>
+  vocab.push({en:"boss", pron:"/bɒs/", type:"Noun", ru:"босс, начальник", cat:"people", def:"the person who employs you and is in charge of you at work", shortEx:"My new boss is much nicer than my old one.", fullDef:"the person who employs you and is in charge of you at work", examples:["my new boss is much nicer than my old one", "I get on really well with my boss"]});
+  vocab.push({en:"co-worker", pron:"/ˌkəʊˈwɜːkə/", type:"Noun", ru:"коллега (по работе)", cat:"people", def:"a person that works with you in the same company and is in a similar position to you", shortEx:"My co-workers and I have regular meetings.", fullDef:"a person that works with you in the same company and is in a similar position to you", examples:["James and some of his co-workers asked for a salary increase", "my co-workers and I have regular meetings"]});
+  vocab.push({en:"manager", pron:"/ˈmænɪdʒə/", type:"Noun", ru:"менеджер, руководитель", cat:"people", def:"someone whose job involves running part of an organization and telling other people what work to do", shortEx:"He's a sales manager for a car company.", fullDef:"a manager is someone whose job involves running part of an organization and telling other people what work to do", examples:["he's a sales manager for a car company", "to be successful, managers need to be good at listening", "a bank manager (in charge of a bank branch)", "everyone in our department respected the manager"], related:[{"form": "Verb", "word": "manage", "example": "she manages a department of 20 people"}]});
+  vocab.push({en:"engineer", pron:"/ˌendʒɪˈnɪə/", type:"Noun", ru:"инженер", cat:"people", def:"someone whose job it is to design or build things such as roads, bridges or machines", shortEx:"Fatime studied at university to become an engineer.", fullDef:"an engineer is someone whose job it is to design or build things such as roads, bridges or machines", examples:["Fatime studied at university to become an engineer", "as an engineer, he builds many of the railway lines"]});
+  vocab.push({en:"delivery driver", pron:"/dɪˈlɪvəri ˈdraɪvə/", type:"Noun", ru:"курьер, водитель доставки", cat:"people", def:"a person who is responsible for transporting things to someone's home or business", shortEx:"My husband works as a food delivery driver.", fullDef:"a person who is responsible for transporting things to someone's home or business", examples:["my husband works as a food delivery driver in the evenings", "there's a delivery driver at the door!"]});
+  vocab.push({en:"client", pron:"/ˈklaɪənt/", type:"Noun", ru:"клиент", cat:"people", def:"someone who pays for professional services or advice from a company", shortEx:"We've gained 25 new clients this month.", fullDef:"someone who pays for professional services or advice from a company", examples:["we've gained 25 new clients this month", "our clients are mainly based in Africa"]});
+  vocab.push({en:"partner", pron:"/ˈpɑːtnə/", type:"Noun", ru:"партнёр, спутник(ца) жизни", cat:"people", def:"someone you have a relationship with", shortEx:"My partner and I are buying our first home.", fullDef:"someone you have a relationship with", examples:["my partner and I are buying our first home", "how long have you and your partner been together?"]});
+  vocab.push({en:"company", pron:"/ˈkʌmpəni/", type:"Noun", ru:"компания", cat:"business", def:"a business or organization that makes things or provides a service", shortEx:"I work for a travel company.", fullDef:"a business or organization that makes things or provides a service", examples:["what's the name of the company you work for?", "I work for a travel company"]});
+  vocab.push({en:"business", pron:"/ˈbɪznəs/", type:"Noun uncount", ru:"бизнес, дело", cat:"business", def:"an organization that sells products or services for money", shortEx:"It's hard to start a business.", fullDef:"an organization that sells products or services for money", examples:["lots of people I know have started their own businesses", "is it hard to start a business in your country?"]});
+  vocab.push({en:"fashion industry", pron:"/ˈfæʃən ˈɪndəstri/", type:"Noun uncount", ru:"индустрия моды", cat:"business", def:"the people, the companies and everything involved in the business of making and selling of clothes", shortEx:"I'd like to work in the fashion industry.", fullDef:"the people, the companies and everything involved in the business of making and selling of clothes", examples:["I love designing, so when I'm older I'd like to work in the fashion industry", "many designers in the fashion industry are now using recycled materials"]});
+  vocab.push({en:"public relations", pron:"/ˌpʌblɪk rɪˈleɪʃənz/", type:"Noun plural", ru:"пиар, связи с общественностью", cat:"business", def:"the industry of maintaining a good public image for a company or person", shortEx:"I work in public relations for a well-known actor.", fullDef:"the industry of maintaining a good public image for a company or person", examples:["I work in public relations for a well-known actor", "it's important the company has a good public relations team"]});
+  vocab.push({en:"government", pron:"/ˈɡʌvənmənt/", type:"Noun", ru:"правительство", cat:"business", def:"the group of people that control and make laws for a country or specific area", shortEx:"Hina works for the local government.", fullDef:"the group of people that control and make laws for a country or specific area", examples:["the government are discussing whether to increase business taxes", "Hina works for the local government"]});
+  vocab.push({en:"competition", pron:"/ˌkɒmpəˈtɪʃən/", type:"Noun", ru:"конкуренция", cat:"business", def:"a situation where people try to be more successful at something than other people", shortEx:"There's a lot of competition in the fashion industry.", fullDef:"a situation where people try to be more successful at something than other people", examples:["there's so much competition in the fashion industry", "there was lots of competition for the job"]});
+  vocab.push({en:"benefit", pron:"/ˈbenɪfɪt/", type:"Noun", ru:"польза, преимущество", cat:"business", def:"a positive thing a person gets from a situation", shortEx:"There are many benefits to this new job.", fullDef:"a positive thing a person gets from a situation", examples:["what are the benefits of running your own business?", "there are so many benefits to me taking this new job"]});
+  vocab.push({en:"data", pron:"/ˈdeɪtə/", type:"Noun uncount", ru:"данные, информация", cat:"business", def:"facts or information", shortEx:"The company is gathering data about their customers.", fullDef:"facts or information", examples:["the company is gathering data about their customers", "when you look online, the internet provider collects your data"]});
+  vocab.push({en:"full-time", pron:"/fʊl taɪm/", type:"Adjective", ru:"полная занятость (~40 часов)", cat:"conditions", def:"working hours of around 40 hours or more", shortEx:"I got a full-time job as a shop assistant.", fullDef:"working hours of around 40 hours or more", examples:["when I left school, I got a full-time job as a shop assistant", "I'm finding it difficult to study alongside my full-time job"]});
+  vocab.push({en:"work part-time", pron:"/wɜːk pɑːt taɪm/", type:"Phrase", ru:"работать неполный день (меньше 30 часов)", cat:"conditions", def:"when you are at your job for fewer than 30 hours per week", shortEx:"I work part-time at the Italian restaurant in town.", fullDef:"when you are at your job for fewer than 30 hours per week", examples:["I work part-time at the Italian restaurant in town", "my son works part-time at the supermarket"]});
+  vocab.push({en:"work from home", pron:"/wɜːk frɒm həʊm/", type:"Phrase", ru:"работать из дома", cat:"conditions", def:"when you do your job from the place you live", shortEx:"How long have you been working from home?", fullDef:"when you do your job from the place you live", examples:["how long have you been working from home?", "I find it hard to work from home as I don't have an office space"]});
+  vocab.push({en:"work in IT", pron:"/wɜːk ɪn aɪ tiː/", type:"Phrase", ru:"работать в IT (или другой сфере)", cat:"conditions", def:"when you have a job in a specific industry, for example Information technology", shortEx:"I've always wanted to work in IT.", fullDef:"when you have a job in a specific industry, for example Information technology", collocates:["work in education", "work in the fashion industry"], examples:["I've always wanted to work in education, but not as a teacher", "my brother works in the fashion industry as a personal shopper"]});
+  vocab.push({en:"hours", pron:"/ˈaʊəz/", type:"Noun plural", ru:"рабочие часы; часы работы (магазина)", cat:"conditions", def:"the number of hours you have to spend at work every day or every week", shortEx:"My hours are 9 till 5.", fullDef:"your hours are the number of hours you have to spend at work every day or every week. The hours of a business are the times when it is open", collocates:["work long hours", "opening hours"], examples:["workers are demanding higher wages and shorter working hours", "I've been working very long hours this week", "my hours are 9 till 5", "the shop's opening hours are from 8 till 8"]});
+  vocab.push({en:"flexible", pron:"/ˈfleksəbl/", type:"Adjective", ru:"гибкий", cat:"conditions", def:"when someone can deal with changes or a changing situation", shortEx:"I'd like a job with flexible working hours.", fullDef:"when someone can deal with changes or a changing situation", collocates:["flexible contract"], examples:["I'd like a job with flexible working hours", "I've got a flexible contract so my hours can change from one week to the next"]});
+  vocab.push({en:"contract", pron:"/ˈkɒntrækt/", type:"Noun", ru:"контракт, договор", cat:"conditions", def:"an official, legal agreement between people", shortEx:"My contract ends next month.", fullDef:"a contract is an official, legal agreement between people", collocates:["sign a contract", "break a contract", "renew a contract", "a temporary contract"], examples:["my contract ends next month", "have you signed the contract yet?", "we're drawing up a new contract", "they said I was breaking my contract", "I was able to renew my contract for another year"]});
+  vocab.push({en:"workspace", pron:"/ˈwɜːkspeɪs/", type:"Noun uncount", ru:"рабочее место", cat:"conditions", def:"a place in which you can do your job", shortEx:"I have a nice workspace in my bedroom.", fullDef:"a place in which you can do your job", examples:["do you have a workspace at home?", "I have a nice workspace in my bedroom, with a desk and a computer screen"]});
+  vocab.push({en:"work-life balance", pron:"/wɜːk laɪf ˈbæləns/", type:"Phrase", ru:"баланс работы и личной жизни", cat:"conditions", def:"the split of time between a person's job and their home and family activities", shortEx:"Does your job give you a good work-life balance?", fullDef:"the split of time between a person's job and their home and family activities", examples:["does your job give you a good work-life balance?", "achieving a good work-life balance can be difficult depending on your job"]});
+  vocab.push({en:"on time", pron:"/ɒn taɪm/", type:"Phrase", ru:"вовремя", cat:"conditions", def:"when you arrive at the right time and are not late", shortEx:"It's important that everyone is on time tomorrow.", fullDef:"when you arrive at the right time and are not late", collocates:["be on time", "arrive on time", "start on time"], examples:["it's important that everyone is on time tomorrow", "we arrived at the station on time", "the meeting must start on time as we have a lot to get through"]});
+  vocab.push({en:"time off", pron:"/taɪm ɒf/", type:"Noun uncount", ru:"свободное время (от работы), отгул", cat:"conditions", def:"when you have free time, and are not at work or school", shortEx:"I took some time off to spend with the family.", fullDef:"when you have free time, and are not at work or school", examples:["I took some time off to spend with the family", "are you taking any time off this year?"]});
+  vocab.push({en:"earn", pron:"/ɜːn/", type:"Verb", ru:"зарабатывать", cat:"money", def:"to receive an amount of money for the work you do", shortEx:"He earns good money as a graphic designer.", fullDef:"to receive an amount of money for the work you do", collocates:["earn good money", "earn $3,000 a month", "earn the minimum wage"], examples:["he earns good money as a graphic designer", "my hope is that I can earn around $3,000 a month"]});
+  vocab.push({en:"wage", pron:"/weɪdʒ/", type:"Noun", ru:"зарплата (за неделю; salary — за месяц)", cat:"money", def:"the amount of money you are paid for your job, especially if you are paid every week", shortEx:"The minimum wage then was £5.73 an hour.", fullDef:"your wage is the amount of money you are paid for your job, especially if you are paid every week. If you are paid every month, you usually talk about your salary", collocates:["an hourly wage", "a daily wage", "a weekly wage"], examples:["the minimum wage then was £5.73 an hour", "he earns a good wage", "they've always paid low wages at that factory", "my first job paid an hourly wage of £12.50", "food prices have gone up faster than wages"]});
+  vocab.push({en:"paid", pron:"/peɪd/", type:"Adjective", ru:"оплаченный, платный", cat:"money", def:"when money is given to buy something", shortEx:"Have you paid the delivery charge?", fullDef:"when money is given to buy something", examples:["I paid extra for better seats at the show", "have you paid the delivery charge?"]});
+  vocab.push({en:"rent", pron:"/rent/", type:"Verb", ru:"снимать (арендовать); плата за жильё", cat:"money", def:"money you pay to live in a house, office, room or place that belongs to another person", shortEx:"We currently rent a two-bedroom flat.", fullDef:"money you pay to live in a house, office, room or place that belongs to another person", examples:["we currently rent a two-bedroom flat", "we're looking to rent a large office space"]});
+  vocab.push({en:"minimum", pron:"/ˈmɪnɪməm/", type:"Adjective", ru:"минимальный, минимум", cat:"money", def:"the smallest amount of something that is allowed or possible", shortEx:"The minimum wage then was £5.73 an hour.", fullDef:"the minimum amount of something is the smallest amount that is allowed or possible", collocates:["a minimum of something", "a maximum of something"], examples:["the minimum wage then was £5.73 an hour", "£700 is the minimum amount I'll accept for the car", "the minimum temperature last night was three degrees below freezing", "the minimum age for voting is 18", "I need a minimum of 20 minutes to get ready", "it will cost a minimum of £4.50 to send a parcel to the USA"], related:[{"form": "Noun", "word": "minimum"}, {"form": "Opposite (Adj)", "word": "maximum"}, {"form": "Noun", "word": "maximum", "example": "the car has a maximum speed of 180 kilometres per hour"}]});
+  vocab.push({en:"increase", pron:"/ɪnˈkriːs/", type:"Verb", ru:"увеличивать(ся)", cat:"money", def:"to become bigger in amount or number", shortEx:"They're going to have to increase our wages.", fullDef:"to become bigger in amount or number", collocates:["increase our wages", "increase salary"], examples:["for me to stay in this job, they're going to have to increase our wages", "I've had an increase in salary this year already"]});
+  vocab.push({en:"apply for", pron:"/əˈplaɪ fɔː/", type:"Phrasal verb", ru:"подавать заявку (на работу)", cat:"hunting", def:"if you apply for something such as a job, you write to say that you want to have it", shortEx:"Did you apply for that job at the BBC?", fullDef:"if you apply for something such as a job, you write to say that you want to have it", collocates:["apply for something"], examples:["you should start applying for jobs before you leave university", "did you apply for that job at the BBC?", "300 people applied for just one job at the studio", "I applied for a grant to study physics at Oxford"], related:[{"form": "Noun", "word": "application", "example": "send in your application by email; she sent out 30 job applications in one week"}]});
+  vocab.push({en:"interview", pron:"/ˈɪntəvjuː/", type:"Noun", ru:"собеседование", cat:"hunting", def:"a meeting where someone who has asked for a job answers questions from the person who might give them a job", shortEx:"I had a job interview yesterday.", fullDef:"an interview is a meeting where someone who has asked for a job answers questions from the person or group of people who might give them a job", collocates:["a job interview", "an interview for something"], examples:["I had a job interview yesterday", "the interview didn't go very well", "they've invited me for interview next week", "she wasn't very well prepared for the interview", "he had an interview for the job of sales manager", "he applied for seven jobs and didn't get a single interview"], related:[{"form": "Verb", "word": "interview", "example": "they interviewed eight people for the job"}, {"form": "Noun", "word": "interviewer", "example": "the interviewer asked me several questions"}, {"form": "Noun", "word": "interviewee", "example": "interviewees should dress smartly and arrive on time"}]});
+  vocab.push({en:"offer", pron:"/ˈɒfə/", type:"Verb", ru:"предлагать (работу, возможность)", cat:"hunting", def:"if you offer someone something such as a job, you tell them that they can have it if they want it", shortEx:"They offered me the job.", fullDef:"if you offer someone something such as a job or an opportunity, you tell them that they can have it if they want it", examples:["they offered me the job", "he was offered a three-year contract with the company", "my boss offered me the chance to work in the New York office for a year"], related:[{"form": "Noun", "word": "offer", "example": "thank you for your generous offer of help; I applied for seven jobs and didn't get a single job offer"}]});
+  vocab.push({en:"experience", pron:"/ɪkˈspɪəriəns/", type:"Noun", ru:"опыт (работы)", cat:"hunting", def:"a person's knowledge and skills gained through time", shortEx:"You must have experience in business.", fullDef:"a person's knowledge and skills gained through time", examples:["what's your experience in the teaching industry?", "you must have experience in business"], related:[{"form": "Adjective", "word": "experienced", "example": "she's an experienced editor"}]});
+  vocab.push({en:"skills", pron:"/skɪlz/", type:"Noun plural", ru:"навыки, умения", cat:"hunting", def:"the ability to do something well, often because of experience or something you learnt", shortEx:"It's important to learn new skills.", fullDef:"the ability to do something well, often because of experience or something you learnt", collocates:["learn new skills"], examples:["I think it's important that we continue to learn new skills as adults", "my dad is improving his computer skills"]});
+  vocab.push({en:"training", pron:"/ˈtreɪnɪŋ/", type:"Noun uncount", ru:"обучение, тренировка", cat:"hunting", def:"teaching or learning the skills that are needed to do a job", shortEx:"I'm going on a training course next week.", fullDef:"training is teaching or learning the skills that are needed to do a job", collocates:["a training course", "by training"], examples:["I'm going on a training course next week", "you get three weeks of training before you start work", "everyone has to do the basic training", "the company provides training for new workers", "a teacher training college (where people learn how to be teachers)", "he's a lawyer by training (he has studied law and is qualified in it)"]});
+  vocab.push({en:"course", pron:"/kɔːs/", type:"Noun", ru:"курс (обучения)", cat:"hunting", def:"a set of educational lessons over a period of time", shortEx:"When does the next course start?", fullDef:"a set of educational lessons over a period of time", examples:["I took a Japanese course when I was at college", "when does the next course start?"]});
+  vocab.push({en:"degree", pron:"/dɪˈɡriː/", type:"Noun", ru:"диплом (университета), степень", cat:"hunting", def:"a certification from university", shortEx:"I have a university degree in politics.", fullDef:"a certification from university", collocates:["university degree", "get a degree"], examples:["I have a university degree in politics", "I wish I'd got a degree as it would have helped me in my job"]});
+  vocab.push({en:"education", pron:"/ˌedjʊˈkeɪʃən/", type:"Noun uncount", ru:"образование", cat:"hunting", def:"the process of going to school, college or university to study, teach or learn", shortEx:"I want my children to have a good education.", fullDef:"education is the process of going to school, college or university to study, teach or learn", examples:["I want my children to have a good education", "the government are discussing how to improve the level of education in the country"], related:[{"form": "Adjective", "word": "educational", "example": "I thought the documentary was very educational"}, {"form": "Adjective", "word": "educated", "example": "she's a very educated woman"}]});
+  vocab.push({en:"do", pron:"/duː/", type:"Verb", ru:"делать (работу, исследование)", cat:"actions", def:"when a person performs an action", shortEx:"As a nurse, she is doing essential work.", fullDef:"when a person performs an action", collocates:["do essential work", "do training", "do research"], examples:["as a nurse, she is doing essential work", "we're going to do some training for the new employees", "she's doing research on the effects of certain foods on our energy levels"]});
+  vocab.push({en:"run", pron:"/rʌn/", type:"Verb", ru:"управлять, руководить", cat:"actions", def:"if you run something, you are in control of it", shortEx:"I run my own company.", fullDef:"if you run something, you are in control of it", collocates:["run a hotel", "run a restaurant", "run my own company"], examples:["I run my own company", "we run a small restaurant in London", "who's going to run the business while you're away?"]});
+  vocab.push({en:"work for", pron:"/wɜːk fɔː/", type:"Phrase", ru:"работать на (кого-то)", cat:"actions", def:"when you are employed by a company or a person, you work for them", shortEx:"I've been working for the government since I left university.", fullDef:"when you are employed by a company or a person, you work for them", collocates:["work for the government", "work for myself"], examples:["I've been working for the government since I left university", "I started working for myself last year, making and selling jewellery"]});
+  vocab.push({en:"work hard", pron:"/wɜːk hɑːd/", type:"Phrase", ru:"усердно работать", cat:"actions", def:"when you put a lot of time and effort into something", shortEx:"She's been working hard to become the manager.", fullDef:"when you put a lot of time and effort into something", collocates:["work hard", "work late", "work part-time"], examples:["she's been working hard because she wants to become the manager", "are you working late tonight?", "my son works part-time at the supermarket"]});
+  vocab.push({en:"work late", pron:"/wɜːk leɪt/", type:"Phrase", ru:"работать допоздна", cat:"actions", def:"when you continue to perform your work tasks after your normal working hours", shortEx:"I worked late last night so I could finish the presentation.", fullDef:"when you continue to perform your work tasks after your normal working hours", examples:["I worked late last night so I could finish the presentation"]});
+  vocab.push({en:"work on", pron:"/wɜːk ɒn/", type:"Phrasal verb", ru:"работать над (чем-то)", cat:"actions", def:"to spend time on something", shortEx:"Abdullah and Liza are working on a presentation together.", fullDef:"to spend time on something", collocates:["work on a presentation", "work on a project"], examples:["Abdullah and Liza are working on a presentation together", "the class have been working on a nature project"]});
+  vocab.push({en:"deal with", pron:"/diːl wɪð/", type:"Phrasal verb", ru:"решать, разбираться с", cat:"actions", def:"when you solve a problem by doing something", shortEx:"He dealt with the problem before it got worse.", fullDef:"when you solve a problem by doing something", collocates:["deal with problems", "deal with customers", "deal with enquiries"], examples:["he dealt with the problem before it got worse", "can you deal with that customer, please?", "we have several new enquiries to deal with today"]});
+  vocab.push({en:"organize", pron:"/ˈɔːɡənaɪz/", type:"Verb", ru:"организовывать", cat:"actions", def:"if you organize something, you plan it and make all the arrangements for it to happen", shortEx:"I'm organizing a big party for my parents.", fullDef:"if you organize something, you plan it and make all the arrangements for it to happen", collocates:["organize an event", "organize a party"], examples:["I'm organizing a big party for my parents' wedding anniversary", "we're organizing the school camping trip to Cornwall", "the conference was organized by the local university", "she helped organize the tennis tournament"], related:[{"form": "Adjective", "word": "organized", "example": "there is organized entertainment in the evenings"}, {"form": "Noun", "word": "organizer", "example": "organizers had to apologize when the main speaker did not arrive"}, {"form": "Noun", "word": "organization", "example": "can I help with the organization of the party?"}]});
+  vocab.push({en:"provide", pron:"/prəˈvaɪd/", type:"Verb", ru:"обеспечивать, предоставлять", cat:"actions", def:"to give someone something they want or need", shortEx:"The company provides training for new workers.", fullDef:"to give someone something they want or need", collocates:["provide help", "provide for your family"], examples:["the organization provided help to those who needed it", "it's important you earn enough to provide for your family"]});
+  vocab.push({en:"support", pron:"/səˈpɔːt/", type:"Verb", ru:"болеть за (команду), поддерживать", cat:"actions", def:"to like a sports team and watch many of their games", shortEx:"Which team do you support?", fullDef:"to like a sports team and watch many of their games", examples:["my sister supports Real Madrid, but I prefer Barcelona", "which team do you support?"]});
+  vocab.push({en:"give", pron:"/ɡɪv/", type:"Verb", ru:"давать; делать (презентацию)", cat:"actions", def:"to show or communicate information", shortEx:"I gave a presentation on successful public speaking.", fullDef:"to show or communicate information", collocates:["give a presentation"], examples:["I gave a presentation on successful public speaking", "have you ever given a presentation in front of a group of people?"]});
+  vocab.push({en:"presentation", pron:"/ˌprezənˈteɪʃən/", type:"Noun", ru:"презентация", cat:"comm", def:"if you give a presentation, you talk about a particular subject in front of a group of people", shortEx:"I'm giving a presentation at the conference on Friday.", fullDef:"if you give a presentation, you talk about a particular subject in front of a group of people, for example, at a conference or in class", examples:["I'm giving a presentation at the conference on Friday", "her presentation was about English grammar", "presentations should last no longer than 20 minutes"], related:[{"form": "Verb", "word": "present", "example": "I presented my report to the management committee"}, {"form": "Noun", "word": "presenter", "example": "Natasha is a very good presenter"}]});
+  vocab.push({en:"talk with", pron:"/tɔːk wɪð/", type:"Verb", ru:"разговаривать с", cat:"comm", def:"to have a conversation with someone", shortEx:"Tomorrow, I'm talking with a new client.", fullDef:"to have a conversation with someone", collocates:["talk with a new client", "talk with the boss"], examples:["tomorrow, I'm talking with a new client about what we can offer them", "the boss has asked to have a talk with me"]});
+  vocab.push({en:"shout", pron:"/ʃaʊt/", type:"Verb", ru:"кричать", cat:"comm", def:"to speak in a loud voice", shortEx:"I heard my mum shouting at my little brother.", fullDef:"to speak in a loud voice", examples:["I heard my mum shouting at my little brother", "the table next to us were shouting in the restaurant"]});
+  vocab.push({en:"complain", pron:"/kəmˈpleɪn/", type:"Verb", ru:"жаловаться", cat:"comm", def:"when you say you are not happy with something, for example a product or service", shortEx:"I heard him complaining about the service.", fullDef:"when you say you are not happy with something, for example a product or service", examples:["I heard him complaining about the service", "shall we complain about the food being cold?"]});
+  vocab.push({en:"introduction", pron:"/ˌɪntrəˈdʌkʃən/", type:"Noun", ru:"представление, знакомство", cat:"comm", def:"the situation where two people come together and meet for the first time, exchanging names", shortEx:"Thanks for the introduction to your colleague.", fullDef:"the situation where two people come together and meet for the first time, exchanging names", examples:["thanks for the introduction to your colleague, she's a great connection to have", "I'll make the introductions as I know everyone here"]});
+  vocab.push({en:"argument", pron:"/ˈɑːɡjumənt/", type:"Noun", ru:"спор, ссора", cat:"comm", def:"the situation where people disagree on something and speak to each other in an angry way", shortEx:"We had an argument about who was right.", fullDef:"the situation where people disagree on something and speak to each other in an angry way", collocates:["have an argument", "get into an argument", "present an argument", "hear both sides of an argument"], examples:["we had an argument about who was right", "I don't want to get into an argument with you", "both sides presented their arguments", "we have to hear both sides of an argument before coming to a conclusion"]});
+  vocab.push({en:"argue", pron:"/ˈɑːɡjuː/", type:"Verb", ru:"спорить, ссориться", cat:"comm", def:"when people disagree about something and speak to each other in an angry way", shortEx:"I heard them arguing about money.", fullDef:"when people disagree about something and speak to each other in an angry way, they argue", collocates:["argue with", "argue about", "argue over"], examples:["I heard them arguing about money", "please don't argue with me – put your phone away, please", "he was arguing with his sister", "my children always argue about what to watch on TV", "I saw a couple arguing over where to go for dinner!"], related:[{"form": "Noun", "word": "argument", "example": "they had a big argument about who to invite"}]});
+  vocab.push({en:"enquiry", pron:"/ɪnˈkwaɪəri/", type:"Noun", ru:"запрос, вопрос (за информацией)", cat:"comm", def:"the questions you ask when you want to find out information", shortEx:"Can you handle any telephone enquiries today?", fullDef:"the questions you ask when you want to find out information", examples:["we've had a lot of enquiries through the website about the course in May", "can you handle any telephone enquiries today, please?"], related:[{"form": "Verb", "word": "enquire", "example": "many people were enquiring about the job"}]});
+  vocab.push({en:"advice", pron:"/ədˈvaɪs/", type:"Noun uncount", ru:"совет", cat:"comm", def:"an opinion about what to do in a certain situation", shortEx:"Can I ask your advice about something?", fullDef:"an opinion about what to do in a certain situation", examples:["can I ask your advice about something?", "why don't you ask your mum? I'm sure she'll give you some good advice"]});
+  vocab.push({en:"wish me luck!", pron:"/wɪʃ miː lʌk/", type:"Phrase", ru:"пожелай мне удачи!", cat:"comm", def:"to say you hope someone will have success", shortEx:"I have a job interview tomorrow — wish me luck!", fullDef:"to say you hope someone will have success", examples:["I have a job interview tomorrow – wish me luck!", "Paco's speaking to the boss today – wish him luck!"]});
+  vocab.push({en:"research", pron:"/rɪˈsɜːtʃ/", type:"Noun uncount", ru:"исследование", cat:"learning", def:"if you do research, you study a subject in detail to find new information about it", shortEx:"I'm doing some research into why people forget things.", fullDef:"if you do research, you study a subject in detail to find new information about it", collocates:["do research (into something)"], examples:["I'm doing some research into why people forget things", "some new research into the causes of cancer", "people who do scientific research"], related:[{"form": "Verb", "word": "research", "example": "the students researched their topics and presented their findings"}, {"form": "Noun", "word": "researcher", "example": "researchers have decided to stop using animals in their experiments"}]});
+  vocab.push({en:"project", pron:"/ˈprɒdʒekt/", type:"Noun", ru:"проект", cat:"learning", def:"a big piece of work that you plan and do over a long period of time", shortEx:"I'm working on a project for my class.", fullDef:"a project is a big piece of work that you plan and do over a long period of time", examples:["I'm working on a project for my class", "a government project to help the environment", "I need to do some research for my project", "a scientific research project", "who's going to manage the project?"]});
+  vocab.push({en:"improve", pron:"/ɪmˈpruːv/", type:"Verb", ru:"улучшать(ся)", cat:"learning", def:"to get better at something, or to make something better", shortEx:"My English has really improved this term.", fullDef:"to get better at something, or to make something better", examples:["my English has really improved this term", "I'd like to improve my football skills"]});
+  vocab.push({en:"retire", pron:"/rɪˈtaɪə/", type:"Verb", ru:"выйти на пенсию", cat:"learning", def:"when you stop working because you reach the age you are too old to work", shortEx:"Our teacher's leaving because he's retiring.", fullDef:"when you stop working because you reach the age you are too old to work", examples:["Our teacher's leaving because he's retiring", "I worked as a dentist for 30 years, but retired last year"], related:[{"form": "Noun", "word": "retirement", "example": "he's reaching retirement age"}, {"form": "Adjective", "word": "retired", "example": "my mother retired early when she was just 52"}]});
+  vocab.push({en:"lose", pron:"/luːz/", type:"Verb", ru:"потерять (работу, клиента)", cat:"learning", def:"to have something taken away from you", shortEx:"I lost a huge client today.", fullDef:"to have something taken away from you", collocates:["lose a job", "lose a client"], examples:["we lost that job to a competitor", "I lost a huge client today because I just couldn't help with what they needed"]});
+  vocab.push({en:"essential", pron:"/ɪˈsenʃəl/", type:"Adjective", ru:"необходимый, важный", cat:"adj", def:"when something is necessary and important", shortEx:"It is essential you receive the correct training.", fullDef:"when something is necessary and important", examples:["it is essential you receive the correct training before you start", "eating a balanced diet is essential for your health"]});
+  vocab.push({en:"grateful", pron:"/ˈɡreɪtfəl/", type:"Adjective", ru:"благодарный", cat:"adj", def:"if you are grateful to someone, you are glad that they have helped you or given you something", shortEx:"I'll always be grateful to the doctor who saved my sight.", fullDef:"if you are grateful to someone, you are glad that they have helped you or given you something", collocates:["be grateful to someone", "feel grateful for something"], examples:["I'll always be grateful to the doctor who saved my sight", "I'm grateful for all your help", "I'd be very grateful if you could phone me", "the families were very grateful for the work she did"], related:[{"form": "Adverb", "word": "gratefully", "example": "any suggestions will be gratefully received"}, {"form": "Noun", "word": "gratitude", "example": "he accepted my offer with gratitude"}]});
+  vocab.push({en:"stressed", pron:"/strest/", type:"Adjective", ru:"в стрессе, взволнованный", cat:"adj", def:"when a person feels nervous or worried by something", shortEx:"I feel quite stressed when I can't control the situation.", fullDef:"when a person feels nervous or worried by something", examples:["I feel quite stressed when I can't control the situation", "he seems stressed – is he OK?"]});
+  vocab.push({en:"sick", pron:"/sɪk/", type:"Adjective", ru:"больной, плохо себя чувствующий", cat:"adj", def:"when a person feels bad and unwell", shortEx:"I was sick after that buffet.", fullDef:"when a person feels bad and unwell", examples:["I was sick after that buffet", "I was quite sick over the holiday – typical!"]});
+  vocab.push({en:"separate", pron:"/ˈsepərət/", type:"Adjective", ru:"отдельный, раздельный", cat:"adj", def:"a way to describe things which are not joined together", shortEx:"They live separate lives.", fullDef:"a way to describe things which are not joined together", examples:["my sister and I didn't have separate rooms when we were younger", "they live separate lives"]});
+  vocab.push({en:"suit", pron:"/suːt/", type:"Verb", ru:"подходить (о времени/одежде)", cat:"adj", def:"when something is right or good for someone", shortEx:"The working hours really suit me.", fullDef:"when something is right or good for someone", examples:["the working hours really suit me", "that jacket really suits you!"]});
+  vocab.push({en:"get on", pron:"/ɡet ɒn/", type:"Phrasal verb", ru:"ладить (с кем-то)", cat:"adj", def:"if you get on with someone, you like them and have a friendly relationship with them", shortEx:"I get on well with the people in the office.", fullDef:"if you get on with someone, you like them and have a friendly relationship with them", examples:["do you get on with the people you work with?", "I never got on with my boss", "we don't get on with our neighbours", "I get on well with the people in the office"]});
+  vocab.push({en:"social life", pron:"/ˈsəʊʃəl laɪf/", type:"Noun uncount", ru:"общение с друзьями, личная жизнь", cat:"life", def:"activities in your life related to spending time with friends and family", shortEx:"Work is so busy that I find it hard to have a good social life.", fullDef:"activities in your life related to spending time with friends and family", examples:["work is so busy that I find it hard to have a good social life", "my grandma has a much better social life than me!"]});
+  vocab.push({en:"snack", pron:"/snæk/", type:"Noun", ru:"перекус", cat:"life", def:"a small amount of food people eat between meals", shortEx:"I'm a bit hungry, shall we have a snack?", fullDef:"a small amount of food people eat between meals", examples:["I'm a bit hungry, shall we have a snack?", "I'll bring some snacks on the walk"]});
+  vocab.push({en:"lie down", pron:"/laɪ daʊn/", type:"Phrasal verb", ru:"лечь, прилечь", cat:"life", def:"to get into a position where your body is flat on a horizontal surface", shortEx:"I'm not feeling well, I'm going to lie down.", fullDef:"to get into a position where your body is flat on a horizontal surface", examples:["if you're tired, you should go and lie down", "I'm not feeling well, I'm going to lie down"]});
+  vocab.push({en:"studio flat", pron:"/ˈstjuːdiəʊ flæt/", type:"Noun", ru:"квартира-студия", cat:"life", def:"a place where people live which has a large room containing a bedroom, living room and kitchen, with a separate bathroom", shortEx:"My first place was a studio flat in the city centre.", fullDef:"a place where people live which has a large room containing a bedroom, living room and kitchen, with a separate bathroom", examples:["my first place was a studio flat right in the city centre", "a studio flat is perfect for me as I'll be living alone"]});
+  vocab.push({en:"van", pron:"/væn/", type:"Noun", ru:"фургон", cat:"life", def:"a large vehicle for transporting things", shortEx:"We need a van to pick up the new sofa.", fullDef:"a large vehicle for transporting things", examples:["my husband is an electrician, so he drives a van with all his equipment in", "we need a van to pick up the new sofa"]});
+  vocab.push({en:"app", pron:"/æp/", type:"Noun", ru:"приложение (на телефоне)", cat:"life", def:"a piece of software where you can access certain things, often on a mobile device", shortEx:"I've downloaded the app onto my phone.", fullDef:"a piece of software where you can access certain things, often on a mobile device, for example, games or social media", collocates:["download an app"], examples:["I've downloaded the app onto my phone", "why don't you use the app instead of the website?", "you can download the app from the app store"]});
+  vocab.push({en:"break", pron:"/breɪk/", type:"Noun", ru:"перерыв (на работе)", cat:"life", def:"when you are at work, a break is a time when you stop working and relax for a short while", shortEx:"I usually take a break at about 11.", fullDef:"when you are at work, a break is a time when you stop working and relax for a short while before starting to work again", collocates:["a lunch break", "a tea break", "a coffee break", "a short break", "a long break"], examples:["I haven't got time to take a break", "I usually take a break at about 11", "I worked from 8 till 4 without a break", "that was a long break", "I had to go to the bank during my lunch break", "a 10-minute break", "he's on his break at the moment"], related:[{"form": "Verb", "word": "break"}]});
+  vocab.push({en:"borrow", pron:"/ˈbɒrəʊ/", type:"Verb", ru:"одолжить (взять)", cat:"useful", def:"when you take or use something for a short time, which you will give back later", shortEx:"Mum, would you mind if I borrowed your car?", fullDef:"when you take or use something for a short time, which you will give back later", collocates:["borrow money"], examples:["mum, would you mind if I borrowed your car this evening?"]});
+  vocab.push({en:"care for", pron:"/keə fɔː/", type:"Verb", ru:"заботиться о, ухаживать за", cat:"useful", def:"when you look after someone who is often not able to look after themselves", shortEx:"Your father is being cared for by the nurse.", fullDef:"when you look after someone who is often not able to look after themselves", examples:["your father is being cared for by the nurse", "she moved back home to care for her elderly parents"]});
+  vocab.push({en:"couple of", pron:"/ˈkʌpl ɒv/", type:"Quantifier", ru:"пара, несколько", cat:"useful", def:"two things or people grouped together", shortEx:"I've been to Hungary a couple of times.", fullDef:"two things or people grouped together", examples:["I've been to Hungary a couple of times", "there are a couple of people who have already arrived for the meeting"]});
+  vocab.push({en:"depend on", pron:"/dɪˈpend ɒn/", type:"Phrasal verb", ru:"зависеть от", cat:"useful", def:"when one thing is changed or affected by another thing", shortEx:"Depending on the weather, we could have a barbecue tomorrow.", fullDef:"when one thing is changed or affected by another thing", examples:["whether I get the job or not depends on how the interview goes", "depending on the weather, we could have a barbecue tomorrow"]});
+  vocab.push({en:"all part of the service", pron:"/ɔːl pɑːt ɒv ðə ˈsɜːvɪs/", type:"Phrase", ru:"всё входит в услугу", cat:"useful", def:"everything is included", shortEx:"Don't worry, sir, it's all part of the service.", fullDef:"everything is included", examples:["don't worry, sir, it's all part of the service – I'm happy to help", "I'll take your bags to your room, it's all part of the service"]});
+  vocab.push({en:"spend", pron:"/spend/", type:"Verb", ru:"тратить (время, деньги)", cat:"useful", def:"to use your time, money, or effort to do something", shortEx:"I love spending time with the family.", fullDef:"to use your time, money, or effort to do something", collocates:["spend time", "spend money"], examples:["I love spending time with the family", "we spent a lot of money on holiday"]});
+  vocab.push({en:"show", pron:"/ʃəʊ/", type:"Noun", ru:"шоу, передача", cat:"useful", def:"something which informs or explains something to people who listen", shortEx:"Today on the show, we have a guest speaker.", fullDef:"something which informs or explains something to people who listen", examples:["today on the show, we have a guest speaker", "did you hear who won that prize on the morning radio show?"]});
+</script>
+<script>
+document.getElementById('totalCount').textContent = vocab.length;
+
+function shuffle(arr) { const a = [...arr]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+
+function switchTab(name) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('section-' + name).classList.add('active');
+  if (name === 'match' && !matchInitialized) initMatch();
+  if (name === 'quiz' && !quizInitialized) initQuiz(false);
+  if (name === 'fill' && !fillInitialized) initFill();
+}
+
+let activeFilter = 'all';
+
+function renderFilters() {
+  const el = document.getElementById('cat-filter');
+  let html = '<div class="cat-chip ' + (activeFilter==='all'?'active':'') + '" onclick="setFilter(\'all\')">Все (' + vocab.length + ')</div>';
+  Object.keys(categories).forEach(cat => {
+    const count = vocab.filter(v => v.cat === cat).length;
+    html += '<div class="cat-chip ' + (activeFilter===cat?'active':'') + '" onclick="setFilter(\'' + cat + '\')">' + categories[cat] + ' (' + count + ')</div>';
+  });
+  el.innerHTML = html;
+}
+
+function setFilter(cat) { activeFilter = cat; renderFilters(); renderCards(); }
+
+function escapeHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function escapeAttr(s) { return String(s).replace(/'/g, "\\'").replace(/&/g,'&amp;').replace(/"/g,'&quot;'); }
+
+function renderCards() {
+  const container = document.getElementById('cards-container');
+  let html = '';
+  const cats = activeFilter === 'all' ? Object.keys(categories) : [activeFilter];
+  cats.forEach(cat => {
+    const items = vocab.filter(v => v.cat === cat);
+    if (!items.length) return;
+    html += '<div class="category-label">' + categories[cat] + '</div>';
+    html += '<div class="cards-grid">';
+    items.forEach((v, idx) => {
+      const globalIdx = vocab.indexOf(v);
+      html += '<div class="card" data-state="0" onclick="advanceCard(this)">' +
+        '<button class="card-expand" title="Подробнее" onclick="event.stopPropagation(); openDetail(' + globalIdx + ')">📖</button>' +
+        '<div class="face face-front">' +
+          '<div class="en">' + escapeHtml(v.en) + '</div>' +
+          '<div class="pron">' + escapeHtml(v.pron) + '</div>' +
+          '<div class="type">' + escapeHtml(v.type) + '</div>' +
+          '<div class="hint-txt">нажми →</div>' +
+        '</div>' +
+        '<div class="face face-def">' +
+          '<div class="label">Definition</div>' +
+          '<div class="def-txt">' + escapeHtml(v.def) + '</div>' +
+          '<div class="ex-txt">' + escapeHtml(v.shortEx) + '</div>' +
+        '</div>' +
+        '<div class="face face-tr">' +
+          '<div class="label">Перевод</div>' +
+          '<div class="ru-txt">' + escapeHtml(v.ru) + '</div>' +
+          '<div class="it-small">' + escapeHtml(v.en) + '</div>' +
+        '</div>' +
+        '<div class="card-state"><span class="state-dot"></span><span class="state-dot"></span><span class="state-dot"></span></div>' +
+        '</div>';
+    });
+    html += '</div>';
+  });
+  container.innerHTML = html;
+}
+
+function advanceCard(el) {
+  let cur = parseInt(el.dataset.state);
+  el.dataset.state = (cur + 1) > 2 ? 0 : cur + 1;
+}
+
+function resetAllCards() { document.querySelectorAll('.card').forEach(c => c.dataset.state = "0"); }
+
+function openDetail(idx) {
+  const v = vocab[idx];
+  document.getElementById('m-word').textContent = v.en;
+  document.getElementById('m-pron').textContent = v.pron;
+  document.getElementById('m-type').textContent = v.type;
+  document.getElementById('m-ru').textContent = v.ru;
+  document.getElementById('m-def').textContent = v.fullDef || v.def;
+
+  const collocSect = document.getElementById('m-colloc-section');
+  const collocEl = document.getElementById('m-colloc');
+  if (v.collocates && v.collocates.length) {
+    collocSect.style.display = 'block';
+    collocEl.innerHTML = v.collocates.map(c => '<span class="colloc-chip">' + escapeHtml(c) + '</span>').join('');
+  } else {
+    collocSect.style.display = 'none';
+  }
+
+  const exEl = document.getElementById('m-examples');
+  exEl.innerHTML = (v.examples || []).map(e => '<li>' + escapeHtml(e) + '</li>').join('');
+
+  const relSect = document.getElementById('m-related-section');
+  const relEl = document.getElementById('m-related');
+  if (v.related && v.related.length) {
+    relSect.style.display = 'block';
+    relEl.innerHTML = v.related.map(r => {
+      let h = '<div class="related-item"><span class="rel-form">' + escapeHtml(r.form) + ':</span><span class="rel-word">' + escapeHtml(r.word) + '</span>';
+      if (r.example) h += '<div class="rel-ex">' + escapeHtml(r.example) + '</div>';
+      return h + '</div>';
+    }).join('');
+  } else {
+    relSect.style.display = 'none';
+  }
+
+  document.getElementById('detail-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDetail() {
+  document.getElementById('detail-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDetail(); });
+
+// MATCH
+let matchInitialized = false, matchSelected = null, matchScore = 0, matchErrors = 0;
+const MATCH_PAIRS = 10;
+
+function initMatch() {
+  matchInitialized = true;
+  matchScore = 0; matchErrors = 0; matchSelected = null;
+  document.getElementById('match-score').textContent = 0;
+  document.getElementById('match-errors').textContent = 0;
+  document.getElementById('match-total').textContent = MATCH_PAIRS;
+  document.getElementById('match-result').classList.add('hidden');
+  const picks = shuffle(vocab).slice(0, MATCH_PAIRS);
+  const board = document.getElementById('match-board');
+  board.innerHTML = '';
+  const leftCol = document.createElement('div'); leftCol.className = 'match-col';
+  const rightCol = document.createElement('div'); rightCol.className = 'match-col';
+  shuffle(picks).forEach(v => {
+    const el = document.createElement('div');
+    el.className = 'match-item en-word';
+    el.dataset.key = v.en; el.dataset.side = 'en';
+    el.textContent = v.en;
+    el.onclick = () => handleMatch(el);
+    leftCol.appendChild(el);
+  });
+  shuffle(picks).forEach(v => {
+    const el = document.createElement('div');
+    el.className = 'match-item ru-word';
+    el.dataset.key = v.en; el.dataset.side = 'ru';
+    el.textContent = v.ru;
+    el.onclick = () => handleMatch(el);
+    rightCol.appendChild(el);
+  });
+  board.appendChild(leftCol); board.appendChild(rightCol);
+}
+
+function handleMatch(el) {
+  if (el.classList.contains('matched') || el.classList.contains('wrong')) return;
+  if (!matchSelected) {
+    document.querySelectorAll('.match-item').forEach(e => e.classList.remove('selected'));
+    el.classList.add('selected'); matchSelected = el; return;
+  }
+  if (el === matchSelected) { el.classList.remove('selected'); matchSelected = null; return; }
+  if (el.dataset.side === matchSelected.dataset.side) {
+    document.querySelectorAll('.match-item').forEach(e => e.classList.remove('selected'));
+    el.classList.add('selected'); matchSelected = el; return;
+  }
+  if (el.dataset.key === matchSelected.dataset.key) {
+    el.classList.add('matched'); matchSelected.classList.add('matched');
+    el.classList.remove('selected'); matchSelected.classList.remove('selected');
+    matchScore++;
+    document.getElementById('match-score').textContent = matchScore;
+    matchSelected = null;
+    if (matchScore === MATCH_PAIRS) {
+      setTimeout(() => {
+        const r = document.getElementById('match-result');
+        r.classList.remove('hidden');
+        document.getElementById('match-final').textContent = matchScore + '/' + MATCH_PAIRS;
+        document.getElementById('match-sub').textContent = matchErrors === 0 ? 'Без ошибок! Excellent!' : 'Ошибок: ' + matchErrors;
+        document.getElementById('match-emoji').textContent = matchErrors === 0 ? '🏆' : matchErrors <= 3 ? '🎉' : '👍';
+      }, 500);
+    }
+  } else {
+    el.classList.add('wrong'); matchSelected.classList.add('wrong');
+    matchErrors++;
+    document.getElementById('match-errors').textContent = matchErrors;
+    const a = el, b = matchSelected;
+    matchSelected = null;
+    setTimeout(() => { a.classList.remove('wrong','selected'); b.classList.remove('wrong','selected'); }, 700);
+  }
+}
+
+// QUIZ
+let quizInitialized = false, quizItems = [], quizIdx = 0, quizCorrect = 0, quizAnswered = false, quizMistakes = [];
+const QUIZ_LEN = 20;
+
+function initQuiz(onlyErrors) {
+  quizInitialized = true;
+  document.getElementById('quiz-result').classList.add('hidden');
+  document.getElementById('quiz-play').classList.remove('hidden');
+  const source = onlyErrors && quizMistakes.length ? quizMistakes : vocab;
+  quizItems = shuffle(source).slice(0, Math.min(QUIZ_LEN, source.length));
+  quizMistakes = []; quizIdx = 0; quizCorrect = 0;
+  renderDots(); showQuiz();
+}
+
+function renderDots() {
+  const el = document.getElementById('quiz-dots');
+  let html = '';
+  for (let i = 0; i < quizItems.length; i++) html += '<div class="dot ' + (i===0?'active':'') + '"></div>';
+  el.innerHTML = html;
+}
+
+function showQuiz() {
+  if (quizIdx >= quizItems.length) { endQuiz(); return; }
+  const v = quizItems[quizIdx];
+  quizAnswered = false;
+  const dir = Math.random() > 0.5;
+  document.getElementById('quiz-dir').textContent = dir ? 'English → Русский' : 'Русский → English';
+  document.getElementById('quiz-word').textContent = dir ? v.en : v.ru;
+  document.getElementById('quiz-feedback').textContent = '';
+  document.getElementById('quiz-feedback').className = 'quiz-feedback';
+  document.getElementById('quiz-next-btn').style.display = 'none';
+  document.getElementById('quiz-counter').textContent = 'Вопрос ' + (quizIdx+1) + ' из ' + quizItems.length;
+  document.getElementById('quiz-bar').style.width = (quizIdx/quizItems.length*100)+'%';
+  document.querySelectorAll('.dot').forEach((d,i) => { d.className = 'dot' + (i<quizIdx?' done':i===quizIdx?' active':''); });
+  const wrong = shuffle(vocab.filter(x=>x.en!==v.en)).slice(0,3);
+  const opts = shuffle([v].concat(wrong));
+  const optEl = document.getElementById('quiz-options');
+  optEl.innerHTML = '';
+  opts.forEach(o => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-option';
+    btn.textContent = dir ? o.ru : o.en;
+    btn.onclick = function() {
+      if (quizAnswered) return;
+      quizAnswered = true;
+      const correct = o.en === v.en;
+      btn.classList.add(correct ? 'correct' : 'wrong');
+      if (!correct) {
+        quizMistakes.push(v);
+        optEl.querySelectorAll('button').forEach(b => { if (b.textContent === (dir?v.ru:v.en)) b.classList.add('correct'); });
+        document.getElementById('quiz-feedback').textContent = 'Правильно: ' + (dir?v.ru:v.en);
+        document.getElementById('quiz-feedback').className = 'quiz-feedback bad';
+      } else {
+        quizCorrect++;
+        document.getElementById('quiz-feedback').textContent = '✓ Correct!';
+        document.getElementById('quiz-feedback').className = 'quiz-feedback good';
+      }
+      document.getElementById('quiz-next-btn').style.display = 'inline-block';
+    };
+    optEl.appendChild(btn);
+  });
+}
+
+function nextQuiz() { quizIdx++; showQuiz(); }
+
+function endQuiz() {
+  document.getElementById('quiz-play').classList.add('hidden');
+  document.getElementById('quiz-result').classList.remove('hidden');
+  const pct = Math.round(quizCorrect/quizItems.length*100);
+  document.getElementById('quiz-final-score').textContent = quizCorrect + '/' + quizItems.length;
+  document.getElementById('quiz-final-sub').textContent = pct + '% правильных ответов';
+  document.getElementById('quiz-emoji').textContent = pct>=80?'🏆':pct>=50?'👍':'📖';
+  document.getElementById('quiz-mistakes-btn').style.display = quizMistakes.length ? 'inline-block' : 'none';
+}
+
+// FILL
+const fillTasks = [
+  { situation: "My new ___ is very nice, she helps me a lot.", translation: "Мой новый босс очень милая.", answer: "boss" },
+  { situation: "My ___ and I have regular meetings.", translation: "Мы с коллегами регулярно проводим встречи.", answer: "co-workers" },
+  { situation: "I ___ good money as a designer.", translation: "Я хорошо зарабатываю как дизайнер.", answer: "earn" },
+  { situation: "It is ___ that you receive the correct training.", translation: "Крайне важно, чтобы ты прошёл правильное обучение.", answer: "essential" },
+  { situation: "I'd like a job with ___ working hours.", translation: "Я хотел бы работу с гибким графиком.", answer: "flexible" },
+  { situation: "She ___ a department of 20 people.", translation: "Она управляет отделом из 20 человек.", answer: "manages" },
+  { situation: "Can I ask your ___ about something?", translation: "Могу я спросить у тебя совета?", answer: "advice" },
+  { situation: "I had a job ___ yesterday.", translation: "Вчера у меня было собеседование.", answer: "interview" },
+  { situation: "They ___ me the job! I start on Monday.", translation: "Они предложили мне работу!", answer: "offered" },
+  { situation: "You must have ___ in business.", translation: "У тебя должен быть опыт в бизнесе.", answer: "experience" },
+  { situation: "It's important to learn new ___ .", translation: "Важно учиться новым навыкам.", answer: "skills" },
+  { situation: "I have a university ___ in politics.", translation: "У меня университетский диплом по политологии.", answer: "degree" },
+  { situation: "I ___ for a travel company.", translation: "Я работаю в туристической компании.", answer: "work" },
+  { situation: "I usually take a ___ at about 11.", translation: "Я обычно делаю перерыв около 11.", answer: "break" },
+  { situation: "I was ___ over the holiday — typical!", translation: "Я болел на праздниках — как всегда!", answer: "sick" },
+  { situation: "I feel quite ___ when I can't control the situation.", translation: "Я чувствую сильный стресс, когда не могу контролировать ситуацию.", answer: "stressed" },
+  { situation: "I'll always be ___ for your help.", translation: "Я всегда буду благодарен за твою помощь.", answer: "grateful" },
+  { situation: "I got a ___ job as a shop assistant.", translation: "Я нашёл работу продавца на полный день.", answer: "full-time" },
+  { situation: "It's important to be ___ time tomorrow.", translation: "Важно завтра прийти вовремя.", answer: "on" },
+  { situation: "I took some ___ off to be with family.", translation: "Я взял отгулы, чтобы побыть с семьёй.", answer: "time" },
+  { situation: "I'd like to ___ my English this year.", translation: "Я хочу улучшить английский в этом году.", answer: "improve" },
+  { situation: "They are ___ on a new project.", translation: "Они работают над новым проектом.", answer: "working" },
+  { situation: "I ___ a lot of money on holiday last year.", translation: "Я потратил много денег на отпуск в прошлом году.", answer: "spent" },
+  { situation: "Can I ___ your pen for a moment?", translation: "Можно я одолжу твою ручку на секунду?", answer: "borrow" },
+  { situation: "I'm giving a ___ at the meeting tomorrow.", translation: "Я делаю презентацию на завтрашней встрече.", answer: "presentation" },
+  { situation: "I ___ my own company.", translation: "У меня свой бизнес (я им управляю).", answer: "run" },
+  { situation: "The minimum ___ is £5.73 an hour.", translation: "Минимальная зарплата — £5.73 в час.", answer: "wage" },
+  { situation: "My ___ ends next month.", translation: "Мой контракт заканчивается в следующем месяце.", answer: "contract" },
+  { situation: "Which team do you ___?", translation: "За какую команду ты болеешь?", answer: "support" },
+  { situation: "I get ___ well with the people in the office.", translation: "Я хорошо лажу с людьми в офисе.", answer: "on" },
+  { situation: "I'm hungry, shall we have a ___?", translation: "Я голоден, перекусим?", answer: "snack" },
+  { situation: "Have you ___ for that job yet?", translation: "Ты уже подал заявку на ту работу?", answer: "applied" },
+  { situation: "I've downloaded the ___ onto my phone.", translation: "Я скачал приложение на телефон.", answer: "app" },
+  { situation: "My mother ___ early when she was 52.", translation: "Моя мама вышла на пенсию рано, в 52.", answer: "retired" },
+  { situation: "The company ___ training for new workers.", translation: "Компания предоставляет обучение новым работникам.", answer: "provides" },
+];
+
+let fillInitialized = false, fillIdx = 0, fillCorrect = 0, fillItems = [];
+const FILL_LEN = 15;
+
+function initFill() {
+  fillInitialized = true;
+  fillItems = shuffle(fillTasks).slice(0, FILL_LEN);
+  fillIdx = 0; fillCorrect = 0;
+  document.getElementById('fill-result').classList.add('hidden');
+  document.getElementById('fill-play').classList.remove('hidden');
+  showFill();
+}
+
+function showFill() {
+  if (fillIdx >= fillItems.length) { endFill(); return; }
+  const t = fillItems[fillIdx];
+  document.getElementById('fill-situation').textContent = t.situation;
+  document.getElementById('fill-translation').textContent = t.translation;
+  document.getElementById('fill-input').value = '';
+  document.getElementById('fill-input').className = 'fill-input';
+  document.getElementById('fill-input').disabled = false;
+  document.getElementById('fill-feedback').textContent = '';
+  document.getElementById('fill-feedback').className = 'fill-feedback';
+  document.getElementById('fill-counter').textContent = 'Задание ' + (fillIdx+1) + ' из ' + fillItems.length;
+  document.getElementById('fill-bar').style.width = (fillIdx/fillItems.length*100)+'%';
+  document.getElementById('fill-check').style.display = 'inline-block';
+  document.getElementById('fill-skip').style.display = 'inline-block';
+  document.getElementById('fill-next').style.display = 'none';
+  setTimeout(() => document.getElementById('fill-input').focus(), 100);
+}
+
+function normalize(s) { return s.toLowerCase().trim().replace(/[!?\.,;:]/g,'').replace(/\s+/g,' '); }
+
+function checkFill() {
+  const t = fillItems[fillIdx];
+  const val = document.getElementById('fill-input').value;
+  if (!val.trim()) return;
+  const correct = normalize(val) === normalize(t.answer);
+  document.getElementById('fill-input').classList.add(correct ? 'correct' : 'wrong');
+  document.getElementById('fill-input').disabled = true;
+  if (correct) {
+    fillCorrect++;
+    document.getElementById('fill-feedback').textContent = '✓ Correct!';
+    document.getElementById('fill-feedback').className = 'fill-feedback good';
+  } else {
+    document.getElementById('fill-feedback').textContent = '✗ Правильно: ' + t.answer;
+    document.getElementById('fill-feedback').className = 'fill-feedback bad';
+  }
+  document.getElementById('fill-check').style.display = 'none';
+  document.getElementById('fill-skip').style.display = 'none';
+  document.getElementById('fill-next').style.display = 'inline-block';
+}
+
+function skipFill() {
+  const t = fillItems[fillIdx];
+  document.getElementById('fill-feedback').textContent = 'Правильный ответ: ' + t.answer;
+  document.getElementById('fill-feedback').className = 'fill-feedback bad';
+  document.getElementById('fill-input').disabled = true;
+  document.getElementById('fill-check').style.display = 'none';
+  document.getElementById('fill-skip').style.display = 'none';
+  document.getElementById('fill-next').style.display = 'inline-block';
+}
+
+function nextFill() { fillIdx++; showFill(); }
+
+function endFill() {
+  document.getElementById('fill-play').classList.add('hidden');
+  document.getElementById('fill-result').classList.remove('hidden');
+  const pct = Math.round(fillCorrect/fillItems.length*100);
+  document.getElementById('fill-final-score').textContent = fillCorrect + '/' + fillItems.length;
+  document.getElementById('fill-final-sub').textContent = pct + '% правильных ответов';
+  document.getElementById('fill-emoji').textContent = pct>=80?'🌟':pct>=50?'📝':'🇬🇧';
+}
+
+renderFilters();
+renderCards();
+</script>
+</body>
+</html>
