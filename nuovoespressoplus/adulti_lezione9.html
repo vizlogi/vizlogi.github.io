@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Italiano — Lezione 9</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #1a1208;
+  --bg2: #231a0d;
+  --chalk: #f0ead8;
+  --chalk-dim: rgba(240,234,216,0.55);
+  --chalk-faint: rgba(240,234,216,0.18);
+  --tomato: #e8472a;
+  --tomato-dim: rgba(232,71,42,0.22);
+  --basil: #4caf7d;
+  --basil-dim: rgba(76,175,125,0.2);
+  --gold: #e8b84b;
+  --gold-dim: rgba(232,184,75,0.18);
+  --shadow: rgba(0,0,0,0.45);
+  --border: rgba(240,234,216,0.14);
+  --border-strong: rgba(240,234,216,0.3);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--chalk);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background:
+    radial-gradient(ellipse 70% 50% at 15% 10%, rgba(232,71,42,0.06) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 60% at 85% 90%, rgba(76,175,125,0.05) 0%, transparent 55%);
+  pointer-events: none; z-index: 0;
+}
+.wrapper { position: relative; z-index: 1; max-width: 820px; margin: 0 auto; padding: 32px 16px 70px; }
+
+/* HEADER */
+header { text-align: center; margin-bottom: 40px; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+.header-eyebrow {
+  font-size: 0.72rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--tomato); margin-bottom: 10px;
+}
+header h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.6rem, 8vw, 4rem);
+  font-weight: 600; color: var(--chalk); line-height: 1;
+  letter-spacing: -0.01em;
+}
+header .sub {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic; font-size: 1.15rem;
+  color: var(--gold); margin-top: 6px;
+}
+header p { color: var(--chalk-dim); font-size: 0.85rem; margin-top: 8px; }
+
+/* TABS */
+.tabs { display: flex; gap: 4px; justify-content: center; margin-bottom: 36px; flex-wrap: wrap; }
+.tab-btn {
+  padding: 8px 18px; border: 1px solid var(--border);
+  background: transparent; border-radius: 4px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.78rem; font-weight: 500; letter-spacing: 0.04em;
+  color: var(--chalk-dim); cursor: pointer; transition: all 0.18s;
+}
+.tab-btn:hover { border-color: var(--border-strong); color: var(--chalk); }
+.tab-btn.active {
+  background: var(--tomato); border-color: var(--tomato); color: #fff;
+}
+
+/* SECTIONS */
+#sec-cards { display: block; }
+#sec-match, #sec-quiz, #sec-fill, #sec-recipe { display: none; }
+
+/* CAT LABEL */
+.cat-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.78rem; font-style: italic;
+  color: var(--gold); letter-spacing: 0.12em; text-transform: uppercase;
+  margin-bottom: 14px; margin-top: 30px;
+  display: flex; align-items: center; gap: 10px;
+}
+.cat-label::before, .cat-label::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+
+/* CARDS */
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(188px, 1fr)); gap: 10px; }
+.card {
+  background: var(--bg2); border-radius: 6px; padding: 16px 14px; cursor: pointer;
+  border: 1px solid var(--border);
+  transition: transform 0.15s, border-color 0.15s; position: relative;
+  min-height: 100px; display: flex; flex-direction: column;
+  align-items: flex-start; justify-content: flex-start; user-select: none;
+  overflow: hidden;
+}
+.card:hover { transform: translateY(-2px); border-color: var(--border-strong); }
+.card-dots { position: absolute; top: 9px; right: 10px; display: flex; gap: 4px; }
+.card-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--chalk-faint); }
+.card-dot.active { background: var(--tomato); }
+.card-dot.done { background: var(--basil); }
+.card-face { display: flex; flex-direction: column; gap: 5px; width: 100%; }
+.card[data-side="0"] .face-word { display: flex; }
+.card[data-side="0"] .face-def { display: none; }
+.card[data-side="0"] .face-ru { display: none; }
+.card[data-side="1"] .face-word { display: none; }
+.card[data-side="1"] .face-def { display: flex; }
+.card[data-side="1"] .face-ru { display: none; }
+.card[data-side="2"] .face-word { display: none; }
+.card[data-side="2"] .face-def { display: none; }
+.card[data-side="2"] .face-ru { display: flex; }
+.face-word, .face-def, .face-ru { flex-direction: column; gap: 4px; }
+.card-word-it {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.15rem; font-weight: 600; color: var(--chalk); line-height: 1.3;
+}
+.card-pos { font-size: 0.65rem; color: var(--chalk-faint); font-style: italic; margin-bottom: 2px; letter-spacing: 0.04em; }
+.card-def { font-size: 0.78rem; color: var(--chalk-dim); line-height: 1.45; margin-top: 3px; }
+.card-ex { font-size: 0.75rem; color: var(--gold); font-style: italic; margin-top: 4px; line-height: 1.4; }
+.card-ex-label { font-size: 0.6rem; color: var(--chalk-faint); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 2px; }
+.card-ru-main { font-size: 1rem; color: var(--basil); font-weight: 500; margin-top: 4px; }
+.card-ru-word { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-weight: 600; color: var(--chalk); }
+.card[data-side="1"] { border-color: rgba(232,184,75,0.25); }
+.card[data-side="2"] { border-color: var(--basil-dim); }
+.card-tap { position: absolute; bottom: 7px; right: 9px; font-size: 0.6rem; color: var(--chalk-faint); pointer-events: none; }
+.card[data-side="2"] .card-tap { display: none; }
+
+/* GAME HEADER */
+.game-header { text-align: center; margin-bottom: 24px; }
+.game-header h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.8rem; font-weight: 600; color: var(--chalk);
+}
+.game-header p { color: var(--chalk-dim); font-size: 0.85rem; margin-top: 4px; }
+
+/* MATCH */
+.match-board { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }
+.match-col { display: flex; flex-direction: column; gap: 7px; }
+.match-item {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 5px;
+  padding: 12px; cursor: pointer; font-size: 0.85rem; text-align: center;
+  transition: all 0.18s; min-height: 44px;
+  display: flex; align-items: center; justify-content: center; line-height: 1.3;
+  color: var(--chalk-dim);
+}
+.match-item.it-w {
+  font-family: 'Cormorant Garamond', serif;
+  color: var(--chalk); font-size: 1rem; font-weight: 600;
+}
+.match-item:hover:not(.matched):not(.wrong) { border-color: var(--border-strong); color: var(--chalk); }
+.match-item.selected { border-color: var(--tomato); background: var(--tomato-dim); color: var(--chalk); }
+.match-item.matched { border-color: var(--basil-dim); background: var(--basil-dim); color: var(--basil); opacity: 0.7; cursor: default; }
+.match-item.wrong { border-color: #e05050; background: rgba(224,80,80,0.1); animation: shake 0.4s; }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+
+/* SCORE BAR */
+.score-bar {
+  display: flex; align-items: center; justify-content: space-around;
+  background: var(--bg2); border-radius: 6px; padding: 14px 18px;
+  border: 1px solid var(--border); margin-bottom: 16px;
+}
+.score-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2rem; font-weight: 600; color: var(--gold);
+}
+.score-lbl {
+  font-size: 0.68rem; color: var(--chalk-dim);
+  text-transform: uppercase; letter-spacing: 0.1em; margin-top: 2px;
+}
+
+/* BUTTONS */
+.btn {
+  display: inline-block; padding: 10px 26px;
+  background: var(--tomato); color: #fff; border: none; border-radius: 4px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 500;
+  cursor: pointer; transition: all 0.18s; letter-spacing: 0.03em;
+}
+.btn:hover { background: #c93a20; transform: translateY(-1px); }
+.btn.sec {
+  background: transparent; color: var(--chalk-dim);
+  border: 1px solid var(--border-strong);
+}
+.btn.sec:hover { color: var(--chalk); border-color: var(--chalk); background: transparent; transform: none; }
+.btn-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+
+/* QUIZ PROGRESS */
+.quiz-progress { height: 3px; background: var(--chalk-faint); border-radius: 99px; margin-bottom: 24px; overflow: hidden; }
+.quiz-progress-fill { height: 100%; background: var(--tomato); border-radius: 99px; transition: width 0.4s; }
+
+/* QUIZ CARD */
+.quiz-card {
+  background: var(--bg2); border-radius: 8px; padding: 28px 22px;
+  text-align: center; border: 1px solid var(--border); margin-bottom: 16px;
+}
+.quiz-lbl {
+  font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.15em;
+  color: var(--chalk-faint); margin-bottom: 10px;
+}
+.quiz-word {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.5rem, 4.5vw, 2.2rem); font-weight: 600;
+  color: var(--chalk); margin-bottom: 4px;
+}
+.quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+.quiz-opt {
+  padding: 13px 10px; background: var(--bg2);
+  border: 1px solid var(--border); border-radius: 5px;
+  font-size: 0.85rem; cursor: pointer; transition: all 0.18s;
+  font-family: 'DM Sans', sans-serif; color: var(--chalk-dim); line-height: 1.3;
+}
+.quiz-opt:hover:not(.correct):not(.wrong) { border-color: var(--border-strong); color: var(--chalk); }
+.quiz-opt.correct { border-color: var(--basil); background: var(--basil-dim); color: var(--basil); font-weight: 600; }
+.quiz-opt.wrong { border-color: var(--tomato); background: var(--tomato-dim); color: #e8472a; }
+.quiz-fb { text-align: center; font-size: 0.85rem; margin-top: 10px; min-height: 22px; font-weight: 500; }
+.quiz-fb.good { color: var(--basil); } .quiz-fb.bad { color: var(--tomato); }
+.quiz-counter { font-size: 0.75rem; color: var(--chalk-faint); text-align: center; margin-bottom: 10px; letter-spacing: 0.06em; }
+.dots { display: flex; gap: 4px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--chalk-faint); transition: all 0.25s; }
+.dot.done { background: var(--basil); } .dot.active { background: var(--tomato); transform: scale(1.3); }
+
+/* FILL */
+.fill-card {
+  background: var(--bg2); border-radius: 8px; padding: 26px 22px;
+  border: 1px solid var(--border); margin-bottom: 16px;
+}
+.fill-sit {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem; font-weight: 400; font-style: italic;
+  color: var(--chalk); line-height: 1.7; margin-bottom: 16px;
+}
+.fill-in-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.fill-in {
+  flex: 1; min-width: 150px; padding: 11px 14px;
+  border: 1px solid var(--border-strong); border-radius: 4px;
+  font-family: 'Cormorant Garamond', serif; font-size: 1.1rem;
+  color: var(--chalk); outline: none; transition: border-color 0.18s;
+  background: rgba(255,255,255,0.04);
+}
+.fill-in:focus { border-color: var(--gold); }
+.fill-in.correct { border-color: var(--basil); background: var(--basil-dim); color: var(--basil); }
+.fill-in.wrong { border-color: var(--tomato); background: var(--tomato-dim); }
+.fill-fb { font-size: 0.85rem; margin-top: 10px; min-height: 20px; font-weight: 500; }
+.fill-fb.good { color: var(--basil); } .fill-fb.bad { color: var(--tomato); }
+
+/* RESULT */
+.result-screen { text-align: center; padding: 48px 20px; }
+.result-emoji { font-size: 3.5rem; margin-bottom: 12px; }
+.result-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.2rem; font-weight: 600; color: var(--chalk); margin-bottom: 8px;
+}
+.result-sub { color: var(--chalk-dim); margin-bottom: 24px; font-size: 0.9rem; }
+.result-score {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 3.5rem; font-weight: 600; color: var(--gold); line-height: 1;
+}
+.hidden { display: none !important; }
+
+/* ===== RECIPE GAME ===== */
+.recipe-selector { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 24px; }
+.recipe-card {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 8px;
+  padding: 22px 18px; cursor: pointer; transition: all 0.2s; text-align: center;
+}
+.recipe-card:hover { border-color: var(--tomato); transform: translateY(-2px); }
+.recipe-card.active { border-color: var(--tomato); background: var(--tomato-dim); }
+.recipe-emoji { font-size: 2.4rem; margin-bottom: 10px; }
+.recipe-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.15rem; font-weight: 600; color: var(--chalk); margin-bottom: 4px;
+}
+.recipe-desc { font-size: 0.78rem; color: var(--chalk-dim); }
+
+.recipe-intro {
+  background: var(--bg2); border-radius: 6px; padding: 16px 18px;
+  border: 1px solid var(--border); margin-bottom: 18px;
+  font-size: 0.85rem; color: var(--chalk-dim); line-height: 1.6; text-align: center;
+}
+.recipe-intro strong { color: var(--gold); }
+
+/* Step */
+.recipe-step {
+  background: var(--bg2); border-radius: 8px; padding: 20px 18px;
+  border: 1px solid var(--border); margin-bottom: 12px;
+}
+.step-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.step-num {
+  width: 30px; height: 30px; border-radius: 50%; background: var(--tomato);
+  color: #fff; display: flex; align-items: center; justify-content: center;
+  font-family: 'Cormorant Garamond', serif; font-size: 1rem; font-weight: 600;
+  flex-shrink: 0;
+}
+.step-title { font-family: 'Cormorant Garamond', serif; font-size: 1rem; font-weight: 600; color: var(--chalk); }
+.step-body { font-size: 0.88rem; line-height: 1.9; color: var(--chalk-dim); }
+.step-body .blank {
+  display: inline-block; min-width: 88px;
+  border-bottom: 1px solid var(--tomato);
+  text-align: center; margin: 0 3px; cursor: pointer;
+  font-family: 'Cormorant Garamond', serif; font-size: 1rem; font-weight: 600;
+  padding: 1px 6px; color: transparent; background: var(--tomato-dim);
+  border-radius: 3px; vertical-align: middle; transition: all 0.18s;
+}
+.step-body .blank.filled { color: var(--gold); background: var(--gold-dim); border-color: var(--gold); }
+.step-body .blank.correct { color: var(--basil); border-color: var(--basil); background: var(--basil-dim); }
+.step-body .blank.wrong { color: var(--tomato); border-color: var(--tomato); background: var(--tomato-dim); }
+
+/* Word bank */
+.word-bank-label {
+  font-size: 0.68rem; font-weight: 600; color: var(--gold);
+  text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 10px;
+}
+.word-bank { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 20px; }
+.word-chip {
+  padding: 7px 16px; background: var(--bg2); border: 1px solid var(--border-strong);
+  border-radius: 99px; font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem; font-weight: 600; color: var(--chalk);
+  cursor: pointer; transition: all 0.18s; user-select: none;
+}
+.word-chip:hover { border-color: var(--gold); color: var(--gold); }
+.word-chip.selected { background: var(--tomato); border-color: var(--tomato); color: #fff; }
+.word-chip.used { opacity: 0.25; pointer-events: none; text-decoration: line-through; }
+
+/* Ingredient list */
+.ingredient-list {
+  background: rgba(255,255,255,0.03); border-radius: 6px;
+  padding: 14px 16px; margin-bottom: 18px; border: 1px solid var(--border);
+}
+.ingredient-list h4 {
+  font-family: 'Cormorant Garamond', serif; color: var(--gold);
+  font-size: 0.88rem; font-style: italic; margin-bottom: 10px;
+}
+.ingredients-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 16px; }
+.ing-item {
+  font-size: 0.82rem; color: var(--chalk-dim);
+  padding: 4px 0; border-bottom: 1px solid var(--chalk-faint);
+}
+.ing-item em { color: var(--chalk); font-style: normal; font-weight: 500; }
+
+/* Recipe score */
+.recipe-progress-wrap { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.recipe-score-display {
+  background: var(--bg2); border-radius: 5px; padding: 8px 14px;
+  border: 1px solid var(--border);
+  font-family: 'Cormorant Garamond', serif; font-size: 1.3rem;
+  font-weight: 600; color: var(--gold); white-space: nowrap;
+}
+.recipe-pb-wrap { flex: 1; height: 3px; background: var(--chalk-faint); border-radius: 99px; overflow: hidden; }
+.recipe-pb { height: 100%; background: var(--basil); border-radius: 99px; transition: width 0.4s; }
+
+/* Tip box */
+.tip-box {
+  background: rgba(232,184,75,0.06); border-radius: 5px;
+  padding: 10px 14px; font-size: 0.78rem; color: var(--chalk-dim);
+  margin-bottom: 14px; border-left: 2px solid var(--gold); line-height: 1.6;
+}
+.tip-box strong { color: var(--gold); }
+
+/* New word badge */
+.new-badge {
+  display: inline-block; font-size: 0.6rem; font-weight: 600;
+  background: var(--gold-dim); border: 1px solid var(--gold);
+  color: var(--gold); border-radius: 3px; padding: 1px 5px; margin-left: 5px;
+  vertical-align: middle; text-transform: uppercase; letter-spacing: 0.06em;
+  font-family: 'DM Sans', sans-serif;
+}
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <div class="header-eyebrow">Adulti · Lezione 9</div>
+    <h1>Cibo &amp; sapori</h1>
+    <div class="sub">Prodotti, mercato, cucina italiana</div>
+    <p>Карточки · матчинг · тест · вписать · рецепт</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showSec('cards')">📚 Parole</button>
+    <button class="tab-btn" onclick="showSec('match')">🔗 Abbina</button>
+    <button class="tab-btn" onclick="showSec('quiz')">🎯 Quiz</button>
+    <button class="tab-btn" onclick="showSec('fill')">✏️ Scrivi</button>
+    <button class="tab-btn" onclick="showSec('recipe')">👨‍🍳 Ricetta</button>
+  </div>
+
+  <!-- CARDS -->
+  <div id="sec-cards">
+    <div class="cat-label">Cibo — frutta, verdura, carne</div>
+    <div class="cards-grid" id="g-food"></div>
+    <div class="cat-label">Negozi e acquisti</div>
+    <div class="cards-grid" id="g-shop"></div>
+    <div class="cat-label">Aggettivi — descrivere i prodotti</div>
+    <div class="cards-grid" id="g-adj"></div>
+    <div class="cat-label">Verbi in cucina</div>
+    <div class="cards-grid" id="g-verbs"></div>
+    <div class="cat-label">Al negozio — frasi e dialogo</div>
+    <div class="cards-grid" id="g-shop-phrases"></div>
+    <div class="cat-label">Cucina e ricette</div>
+    <div class="cards-grid" id="g-recipe"></div>
+    <div class="cat-label">Parole utili</div>
+    <div class="cards-grid" id="g-useful"></div>
+    <p style="text-align:center;color:var(--chalk-faint);font-size:0.75rem;margin-top:18px;font-style:italic;">1° tocco → definizione &amp; esempio · 2° tocco → traduzione</p>
+  </div>
+
+  <!-- MATCH -->
+  <div id="sec-match">
+    <div class="game-header"><h2>Abbina le parole</h2><p>Collega la parola italiana alla sua traduzione</p></div>
+    <div class="score-bar">
+      <div><div class="score-num" id="ms">0</div><div class="score-lbl">Coppie</div></div>
+      <div><div class="score-num" id="mt">0</div><div class="score-lbl">Totale</div></div>
+      <div><div class="score-num" id="me">0</div><div class="score-lbl">Errori</div></div>
+    </div>
+    <div class="match-board"><div class="match-col" id="ml"></div><div class="match-col" id="mr"></div></div>
+    <div class="btn-row"><button class="btn" onclick="initMatch()">🔄 Nuovo giro</button></div>
+    <div id="match-res" class="result-screen hidden">
+      <div class="result-emoji">🎉</div><div class="result-title">Bravissimo!</div>
+      <div class="result-sub">Tutte le coppie trovate!</div>
+      <div class="btn-row"><button class="btn" onclick="initMatch()">Ancora</button></div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="sec-quiz">
+    <div class="game-header"><h2>Quiz</h2><p>Scegli la traduzione corretta</p></div>
+    <div class="quiz-progress"><div class="quiz-progress-fill" id="qb"></div></div>
+    <div class="dots" id="qdots"></div>
+    <div class="quiz-counter" id="qcount"></div>
+    <div id="quiz-play">
+      <div class="quiz-card">
+        <div class="quiz-lbl" id="qdir">Italiano → Russo</div>
+        <div class="quiz-word" id="qword">—</div>
+      </div>
+      <div class="quiz-options" id="qopts"></div>
+      <div class="quiz-fb" id="qfb"></div>
+      <div class="btn-row"><button class="btn sec" id="qnext" onclick="nextQuiz()" style="display:none">Дальше →</button></div>
+    </div>
+    <div id="quiz-res" class="result-screen hidden">
+      <div class="result-emoji" id="qemoji">🏆</div><div class="result-title">Risultato</div>
+      <div class="result-score" id="qscore"></div><div class="result-sub" id="qsub"></div>
+      <div class="btn-row">
+        <button class="btn" onclick="initQuiz()">Di nuovo</button>
+        <button class="btn sec" onclick="initQuiz(true)">Solo errori</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILL -->
+  <div id="sec-fill">
+    <div class="game-header"><h2>Scrivi in italiano</h2><p>Inserisci la parola o la frase giusta</p></div>
+    <div class="quiz-progress"><div class="quiz-progress-fill" id="fb"></div></div>
+    <div class="quiz-counter" id="fcount"></div>
+    <div id="fill-play">
+      <div class="fill-card">
+        <div class="fill-sit" id="fsit"></div>
+        <div class="fill-in-row">
+          <input class="fill-in" id="fin" placeholder="Inserisci la risposta..." onkeydown="if(event.key==='Enter')checkFill()">
+          <button class="btn" onclick="checkFill()">→</button>
+        </div>
+        <div class="fill-fb" id="ffb"></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn sec" id="fskip" onclick="skipFill()">Salta</button>
+        <button class="btn sec hidden" id="fnext" onclick="nextFill()">Avanti →</button>
+      </div>
+    </div>
+    <div id="fill-res" class="result-screen hidden">
+      <div class="result-emoji" id="femoji">🌟</div><div class="result-title">Fatto!</div>
+      <div class="result-score" id="fscore"></div><div class="result-sub" id="frsub"></div>
+      <div class="btn-row"><button class="btn" onclick="initFill()">Di nuovo</button></div>
+    </div>
+  </div>
+
+  <!-- RECIPE GAME -->
+  <div id="sec-recipe">
+    <div class="game-header">
+      <h2>👨‍🍳 Ricetta</h2>
+      <p>Scegli una ricetta e completa gli spazi nei passaggi</p>
+    </div>
+    <div id="recipe-chooser">
+      <div class="recipe-intro">
+        Clicca su una ricetta per iniziare. Inserisci le parole dal banco negli spazi giusti.<br>
+        <strong>Parole nuove</strong> отмечены значком <span class="new-badge">NEW</span> — это бонус!
+      </div>
+      <div class="recipe-selector">
+        <div class="recipe-card" onclick="startRecipe(0)">
+          <div class="recipe-emoji">🍝</div>
+          <div class="recipe-name">Ragù bolognese</div>
+          <div class="recipe-desc">il classico sugo di carne emiliano</div>
+        </div>
+        <div class="recipe-card" onclick="startRecipe(1)">
+          <div class="recipe-emoji">🥗</div>
+          <div class="recipe-name">Insalata caprese</div>
+          <div class="recipe-desc">pomodori, mozzarella, basilico</div>
+        </div>
+        <div class="recipe-card" onclick="startRecipe(2)">
+          <div class="recipe-emoji">🧄</div>
+          <div class="recipe-name">Pasta aglio e olio</div>
+          <div class="recipe-desc">aglio, olio, peperoncino</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="recipe-game" class="hidden">
+      <div id="recipe-header-info" style="text-align:center;margin-bottom:16px;"></div>
+      <div class="recipe-progress-wrap">
+        <div class="recipe-score-display"><span id="rec-correct">0</span>/<span id="rec-total">0</span></div>
+        <div class="recipe-pb-wrap"><div class="recipe-pb" id="rec-pb" style="width:0%"></div></div>
+      </div>
+      <div id="ingredient-list-wrap"></div>
+      <div class="tip-box"><strong>Come si gioca:</strong> clicca su una parola → poi clicca sullo spazio nel testo. Clicca sullo spazio già compilato per restituire la parola.</div>
+      <div class="word-bank-label">Banco parole</div>
+      <div class="word-bank" id="word-bank"></div>
+      <div id="recipe-steps"></div>
+      <div class="btn-row">
+        <button class="btn" onclick="checkRecipe()">✓ Controlla</button>
+        <button class="btn sec" onclick="resetRecipe()">↺ Ricomincia</button>
+        <button class="btn sec" onclick="backToChooser()">← Altra ricetta</button>
+      </div>
+      <div class="quiz-fb" id="rec-fb" style="margin-top:14px;"></div>
+    </div>
+
+    <div id="recipe-done" class="result-screen hidden">
+      <div class="result-emoji" id="rec-emoji">🍽️</div>
+      <div class="result-title" id="rec-title">Buon appetito!</div>
+      <div class="result-score" id="rec-score"></div>
+      <div class="result-sub" id="rec-sub"></div>
+      <div class="btn-row">
+        <button class="btn" onclick="resetRecipe()">Riprova</button>
+        <button class="btn sec" onclick="backToChooser()">Altra ricetta</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===================== VOCAB =====================
+const vocab = [
+  // CIBO
+  { it:"il sapore", pos:"sost. m.", def:"La qualità del cibo che sentiamo con la lingua.", ex:"Questo sugo ha un sapore intenso e ricco.", ru:"вкус / аромат", cat:"food" },
+  { it:"preferito/a", pos:"agg.", def:"Quello che ci piace di più, il favorito.", ex:"La pizza è il mio piatto preferito.", ru:"любимый", cat:"food" },
+  { it:"il biscotto", pos:"sost. m.", def:"Un dolcetto secco e croccante, spesso si mangia a colazione.", ex:"Ho mangiato due biscotti con il caffè.", ru:"печенье", cat:"food" },
+  { it:"il cocomero", pos:"sost. m.", def:"Un frutto grande, verde fuori e rosso dentro, fresco d'estate.", ex:"D'estate mangio il cocomero ogni giorno.", ru:"арбуз", cat:"food" },
+  { it:"la carne macinata", pos:"sost. f.", def:"La carne tagliata in pezzi molto piccoli, usata per il ragù.", ex:"Per il ragù servo 300 grammi di carne macinata.", ru:"фарш (мясной)", cat:"food" },
+  { it:"la ciliegia", pos:"sost. f.", def:"Un piccolo frutto rosso dolce che matura in primavera.", ex:"Ho comprato un chilo di ciliegie al mercato.", ru:"вишня / черешня", cat:"food" },
+  { it:"la pesca", pos:"sost. f.", def:"Un frutto morbido e dolce, tipico dell'estate.", ex:"Questa pesca è matura e molto dolce.", ru:"персик", cat:"food" },
+  { it:"l'uovo", pos:"sost. m. (pl. le uova)", def:"Un alimento prodotto dalle galline, molto usato in cucina.", ex:"Per la frittata servono tre uova fresche.", ru:"яйцо (uova — яйца)", cat:"food" },
+  { it:"il salame", pos:"sost. m.", def:"Un salume di carne di maiale, stagionato e tagliato a fette.", ex:"Vuole il salame affettato sottile o grosso?", ru:"салями", cat:"food" },
+  { it:"il burro", pos:"sost. m.", def:"Un grasso giallo fatto con il latte, usato per cucinare e come condimento.", ex:"Aggiungi un po' di burro nella padella.", ru:"сливочное масло", cat:"food" },
+  { it:"il miele", pos:"sost. m.", def:"Un liquido dolce e dorato prodotto dalle api.", ex:"Metto il miele nel tè invece dello zucchero.", ru:"мёд", cat:"food" },
+  { it:"l'aglio", pos:"sost. m.", def:"Una verdura con spicchi piccoli e sapore molto forte, base della cucina italiana.", ex:"Taglia due spicchi d'aglio per il soffritto.", ru:"чеснок", cat:"food" },
+  { it:"la cipolla", pos:"sost. f.", def:"Una verdura rotonda con sapore forte, usata per il soffritto.", ex:"La cipolla e l'aglio sono la base di molte ricette.", ru:"лук", cat:"food" },
+  { it:"l'arancia", pos:"sost. f.", def:"Un frutto agrumato, arancione, ricco di vitamina C.", ex:"Vuoi una spremuta d'arancia fresca?", ru:"апельсин", cat:"food" },
+  { it:"l'uva", pos:"sost. f.", def:"Un frutto a grappolo, dolce, usato anche per fare il vino.", ex:"Ho comprato un chilo d'uva bianca.", ru:"виноград", cat:"food" },
+  { it:"la mortadella", pos:"sost. f.", def:"Un salume tipico di Bologna, rosa, con pezzetti di grasso bianco.", ex:"Un panino con la mortadella, per favore.", ru:"мортаделла (колбаса)", cat:"food" },
+  { it:"l'oliva", pos:"sost. f.", def:"Un piccolo frutto verde o nero usato per l'olio e come antipasto.", ex:"Vuoi le olive verdi o nere sull'insalata?", ru:"оливка", cat:"food" },
+  { it:"lo yogurt", pos:"sost. m.", def:"Un latticino cremoso fatto con latte fermentato.", ex:"Mangio uno yogurt alla frutta ogni mattina.", ru:"йогурт", cat:"food" },
+  { it:"il pasto", pos:"sost. m.", def:"Un momento in cui si mangia: colazione, pranzo o cena.", ex:"Il pranzo è il pasto principale in Italia.", ru:"приём пищи / трапеза", cat:"food" },
+  { it:"i salumi", pos:"sost. m. pl.", def:"Prodotti di carne stagionata: prosciutto, salame, mortadella.", ex:"Un tagliere di salumi misti come antipasto.", ru:"мясная нарезка / колбасы", cat:"food" },
+  { it:"il condimento", pos:"sost. m.", def:"Quello che si aggiunge al cibo per dare sapore: olio, sale, aceto.", ex:"Condisci l'insalata con olio e aceto.", ru:"приправа / заправка", cat:"food" },
+  { it:"il sedano", pos:"sost. m.", def:"Una verdura verde e croccante, usata nel soffritto con cipolla e carota.", ex:"Il sedano fa parte del soffritto classico.", ru:"сельдерей", cat:"food" },
+  { it:"la provola", pos:"sost. f.", def:"Un formaggio morbido e filante, tipico del Sud Italia.", ex:"Aggiungi la provola sulla pizza prima di infornarla.", ru:"провола (сыр)", cat:"food" },
+
+  // NEGOZIO
+  { it:"gli alimentari", pos:"sost. m. pl.", def:"Un piccolo negozio dove si comprano cibo e prodotti di base.", ex:"Vado agli alimentari sotto casa a comprare il latte.", ru:"продуктовый магазин", cat:"shop" },
+  { it:"il panificio", pos:"sost. m.", def:"Un negozio o laboratorio dove si produce e vende il pane.", ex:"Il panificio apre alle sei di mattina.", ru:"булочная / пекарня", cat:"shop" },
+  { it:"la macelleria", pos:"sost. m.", def:"Un negozio specializzato nella vendita di carne.", ex:"Compro sempre la carne fresca in macelleria.", ru:"мясная лавка", cat:"shop" },
+  { it:"il pacco", pos:"sost. m.", def:"Una confezione o un involucro in cui si mette un prodotto.", ex:"Un pacco di pasta da 500 grammi.", ru:"упаковка / пакет", cat:"shop" },
+  { it:"l'etto", pos:"sost. m.", def:"Un'unità di misura pari a 100 grammi, usata nei negozi.", ex:"Mi dà due etti di prosciutto cotto, per favore?", ru:"100 грамм (гектограмм)", cat:"shop" },
+  { it:"il chilo", pos:"sost. m.", def:"Un'unità di misura pari a 1000 grammi (= un chilogrammo).", ex:"Vorrei un chilo di pomodori freschi.", ru:"килограмм (разг.)", cat:"shop" },
+  { it:"il prodotto", pos:"sost. m.", def:"Un articolo che si vende o compra.", ex:"Questo prodotto è biologico e locale.", ru:"продукт / товар", cat:"shop" },
+  { it:"il vasetto", pos:"sost. m.", def:"Un piccolo contenitore di vetro con il tappo, per conserve o yogurt.", ex:"Un vasetto di miele artigianale.", ru:"баночка (маленькая)", cat:"shop" },
+  { it:"la confezione", pos:"sost. f.", def:"Il pacchetto o contenitore in cui viene venduto un prodotto.", ex:"Compra una confezione di biscotti per la merenda.", ru:"упаковка / пачка", cat:"shop" },
+  { it:"la maionese", pos:"sost. f.", def:"Una salsa cremosa bianca fatta con uova e olio.", ex:"Vuole la maionese nel panino?", ru:"майонез", cat:"shop" },
+  { it:"la cassa", pos:"sost. f.", def:"Il posto dove si paga al supermercato o al negozio.", ex:"Paga alla cassa numero 3.", ru:"касса", cat:"shop" },
+  { it:"il centesimo", pos:"sost. m.", def:"La moneta più piccola dell'euro: un euro vale 100 centesimi.", ex:"Il resto è di 50 centesimi.", ru:"евроцент", cat:"shop" },
+  { it:"a lunga conservazione", pos:"loc. agg.", def:"Si dice di un prodotto che si può conservare a lungo senza andare a male.", ex:"Il latte a lunga conservazione si conserva per mesi.", ru:"длительного хранения", cat:"shop" },
+  { it:"intero/a", pos:"agg.", def:"Completo, non tagliato o diviso in parti.", ex:"Vuole la forma di parmigiano intera o a pezzi?", ru:"целый / полный", cat:"shop" },
+  { it:"nient'altro", pos:"loc.", def:"Nessun'altra cosa — si usa per dire che non si vuole comprare altro.", ex:"— Altro? — No, grazie, nient'altro.", ru:"больше ничего", cat:"shop" },
+
+  // AGGETTIVI
+  { it:"affettato/a", pos:"agg.", def:"Tagliato in fette, a fettine.", ex:"Vuole il prosciutto affettato sottile?", ru:"нарезанный (ломтиками)", cat:"adj" },
+  { it:"sottile", pos:"agg.", def:"Di spessore piccolo, non grosso.", ex:"Taglia il prosciutto molto sottile, per favore.", ru:"тонкий", cat:"adj" },
+  { it:"magro/a", pos:"agg.", def:"Con poco grasso. Per la carne: che contiene poco grasso.", ex:"Preferisco la carne magra.", ru:"нежирный / постный", cat:"adj" },
+  { it:"stagionato/a", pos:"agg.", def:"Lasciato maturare per un lungo periodo — si dice di formaggi e salumi.", ex:"Il parmigiano stagionato ha un sapore molto intenso.", ru:"выдержанный (о сыре)", cat:"adj" },
+  { it:"grosso/a", pos:"agg.", def:"Di dimensione grande, spesso.", ex:"Taglia le fette grosse per il pane abbrustolito.", ru:"толстый / крупный", cat:"adj" },
+  { it:"piuttosto", pos:"avv.", def:"Abbastanza, in modo considerevole.", ex:"Questo formaggio è piuttosto stagionato.", ru:"довольно / скорее", cat:"adj" },
+
+  // FRASI AL NEGOZIO
+  { it:"guardi", pos:"v. imper. (voi.)", def:"Forma di cortesia per attirare l'attenzione di qualcuno.", ex:"Guardi, abbiamo anche il prosciutto cotto.", ru:"посмотрите (вежл.)", cat:"shop-phrases" },
+  { it:"ecco fatto", pos:"loc.", def:"Espressione che indica che qualcosa è terminato, pronto.", ex:"— Trecentocinquanta grammi. — Ecco fatto!", ru:"вот и всё / готово", cat:"shop-phrases" },
+  { it:"si accomodi", pos:"v. imper. (voi.)", def:"Forma di cortesia: invitare qualcuno ad avvicinarsi o sistemarsi.", ex:"Si accomodi alla cassa, prego.", ru:"пожалуйста, проходите (вежл.)", cat:"shop-phrases" },
+  { it:"l'abitudine", pos:"sost. f.", def:"Un'azione che si fa regolarmente, di solito senza pensarci.", ex:"Fare la spesa il sabato è la mia abitudine.", ru:"привычка", cat:"shop-phrases" },
+  { it:"la risposta", pos:"sost. f.", def:"Quello che si dice o scrive in risposta a una domanda.", ex:"Non ho ancora la risposta per te.", ru:"ответ", cat:"shop-phrases" },
+  { it:"il frigo", pos:"sost. m.", def:"Il frigorifero — elettrodomestico che conserva il cibo al freddo (forma colloquiale).", ex:"Metti il formaggio in frigo.", ru:"холодильник (разг.)", cat:"shop-phrases" },
+  { it:"all'ultimo momento", pos:"loc. avv.", def:"Molto tardi, quando non c'è quasi più tempo.", ex:"Ho comprato il pane all'ultimo momento prima che chiudesse.", ru:"в последний момент", cat:"shop-phrases" },
+
+  // VERBI IN CUCINA
+  { it:"cuocere", pos:"v.", def:"Preparare il cibo con il calore: in forno, in padella, in acqua.", ex:"Cuoci la pasta per dieci minuti.", ru:"готовить / варить / жарить", cat:"verbs" },
+  { it:"versare", pos:"v.", def:"Far scorrere un liquido da un contenitore in un altro.", ex:"Versa l'acqua nella pentola.", ru:"наливать / добавлять", cat:"verbs" },
+  { it:"mescolare", pos:"v.", def:"Girare gli ingredienti insieme per mischiarli.", ex:"Mescola il sugo con il cucchiaio di legno.", ru:"мешать / перемешивать", cat:"verbs" },
+  { it:"aggiungere", pos:"v.", def:"Mettere qualcosa in più, unire un ingrediente a quello che c'è già.", ex:"Aggiungi un pizzico di sale alla pasta.", ru:"добавлять", cat:"verbs" },
+  { it:"tagliare", pos:"v.", def:"Dividere il cibo in pezzi con un coltello.", ex:"Taglia la cipolla a pezzi piccoli.", ru:"резать / нарезать", cat:"verbs" },
+  { it:"togliere", pos:"v.", def:"Rimuovere, levare qualcosa da dove si trova.", ex:"Togli la padella dal fuoco.", ru:"убирать / снимать", cat:"verbs" },
+  { it:"spezzare", pos:"v.", def:"Rompere qualcosa con le mani in più pezzi.", ex:"Spezza gli spaghetti a metà prima di cuocerli.", ru:"ломать / разламывать", cat:"verbs" },
+  { it:"pulire", pos:"v.", def:"Lavare e togliere lo sporco o le parti non utili.", ex:"Pulisci le verdure prima di tagliarle.", ru:"чистить / мыть", cat:"verbs" },
+  { it:"condire", pos:"v.", def:"Aggiungere olio, sale, pepe o altre spezie al cibo.", ex:"Condisci l'insalata con olio e limone.", ru:"заправлять / приправлять", cat:"verbs" },
+  { it:"diventare", pos:"v.", def:"Trasformarsi, cambiare e assumere una qualità diversa.", ex:"Il sugo diventa più denso dopo 20 minuti.", ru:"становиться", cat:"verbs" },
+  { it:"costituire", pos:"v.", def:"Formare, fare parte di qualcosa insieme ad altre cose.", ex:"Il soffritto costituisce la base di molte ricette.", ru:"составлять / формировать", cat:"verbs" },
+
+  // RICETTE
+  { it:"la ricetta", pos:"sost. f.", def:"Le istruzioni per preparare un piatto: ingredienti e passaggi.", ex:"Hai la ricetta della pasta al pesto?", ru:"рецепт", cat:"recipe" },
+  { it:"il sugo", pos:"sost. m.", def:"Una salsa, spesso di pomodoro, per condire la pasta.", ex:"Il sugo di pomodoro deve cuocere almeno venti minuti.", ru:"соус / подливка", cat:"recipe" },
+  { it:"il ragù", pos:"sost. m.", def:"Un sugo di carne macinata cotto lentamente con pomodoro.", ex:"Il ragù bolognese si mangia con le tagliatelle.", ru:"рагу (мясной соус)", cat:"recipe" },
+  { it:"la passata di pomodoro", pos:"sost. f.", def:"I pomodori frullati e setacciati, pronti per fare il sugo.", ex:"Versa la passata di pomodoro nella padella.", ru:"томатная пассата", cat:"recipe" },
+  { it:"la scarpetta", pos:"sost. f.", def:"Il gesto di pulire il piatto con il pane per raccogliere il sugo.", ex:"Faccio sempre la scarpetta — il sugo è troppo buono!", ru:"«корочка» — хлеб для соуса", cat:"recipe" },
+  { it:"il tempo di cottura", pos:"sost. m.", def:"Il tempo necessario per cucinare qualcosa.", ex:"Il tempo di cottura del ragù è di circa un'ora.", ru:"время приготовления", cat:"recipe" },
+  { it:"esclusivamente", pos:"avv.", def:"Solo e soltanto, senza eccezioni.", ex:"Uso esclusivamente olio extravergine di oliva.", ru:"исключительно", cat:"recipe" },
+  { it:"l'olio extravergine di oliva", pos:"sost. m.", def:"Il miglior olio d'oliva, ottenuto dalla prima spremitura a freddo.", ex:"Condisci con olio extravergine di oliva italiano.", ru:"оливковое масло первого отжима", cat:"recipe" },
+];
+
+const catMap = {
+  food:"g-food", shop:"g-shop", adj:"g-adj", verbs:"g-verbs",
+  "shop-phrases":"g-shop-phrases", recipe:"g-recipe"
+};
+
+function renderCards() {
+  Object.values(catMap).forEach(id => { const el=document.getElementById(id); if(el) el.innerHTML=''; });
+  vocab.forEach(v => {
+    const el = document.createElement('div'); el.className = 'card'; el.dataset.side = '0';
+    el.innerHTML = `
+      <div class="card-dots">
+        <div class="card-dot active"></div>
+        <div class="card-dot"></div>
+        <div class="card-dot"></div>
+      </div>
+      <div class="card-face">
+        <div class="face-word">
+          <div class="card-pos">${v.pos||''}</div>
+          <div class="card-word-it">${v.it}</div>
+          <div class="card-def">${v.def}</div>
+          <div class="card-ex">"${v.ex}"</div>
+        </div>
+        <div class="face-def">
+          <div class="card-ex-label">esempio</div>
+          <div class="card-word-it">${v.it}</div>
+          <div class="card-ex">"${v.ex}"</div>
+        </div>
+        <div class="face-ru">
+          <div class="card-pos">${v.pos||''}</div>
+          <div class="card-word-it">${v.it}</div>
+          <div class="card-ru-main">${v.ru}</div>
+        </div>
+      </div>
+      <div class="card-tap">tocca →</div>
+    `;
+    el.onclick = () => {
+      const cur = parseInt(el.dataset.side);
+      const next = (cur + 1) % 3;
+      el.dataset.side = next;
+      el.querySelectorAll('.card-dot').forEach((d,i) => {
+        d.className = 'card-dot' + (i<next?' done':i===next?' active':'');
+      });
+    };
+    const g = document.getElementById(catMap[v.cat]); if(g) g.appendChild(el);
+  });
+}
+
+function showSec(n) {
+  ['cards','match','quiz','fill','recipe'].forEach(s => {
+    document.getElementById('sec-'+s).style.display = s===n?'block':'none';
+  });
+  document.querySelectorAll('.tab-btn').forEach((b,i) => {
+    b.classList.toggle('active', ['cards','match','quiz','fill','recipe'][i]===n);
+  });
+  if(n==='match') initMatch();
+  if(n==='quiz') initQuiz();
+  if(n==='fill') initFill();
+}
+
+function shuffle(a){ return [...a].sort(()=>Math.random()-0.5); }
+
+// ===================== MATCH =====================
+let mSel=null, mScore=0, mErr=0;
+function initMatch() {
+  const pool=shuffle(vocab).slice(0,8); mScore=0; mErr=0;
+  ['ms','me'].forEach(id=>document.getElementById(id).textContent=0);
+  document.getElementById('mt').textContent=pool.length;
+  document.getElementById('match-res').classList.add('hidden');
+  mSel=null;
+  const L=document.getElementById('ml'), R=document.getElementById('mr');
+  L.innerHTML=''; R.innerHTML='';
+  shuffle(pool).forEach(v=>{
+    const el=document.createElement('div'); el.className='match-item it-w';
+    el.textContent=v.it; el.dataset.key=v.it; el.dataset.side='it';
+    el.onclick=()=>hMatch(el); L.appendChild(el);
+  });
+  shuffle(pool).forEach(v=>{
+    const el=document.createElement('div'); el.className='match-item ru-w';
+    el.textContent=v.ru; el.dataset.key=v.it; el.dataset.side='ru';
+    el.onclick=()=>hMatch(el); R.appendChild(el);
+  });
+}
+function hMatch(el) {
+  if(el.classList.contains('matched')||el.classList.contains('wrong')) return;
+  if(!mSel){ document.querySelectorAll('.match-item').forEach(e=>e.classList.remove('selected')); el.classList.add('selected'); mSel=el; return; }
+  if(el===mSel){ el.classList.remove('selected'); mSel=null; return; }
+  if(el.dataset.side===mSel.dataset.side){ document.querySelectorAll('.match-item').forEach(e=>e.classList.remove('selected')); el.classList.add('selected'); mSel=el; return; }
+  if(el.dataset.key===mSel.dataset.key) {
+    el.classList.add('matched'); mSel.classList.add('matched'); el.classList.remove('selected'); mSel.classList.remove('selected');
+    mScore++; document.getElementById('ms').textContent=mScore; mSel=null;
+    if(mScore===parseInt(document.getElementById('mt').textContent)) setTimeout(()=>document.getElementById('match-res').classList.remove('hidden'),500);
+  } else {
+    el.classList.add('wrong'); mSel.classList.add('wrong'); mErr++; document.getElementById('me').textContent=mErr;
+    const a=el,b=mSel; mSel=null;
+    setTimeout(()=>{ a.classList.remove('wrong','selected'); b.classList.remove('wrong','selected'); },700);
+  }
+}
+
+// ===================== QUIZ =====================
+let qItems=[],qIdx=0,qCorrect=0,qAnswered=false,qMistakes=[];
+function initQuiz(onlyErr=false) {
+  document.getElementById('quiz-res').classList.add('hidden');
+  document.getElementById('quiz-play').classList.remove('hidden');
+  qItems=shuffle(onlyErr&&qMistakes.length?qMistakes:vocab).slice(0,onlyErr?qMistakes.length:15);
+  qMistakes=[]; qIdx=0; qCorrect=0;
+  document.getElementById('qdots').innerHTML=qItems.map((_,i)=>`<div class="dot ${i===0?'active':''}" id="d${i}"></div>`).join('');
+  showQuiz();
+}
+function showQuiz() {
+  if(qIdx>=qItems.length){ endQuiz(); return; }
+  const v=qItems[qIdx]; qAnswered=false;
+  const dir=Math.random()>0.5;
+  document.getElementById('qdir').textContent=dir?'Italiano → Russo':'Russo → Italiano';
+  document.getElementById('qword').textContent=dir?v.it:v.ru;
+  document.getElementById('qfb').textContent=''; document.getElementById('qfb').className='quiz-fb';
+  document.getElementById('qnext').style.display='none';
+  document.getElementById('qcount').textContent=`Domanda ${qIdx+1} di ${qItems.length}`;
+  document.getElementById('qb').style.width=(qIdx/qItems.length*100)+'%';
+  document.querySelectorAll('.dot').forEach((d,i)=>{ d.className='dot'+(i<qIdx?' done':i===qIdx?' active':''); });
+  const wrong=shuffle(vocab.filter(x=>x.it!==v.it)).slice(0,3);
+  const opts=shuffle([v,...wrong]);
+  const optEl=document.getElementById('qopts'); optEl.innerHTML='';
+  opts.forEach(o=>{
+    const btn=document.createElement('button'); btn.className='quiz-opt';
+    btn.textContent=dir?o.ru:o.it;
+    btn.onclick=()=>{
+      if(qAnswered) return; qAnswered=true;
+      const ok=o.it===v.it; btn.classList.add(ok?'correct':'wrong');
+      if(!ok){ qMistakes.push(v); optEl.querySelectorAll('button').forEach(b=>{if(b.textContent===(dir?v.ru:v.it))b.classList.add('correct');}); document.getElementById('qfb').textContent=`Risposta: ${dir?v.ru:v.it}`; document.getElementById('qfb').className='quiz-fb bad'; }
+      else { qCorrect++; document.getElementById('qfb').textContent='✓ Bravo!'; document.getElementById('qfb').className='quiz-fb good'; }
+      document.getElementById('qnext').style.display='inline-block';
+    };
+    optEl.appendChild(btn);
+  });
+}
+function nextQuiz(){ qIdx++; showQuiz(); }
+function endQuiz() {
+  document.getElementById('quiz-play').classList.add('hidden');
+  document.getElementById('quiz-res').classList.remove('hidden');
+  const pct=Math.round(qCorrect/qItems.length*100);
+  document.getElementById('qscore').textContent=`${qCorrect}/${qItems.length}`;
+  document.getElementById('qsub').textContent=`${pct}% di risposte corrette`;
+  document.getElementById('qemoji').textContent=pct>=80?'🏆':pct>=50?'👍':'📖';
+}
+
+// ===================== FILL =====================
+const fillTasks = [
+  { s:"Vorrei un ___ di prosciutto crudo.", a:"etto" },
+  { s:"Mi dà un ___ di parmigiano intero?", a:"chilo" },
+  { s:"Vado al ___ a comprare il pane.", a:"panificio" },
+  { s:"Compro la carne in ___ .", a:"macelleria" },
+  { s:"Il caffè ha un ___ intenso.", a:"sapore" },
+  { s:"Hai un ___ di olive?", a:"vasetto" },
+  { s:"Vuole il prosciutto ___ o grosso?", a:"sottile" },
+  { s:"Questa mozzarella è a ___ conservazione.", a:"lunga" },
+  { s:"La pasta al pomodoro è la mia ___ .", a:"preferita" },
+  { s:"Aggiungi ___ e ___ per il soffritto.", a:"aglio / cipolla" },
+  { s:"___ il sugo per 20 minuti a fuoco basso.", a:"cuoci" },
+  { s:"Alla fine ___ la pasta con olio e pepe.", a:"condisci" },
+  { s:"___ le verdure a pezzi piccoli.", a:"taglia" },
+  { s:"___ il sugo con il cucchiaio di legno.", a:"mescola" },
+  { s:"___ la passata di pomodoro nella padella.", a:"versa" },
+  { s:"Qual è il tuo prodotto alimentare ___?", a:"preferito" },
+  { s:"Nient'___ — solo queste cose grazie.", a:"altro" },
+  { s:"Il conto è 4 euro e 50 ___.", a:"centesimi" },
+  { s:"Il ___ è il mio piatto preferito d'estate.", a:"cocomero" },
+  { s:"Questa ricetta ha un ___ di cottura di 30 minuti.", a:"tempo" },
+  { s:"___ il soffritto di aglio e cipolla.", a:"pulisci" },
+  { s:"Questa stagione preferisco la ___.", a:"pesca" },
+  { s:"___ le uova con il burro in padella.", a:"aggiungi" },
+  { s:"Metti il sugo nel ___ in frigo.", a:"vasetto" },
+];
+
+let fIdx=0,fCorrect=0,fItems=[];
+function initFill() {
+  fItems=shuffle(fillTasks); fIdx=0; fCorrect=0;
+  document.getElementById('fill-res').classList.add('hidden');
+  document.getElementById('fill-play').classList.remove('hidden');
+  showFill();
+}
+function showFill() {
+  if(fIdx>=fItems.length){ endFill(); return; }
+  const t=fItems[fIdx];
+  document.getElementById('fsit').textContent=t.s;
+  document.getElementById('fin').value='';
+  document.getElementById('fin').className='fill-in';
+  document.getElementById('ffb').textContent='';
+  document.getElementById('ffb').className='fill-fb';
+  document.getElementById('fcount').textContent=`Esercizio ${fIdx+1} di ${fItems.length}`;
+  document.getElementById('fb').style.width=(fIdx/fItems.length*100)+'%';
+  document.getElementById('fskip').classList.remove('hidden');
+  document.getElementById('fnext').classList.add('hidden');
+  document.getElementById('fin').disabled=false;
+  setTimeout(()=>document.getElementById('fin').focus(),80);
+}
+function norm(s){ return s.toLowerCase().trim().replace(/[!?.,]/g,''); }
+function checkFill() {
+  const t=fItems[fIdx]; const val=document.getElementById('fin').value; if(!val.trim()) return;
+  const answers=t.a.split('/').map(a=>norm(a));
+  const ok=answers.some(a=>norm(val)===a||norm(val)===a.replace(/[aeiouàèéìòùo]$/,''));
+  document.getElementById('fin').classList.add(ok?'correct':'wrong');
+  document.getElementById('fin').disabled=true;
+  if(ok){ fCorrect++; document.getElementById('ffb').textContent='✓ Bravo!'; document.getElementById('ffb').className='fill-fb good'; }
+  else { document.getElementById('ffb').textContent=`✗ Risposta: ${t.a}`; document.getElementById('ffb').className='fill-fb bad'; }
+  document.getElementById('fskip').classList.add('hidden');
+  document.getElementById('fnext').classList.remove('hidden');
+}
+function skipFill() {
+  const t=fItems[fIdx];
+  document.getElementById('ffb').textContent=`Risposta corretta: ${t.a}`;
+  document.getElementById('ffb').className='fill-fb bad';
+  document.getElementById('fin').disabled=true;
+  document.getElementById('fskip').classList.add('hidden');
+  document.getElementById('fnext').classList.remove('hidden');
+}
+function nextFill(){ fIdx++; showFill(); }
+function endFill() {
+  document.getElementById('fill-play').classList.add('hidden');
+  document.getElementById('fill-res').classList.remove('hidden');
+  const pct=Math.round(fCorrect/fItems.length*100);
+  document.getElementById('fscore').textContent=`${fCorrect}/${fItems.length}`;
+  document.getElementById('frsub').textContent=`${pct}% di risposte corrette`;
+  document.getElementById('femoji').textContent=pct>=80?'🌟':pct>=50?'📝':'🛒';
+}
+
+// ===================== RECIPE GAME =====================
+// Each blank: { id, answer, display (what shows after correct), isNew (show badge) }
+// Steps: array of { title, parts: array of string | {blank} }
+
+const recipes = [
+  {
+    name: "Ragù bolognese",
+    emoji: "🍝",
+    desc: "Classico sugo di carne per la pasta — il re della cucina emiliana.",
+    ingredients: [
+      { q:"300 g", it:"carne macinata", ru:"фарш", isNew:false },
+      { q:"1", it:"cipolla", ru:"лук", isNew:false },
+      { q:"2 spicchi", it:"aglio", ru:"чеснок", isNew:false },
+      { q:"1 gambo", it:"sedano", ru:"сельдерей", isNew:false },
+      { q:"400 ml", it:"passata di pomodoro", ru:"томатная пассата", isNew:false },
+      { q:"1 bicchiere", it:"vino rosso", ru:"красное вино", isNew:true },
+      { q:"q.b.", it:"olio extravergine di oliva", ru:"оливковое масло", isNew:false },
+      { q:"q.b.", it:"sale e pepe", ru:"соль и перец", isNew:true },
+    ],
+    steps: [
+      {
+        title: "Soffritto",
+        parts: ["Prima ", {blank:"taglia", answer:"taglia", ru:"нарезать"}, " la cipolla, il sedano e l'aglio a pezzi piccoli."]
+      },
+      {
+        title: "In padella",
+        parts: ["Poi ", {blank:"versa", answer:"versa", ru:"налить"}, " un po' di olio in padella e ", {blank:"aggiungi", answer:"aggiungi", ru:"добавить"}, " le verdure."]
+      },
+      {
+        title: "La carne",
+        parts: [{blank:"Aggiunge", answer:"aggiungi", ru:"добавить"}, " la carne macinata e ", {blank:"mescola", answer:"mescola", ru:"перемешать"}, " bene."]
+      },
+      {
+        title: "Il vino",
+        parts: ["Quando la carne è dorata, ", {blank:"versa", answer:"versa", ru:"налить"}, " il vino rosso e aspetta che evapori."]
+      },
+      {
+        title: "Il sugo",
+        parts: ["Ora ", {blank:"aggiungi", answer:"aggiungi", ru:"добавить"}, " la passata di pomodoro e ", {blank:"cuoci", answer:"cuoci", ru:"готовить"}, " a fuoco basso per 40 minuti."]
+      },
+      {
+        title: "Condire",
+        parts: ["Alla fine ", {blank:"condisci", answer:"condisci", ru:"приправить"}, " con sale e pepe. Il ragù è pronto!"]
+      },
+    ],
+    bankWords: ["taglia","versa","aggiungi","mescola","cuoci","condisci"]
+  },
+
+  {
+    name: "Insalata caprese",
+    emoji: "🥗",
+    desc: "Semplicissima e buonissima — i colori della bandiera italiana nel piatto.",
+    ingredients: [
+      { q:"3", it:"pomodori grandi", ru:"большие помидоры", isNew:true },
+      { q:"250 g", it:"mozzarella", ru:"моцарелла", isNew:true },
+      { q:"qualche foglia", it:"basilico fresco", ru:"свежий базилик", isNew:true },
+      { q:"q.b.", it:"olio extravergine di oliva", ru:"оливковое масло", isNew:false },
+      { q:"q.b.", it:"sale", ru:"соль", isNew:true },
+      { q:"a piacere", it:"pepe nero", ru:"чёрный перец", isNew:true },
+    ],
+    steps: [
+      {
+        title: "I pomodori",
+        parts: ["Prima ", {blank:"taglia", answer:"taglia", ru:"нарезать"}, " i pomodori a fette (ломтиками) non troppo sottili."]
+      },
+      {
+        title: "La mozzarella",
+        parts: ["Poi ", {blank:"taglia", answer:"taglia", ru:"нарезать"}, " anche la mozzarella a fette della stessa grandezza."]
+      },
+      {
+        title: "Il piatto",
+        parts: ["Disponi (разложи) i pomodori e la mozzarella alternati sul piatto. ", {blank:"aggiungi", answer:"aggiungi", ru:"добавить"}, " le foglie di basilico sopra."]
+      },
+      {
+        title: "Condire",
+        parts: ["Infine (наконец) ", {blank:"condisci", answer:"condisci", ru:"заправить"}, " con olio extravergine e ", {blank:"aggiungi", answer:"aggiungi", ru:"добавить"}, " sale a piacere."]
+      },
+      {
+        title: "Servire",
+        parts: ["", {blank:"servi", answer:"servi", ru:"подать"}, " subito — la caprese è migliore fresca!"]
+      },
+    ],
+    bankWords: ["taglia","aggiungi","condisci","servi"]
+  },
+
+  {
+    name: "Pasta aglio e olio",
+    emoji: "🧄",
+    desc: "Il piatto della mezzanotte — veloce, saporito e con pochissimi ingredienti.",
+    ingredients: [
+      { q:"320 g", it:"spaghetti", ru:"спагетти", isNew:true },
+      { q:"4 spicchi", it:"aglio", ru:"чеснок", isNew:false },
+      { q:"1 peperoncino", it:"peperoncino rosso", ru:"красный перчик чили", isNew:true },
+      { q:"abbondante", it:"olio extravergine di oliva", ru:"оливковое масло", isNew:false },
+      { q:"q.b.", it:"prezzemolo fresco", ru:"свежая петрушка", isNew:true },
+      { q:"q.b.", it:"sale", ru:"соль", isNew:true },
+    ],
+    steps: [
+      {
+        title: "L'acqua",
+        parts: ["Prima ", {blank:"versa", answer:"versa", ru:"налить"}, " l'acqua in una pentola grande e ", {blank:"cuoci", answer:"cuoci", ru:"вари"}, " a fuoco alto fino all'ebollizione (до кипения). ", {blank:"aggiungi", answer:"aggiungi", ru:"добавь"}, " il sale."]
+      },
+      {
+        title: "L'aglio",
+        parts: [{blank:"taglia", answer:"taglia", ru:"нарезать"}, " l'aglio a fette sottili. In una padella grande ", {blank:"versa", answer:"versa", ru:"налей"}, " abbondante olio."]
+      },
+      {
+        title: "Soffritto",
+        parts: [{blank:"aggiungi", answer:"aggiungi", ru:"добавь"}, " l'aglio e il peperoncino nell'olio freddo e scalda (нагрей) a fuoco basso. ", {blank:"mescola", answer:"mescola", ru:"мешай"}, " spesso."]
+      },
+      {
+        title: "La pasta",
+        parts: ["Quando l'acqua bolle (кипит), ", {blank:"cuoci", answer:"cuoci", ru:"вари"}, " gli spaghetti al dente secondo le istruzioni."]
+      },
+      {
+        title: "Unire",
+        parts: ["Scola (слей) la pasta e ", {blank:"versa", answer:"versa", ru:"влей"}, " gli spaghetti nella padella con l'aglio. ", {blank:"mescola", answer:"mescola", ru:"перемешай"}, " bene a fuoco medio."]
+      },
+      {
+        title: "Finire",
+        parts: [{blank:"aggiungi", answer:"aggiungi", ru:"добавь"}, " il prezzemolo tritato (мелко нарезанный) e ", {blank:"servi", answer:"servi", ru:"подай"}, " subito. Buon appetito!"]
+      },
+    ],
+    bankWords: ["versa","cuoci","aggiungi","taglia","mescola","servi"]
+  }
+];
+
+// Conjugation map — accept different forms of same verb
+const verbForms = {
+  "taglia": ["taglia","tagliare","tagli"],
+  "versa": ["versa","versare"],
+  "aggiungi": ["aggiungi","aggiunge","aggiungere","aggiungete"],
+  "mescola": ["mescola","mescolare"],
+  "cuoci": ["cuoci","cuocere","cuoce"],
+  "condisci": ["condisci","condire","condisce"],
+  "servi": ["servi","serve","servire"],
+};
+
+let currentRecipe = null;
+let selectedChip = null;
+let recCorrect = 0;
+let recTotal = 0;
+
+function startRecipe(idx) {
+  currentRecipe = recipes[idx];
+  selectedChip = null;
+  document.getElementById('recipe-chooser').classList.add('hidden');
+  document.getElementById('recipe-done').classList.add('hidden');
+  document.getElementById('recipe-game').classList.remove('hidden');
+
+  // Header
+  document.getElementById('recipe-header-info').innerHTML =
+    `<div style="font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--terracotta);">${currentRecipe.emoji} ${currentRecipe.name}</div>
+     <div style="font-size:0.85rem;color:#8a7060;margin-top:4px;font-style:italic;">${currentRecipe.desc}</div>`;
+
+  // Ingredients
+  const ingHtml = `
+    <div class="ingredient-list">
+      <h4>Ingredienti</h4>
+      <div class="ingredients-grid">
+        ${currentRecipe.ingredients.map(ing => `
+          <div class="ing-item">
+            <em>${ing.q}</em> ${ing.it}${ing.isNew?'<span class="new-badge">NEW</span>':''}<br>
+            <span style="font-size:0.75rem;color:#a09080;">${ing.ru}</span>
+          </div>`).join('')}
+      </div>
+    </div>`;
+  document.getElementById('ingredient-list-wrap').innerHTML = ingHtml;
+
+  // Count blanks
+  recTotal = 0;
+  currentRecipe.steps.forEach(step => {
+    step.parts.forEach(p => { if(typeof p === 'object') recTotal++; });
+  });
+  recCorrect = 0;
+  updateRecipeScore();
+
+  // Word bank
+  renderWordBank();
+
+  // Steps
+  renderSteps();
+}
+
+function renderWordBank() {
+  const bank = document.getElementById('word-bank');
+  bank.innerHTML = '';
+  // Collect how many times each word is needed
+  const needed = {};
+  currentRecipe.steps.forEach(step => {
+    step.parts.forEach(p => {
+      if(typeof p === 'object') needed[p.answer] = (needed[p.answer]||0)+1;
+    });
+  });
+  const pool = currentRecipe.bankWords;
+  const extra = shuffle([...pool,...pool]).slice(0, Math.max(pool.length+2, 8));
+  const finalPool = shuffle([...new Set([...pool,...extra])]);
+  finalPool.forEach(w => {
+    const chip = document.createElement('div');
+    chip.className = 'word-chip';
+    chip.textContent = w;
+    chip.dataset.word = w;
+    chip.onclick = () => selectChip(chip);
+    bank.appendChild(chip);
+  });
+}
+
+function renderSteps() {
+  const stepsEl = document.getElementById('recipe-steps');
+  stepsEl.innerHTML = '';
+  currentRecipe.steps.forEach((step, si) => {
+    const div = document.createElement('div');
+    div.className = 'recipe-step';
+    let html = `<div class="step-header"><div class="step-num">${si+1}</div><div class="step-title">${step.title}</div></div><div class="step-body">`;
+    step.parts.forEach((p, pi) => {
+      if(typeof p === 'string') {
+        html += p;
+      } else {
+        html += `<span class="blank" data-step="${si}" data-part="${pi}" data-answer="${p.answer}" data-ru="${p.ru||''}" onclick="fillBlank(this)">___</span>`;
+      }
+    });
+    html += '</div>';
+    div.innerHTML = html;
+    stepsEl.appendChild(div);
+  });
+}
+
+function selectChip(chip) {
+  if(chip.classList.contains('used')) return;
+  document.querySelectorAll('.word-chip').forEach(c => c.classList.remove('selected'));
+  if(selectedChip === chip) { selectedChip = null; return; }
+  chip.classList.add('selected');
+  selectedChip = chip;
+}
+
+function fillBlank(blank) {
+  if(blank.classList.contains('correct')) return;
+
+  if(blank.classList.contains('filled') && !selectedChip) {
+    // Return word to bank
+    const word = blank.dataset.filled;
+    blank.textContent = '___';
+    blank.classList.remove('filled','wrong');
+    blank.dataset.filled = '';
+    document.querySelectorAll('.word-chip').forEach(c => {
+      if(c.dataset.word === word && c.classList.contains('used')) {
+        c.classList.remove('used'); return;
+      }
+    });
+    return;
+  }
+
+  if(!selectedChip) return;
+  const word = selectedChip.dataset.word;
+
+  // If blank already had something, return old word first
+  if(blank.dataset.filled) {
+    const old = blank.dataset.filled;
+    document.querySelectorAll('.word-chip').forEach(c => {
+      if(c.dataset.word === old && c.classList.contains('used')) { c.classList.remove('used'); return; }
+    });
+  }
+
+  blank.textContent = word;
+  blank.classList.add('filled');
+  blank.classList.remove('wrong');
+  blank.dataset.filled = word;
+  selectedChip.classList.add('used');
+  selectedChip.classList.remove('selected');
+  selectedChip = null;
+}
+
+function checkRecipe() {
+  recCorrect = 0;
+  document.querySelectorAll('.blank').forEach(blank => {
+    if(!blank.dataset.filled) return;
+    const answer = blank.dataset.answer;
+    const filled = blank.dataset.filled.toLowerCase().trim();
+    const accepted = verbForms[answer] || [answer];
+    if(accepted.includes(filled)) {
+      blank.classList.add('correct');
+      blank.classList.remove('wrong','filled');
+      const ru = blank.dataset.ru;
+      blank.innerHTML = blank.dataset.filled + (ru ? ` <span style="font-size:0.7rem;color:var(--olive);opacity:0.7;">(${ru})</span>` : '');
+      recCorrect++;
+    } else {
+      blank.classList.add('wrong');
+    }
+  });
+  updateRecipeScore();
+  const total = document.querySelectorAll('.blank').length;
+  const filled = document.querySelectorAll('.blank[data-filled]').length;
+  const fb = document.getElementById('rec-fb');
+  if(recCorrect === total) {
+    setTimeout(() => endRecipe(), 600);
+  } else if(filled === total) {
+    fb.textContent = `${recCorrect} di ${total} правильно. Попробуй исправить ошибки!`;
+    fb.className = 'quiz-fb bad';
+  } else {
+    fb.textContent = `Заполни все пропуски перед проверкой (осталось: ${total - filled})`;
+    fb.className = 'quiz-fb bad';
+  }
+}
+
+function updateRecipeScore() {
+  document.getElementById('rec-correct').textContent = recCorrect;
+  document.getElementById('rec-total').textContent = recTotal;
+  document.getElementById('rec-pb').style.width = recTotal ? (recCorrect/recTotal*100)+'%' : '0%';
+}
+
+function endRecipe() {
+  document.getElementById('recipe-game').classList.add('hidden');
+  document.getElementById('recipe-done').classList.remove('hidden');
+  const pct = Math.round(recCorrect/recTotal*100);
+  document.getElementById('rec-score').textContent = `${recCorrect}/${recTotal}`;
+  document.getElementById('rec-sub').textContent = pct>=80 ? 'Sei un vero chef! 👨‍🍳' : pct>=50 ? 'Quasi perfetto — riprova!' : 'Studia ancora e riprova!';
+  document.getElementById('rec-emoji').textContent = pct>=80?'🏆':pct>=60?'🍽️':'📖';
+  document.getElementById('rec-title').textContent = pct>=80 ? `Bravo! ${currentRecipe.emoji} ${currentRecipe.name}` : 'Quasi...';
+}
+
+function resetRecipe() {
+  startRecipe(recipes.indexOf(currentRecipe));
+}
+
+function backToChooser() {
+  document.getElementById('recipe-chooser').classList.remove('hidden');
+  document.getElementById('recipe-game').classList.add('hidden');
+  document.getElementById('recipe-done').classList.add('hidden');
+}
+
+// ===================== INIT =====================
+renderCards();
+</script>
+</body>
+</html>
