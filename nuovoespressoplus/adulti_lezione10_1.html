@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Italiano — Lezione 10 · In famiglia</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400;1,9..144,600&family=Karla:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --linen:#f3ece0; --paper:#fffdf8; --ink:#25304a; --ink2:#5b6580; --ink3:#9aa1b4;
+  --rose:#b8506a; --rose-soft:#f6dde4; --mustard:#c8932a; --mustard-soft:#f7ebcb;
+  --sage:#5f8a6c; --sage-soft:#dcebe0; --line:#e2d7c4; --red:#c0392b; --red-soft:#f8dcd8;
+  --shadow:0 1px 0 #e2d7c4, 0 10px 22px rgba(37,48,74,.08);
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:'Karla',sans-serif; background:var(--linen); color:var(--ink); min-height:100vh; overflow-x:hidden; }
+body::before { content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background:radial-gradient(ellipse 60% 40% at 90% 0%, rgba(184,80,106,.08), transparent 60%),
+             radial-gradient(ellipse 50% 50% at 0% 100%, rgba(200,147,42,.09), transparent 60%); }
+.wrapper { position:relative; z-index:1; max-width:860px; margin:0 auto; padding:34px 16px 70px; }
+
+header { text-align:center; margin-bottom:34px; }
+.eyebrow { font-size:.72rem; font-weight:700; letter-spacing:.22em; text-transform:uppercase; color:var(--rose); margin-bottom:10px; }
+header h1 { font-family:'Fraunces',serif; font-weight:600; font-size:clamp(2.6rem,8vw,4rem); line-height:1; letter-spacing:-.01em; }
+header .sub { font-family:'Fraunces',serif; font-style:italic; color:var(--mustard); font-size:1.15rem; margin-top:8px; }
+header .orn { color:var(--ink3); margin-top:14px; letter-spacing:.6em; font-size:.9rem; }
+
+.tabs { display:flex; gap:6px; justify-content:center; flex-wrap:wrap; margin-bottom:34px; }
+.tab { padding:8px 17px; border:1.5px solid var(--line); background:var(--paper); border-radius:99px; font-family:'Karla',sans-serif;
+  font-size:.82rem; font-weight:700; color:var(--ink2); cursor:pointer; transition:all .18s; }
+.tab:hover { border-color:var(--ink); color:var(--ink); }
+.tab.active { background:var(--ink); border-color:var(--ink); color:var(--paper); }
+
+.sec { display:none; }
+.sec.on { display:block; }
+
+.cat { display:flex; align-items:center; gap:12px; margin:34px 0 18px; font-family:'Fraunces',serif; font-style:italic; font-size:1rem; color:var(--rose); }
+.cat::after { content:''; flex:1; height:1px; background:var(--line); }
+
+/* CARDS */
+.grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(215px,1fr)); gap:20px 16px; }
+.card { background:var(--paper); border:1px solid var(--line); border-radius:3px; padding:20px 16px 16px; cursor:pointer; position:relative;
+  box-shadow:var(--shadow); transition:transform .18s, border-color .18s; user-select:none; min-height:118px; }
+.card::before { content:''; position:absolute; top:-8px; left:50%; width:50px; height:15px; background:rgba(200,147,42,.35); transform:translateX(-50%) rotate(-2deg); }
+.card:nth-child(3n+1){ transform:rotate(-.5deg); } .card:nth-child(3n+2){ transform:rotate(.4deg); } .card:nth-child(3n){ transform:rotate(-.2deg); }
+.card:hover { transform:rotate(0) translateY(-3px); }
+.card[data-s="1"] { border-color:var(--mustard); }
+.card[data-s="2"] { border-color:var(--sage); }
+.dots { position:absolute; bottom:8px; right:10px; display:flex; gap:4px; }
+.dots i { width:5px; height:5px; border-radius:50%; background:var(--line); display:block; }
+.dots i.act { background:var(--rose); } .dots i.done { background:var(--sage); }
+.f0, .f1, .f2 { display:none; flex-direction:column; gap:6px; }
+.card[data-s="0"] .f0, .card[data-s="1"] .f1, .card[data-s="2"] .f2 { display:flex; }
+.pos { font-size:.66rem; color:var(--ink3); font-style:italic; letter-spacing:.04em; }
+.w { font-family:'Fraunces',serif; font-weight:600; font-size:1.3rem; line-height:1.2; }
+.w.sm { font-size:1.05rem; }
+.hint { font-size:.7rem; color:var(--ink3); margin-top:6px; }
+.def { font-size:.82rem; color:var(--ink2); line-height:1.5; }
+.ex { font-size:.82rem; color:var(--rose); font-style:italic; line-height:1.45; }
+.lbl { font-size:.6rem; letter-spacing:.14em; text-transform:uppercase; color:var(--mustard); font-weight:700; }
+.ru { font-family:'Fraunces',serif; font-size:1.15rem; color:var(--sage); font-weight:600; line-height:1.3; }
+
+/* GAME COMMON */
+.gh { text-align:center; margin-bottom:22px; }
+.gh h2 { font-family:'Fraunces',serif; font-weight:600; font-size:1.8rem; }
+.gh p { color:var(--ink2); font-size:.88rem; margin-top:4px; }
+.score { display:flex; justify-content:space-around; background:var(--paper); border:1px solid var(--line); border-radius:6px; padding:13px; margin-bottom:16px; box-shadow:var(--shadow); }
+.score b { display:block; font-family:'Fraunces',serif; font-size:1.9rem; color:var(--rose); font-weight:600; text-align:center; line-height:1.1; }
+.score span { font-size:.66rem; text-transform:uppercase; letter-spacing:.12em; color:var(--ink2); display:block; text-align:center; }
+.btn { display:inline-block; padding:10px 24px; background:var(--rose); color:#fff; border:none; border-radius:99px; font-family:'Karla',sans-serif; font-size:.88rem; font-weight:700; cursor:pointer; transition:all .18s; }
+.btn:hover { background:#9d3f57; transform:translateY(-1px); }
+.btn.sec { background:transparent; color:var(--ink); border:1.5px solid var(--ink); }
+.btn.sec:hover { background:var(--ink); color:var(--paper); }
+.row { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:16px; }
+.bar { height:4px; background:var(--line); border-radius:9px; margin-bottom:20px; overflow:hidden; }
+.bar i { display:block; height:100%; background:var(--rose); width:0; transition:width .35s; }
+.count { text-align:center; font-size:.78rem; color:var(--ink3); margin-bottom:12px; letter-spacing:.05em; }
+.fb { text-align:center; font-weight:700; font-size:.9rem; min-height:24px; margin-top:10px; }
+.fb.good { color:var(--sage); } .fb.bad { color:var(--red); }
+.panel { background:var(--paper); border:1px solid var(--line); border-radius:6px; padding:26px 22px; box-shadow:var(--shadow); margin-bottom:16px; }
+.hidden { display:none !important; }
+.res { text-align:center; padding:44px 20px; }
+.res .em { font-size:3.2rem; }
+.res h3 { font-family:'Fraunces',serif; font-size:2rem; font-weight:600; margin:8px 0; }
+.res .big { font-family:'Fraunces',serif; font-size:3.4rem; color:var(--mustard); font-weight:600; line-height:1; }
+.res p { color:var(--ink2); margin-top:8px; }
+
+/* MATCH */
+.mboard { display:grid; grid-template-columns:1fr 1.5fr; gap:10px; }
+.mcol { display:flex; flex-direction:column; gap:8px; }
+.mi { background:var(--paper); border:1.5px solid var(--line); border-radius:6px; padding:11px 12px; cursor:pointer; font-size:.82rem; line-height:1.4; color:var(--ink2); transition:all .15s; display:flex; align-items:center; min-height:48px; }
+.mi.w { font-family:'Fraunces',serif; font-weight:600; font-size:1rem; color:var(--ink); justify-content:center; text-align:center; }
+.mi:hover:not(.ok):not(.no) { border-color:var(--mustard); }
+.mi.sel { border-color:var(--rose); background:var(--rose-soft); }
+.mi.ok { border-color:var(--sage); background:var(--sage-soft); color:var(--sage); cursor:default; }
+.mi.no { border-color:var(--red); background:var(--red-soft); animation:shake .4s; }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+
+/* QUIZ */
+.qdef { font-family:'Fraunces',serif; font-style:italic; font-size:clamp(1.15rem,3.6vw,1.5rem); line-height:1.5; text-align:center; }
+.qlab { text-align:center; font-size:.68rem; letter-spacing:.16em; text-transform:uppercase; color:var(--ink3); margin-bottom:12px; }
+.opts { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.opt { padding:13px 10px; background:var(--paper); border:1.5px solid var(--line); border-radius:6px; font-family:'Fraunces',serif; font-weight:600; font-size:1rem; cursor:pointer; color:var(--ink); transition:all .15s; }
+.opt:hover:not(.ok):not(.no) { border-color:var(--mustard); }
+.opt.ok { border-color:var(--sage); background:var(--sage-soft); color:var(--sage); }
+.opt.no { border-color:var(--red); background:var(--red-soft); color:var(--red); }
+.pd { display:flex; gap:5px; justify-content:center; flex-wrap:wrap; margin-bottom:16px; }
+.pd i { width:8px; height:8px; border-radius:50%; background:var(--line); display:block; transition:all .2s; }
+.pd i.done { background:var(--sage); } .pd i.act { background:var(--rose); transform:scale(1.35); }
+
+/* FILL */
+.cloze { font-family:'Fraunces',serif; font-size:1.25rem; line-height:1.7; margin-bottom:6px; }
+.cloze u { display:inline-block; min-width:90px; border-bottom:2px solid var(--rose); text-decoration:none; }
+.fhint { font-size:.76rem; color:var(--ink3); margin-bottom:14px; font-style:italic; }
+.irow { display:flex; gap:10px; flex-wrap:wrap; }
+.inp { flex:1; min-width:160px; padding:11px 14px; border:1.5px solid var(--line); border-radius:6px; font-family:'Fraunces',serif; font-size:1.1rem; background:var(--linen); color:var(--ink); outline:none; }
+.inp:focus { border-color:var(--rose); background:var(--paper); }
+.inp.ok { border-color:var(--sage); background:var(--sage-soft); } .inp.no { border-color:var(--red); background:var(--red-soft); }
+
+/* TREE */
+.tree { background:var(--paper); border:1px solid var(--line); border-radius:6px; padding:18px 10px 8px; box-shadow:var(--shadow); margin-bottom:16px; }
+.trow { display:flex; justify-content:center; align-items:flex-start; gap:clamp(6px,2.5vw,26px); margin-bottom:6px; flex-wrap:nowrap; }
+.tcap { text-align:center; font-size:.62rem; letter-spacing:.16em; text-transform:uppercase; color:var(--ink3); margin:8px 0 8px; }
+.tgrp { display:flex; align-items:center; gap:2px; }
+.tbond { color:var(--mustard); font-size:1rem; align-self:flex-start; margin-top:18px; }
+.tnode { width:clamp(52px,13vw,76px); text-align:center; border:2px solid transparent; border-radius:10px; padding:6px 2px; transition:all .2s; }
+.tav { font-size:clamp(1.6rem,6vw,2.3rem); line-height:1.1; }
+.tlab { font-size:.72rem; color:var(--ink3); margin-top:3px; font-weight:700; min-height:1em; }
+.tnode.ref { background:var(--mustard-soft); border-color:var(--mustard); }
+.tnode.ref .tlab { color:var(--mustard); }
+.tnode.target { border-color:var(--rose); background:var(--rose-soft); animation:pulse 1.2s infinite; }
+.tnode.target .tlab { color:var(--rose); }
+.tnode.revealed .tlab { color:var(--sage); font-family:'Fraunces',serif; font-size:.82rem; }
+@keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.07)} }
+
+/* STORY */
+.stitle { font-family:'Fraunces',serif; font-style:italic; text-align:center; color:var(--rose); font-size:1.2rem; margin-bottom:14px; }
+.steps { display:flex; flex-direction:column; gap:9px; }
+.step { display:flex; align-items:center; gap:12px; background:var(--paper); border:1.5px solid var(--line); border-radius:6px; padding:13px 14px; cursor:pointer; font-size:.95rem; line-height:1.45; transition:all .15s; }
+.step:hover:not(.ok) { border-color:var(--mustard); }
+.step .n { width:28px; height:28px; border-radius:50%; background:var(--line); color:var(--ink3); display:flex; align-items:center; justify-content:center; font-family:'Fraunces',serif; font-weight:600; flex-shrink:0; }
+.step.ok { border-color:var(--sage); background:var(--sage-soft); cursor:default; }
+.step.ok .n { background:var(--sage); color:#fff; }
+.step.no { border-color:var(--red); background:var(--red-soft); animation:shake .4s; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <div class="eyebrow">Adulti · Lezione 10</div>
+    <h1>In famiglia</h1>
+    <div class="sub">Parenti, matrimoni e vita di coppia</div>
+    <div class="orn">❦ ❦ ❦</div>
+  </header>
+
+  <div class="tabs">
+    <button class="tab on active" onclick="showSec('cards')">📖 Parole</button>
+    <button class="tab" onclick="showSec('match')">🔗 Abbina</button>
+    <button class="tab" onclick="showSec('quiz')">🎯 Quiz</button>
+    <button class="tab" onclick="showSec('fill')">✏️ Scrivi</button>
+    <button class="tab" onclick="showSec('tree')">🌳 Albero</button>
+    <button class="tab" onclick="showSec('story')">💍 Storia</button>
+  </div>
+
+  <!-- PAROLE -->
+  <div class="sec on" id="sec-cards">
+    <div class="cat">La famiglia</div><div class="grid" id="g-fam"></div>
+    <div class="cat">Matrimonio e coppia</div><div class="grid" id="g-matr"></div>
+    <div class="cat">Verbi della vita</div><div class="grid" id="g-verbi"></div>
+    <div class="cat">Aspetto e colori</div><div class="grid" id="g-asp"></div>
+    <div class="cat">Società, tecnologia, sentimenti</div><div class="grid" id="g-soc"></div>
+    <div class="cat">Espressioni utili</div><div class="grid" id="g-espr"></div>
+    <p style="text-align:center;color:var(--ink3);font-size:.78rem;margin-top:26px;font-style:italic;">1° tocco → definizione ed esempio · 2° tocco → traduzione · 3° tocco → di nuovo la parola</p>
+  </div>
+
+  <!-- ABBINA -->
+  <div class="sec" id="sec-match">
+    <div class="gh"><h2>Abbina</h2><p>Collega ogni parola alla sua definizione</p></div>
+    <div class="score"><div><b id="ms">0</b><span>Coppie</span></div><div><b id="mt">0</b><span>Totale</span></div><div><b id="me">0</b><span>Errori</span></div></div>
+    <div class="mboard"><div class="mcol" id="ml"></div><div class="mcol" id="mr"></div></div>
+    <div class="row"><button class="btn" onclick="initMatch()">🔄 Nuovo giro</button></div>
+    <div class="res hidden" id="mres"><div class="em">🎉</div><h3>Bravissimo!</h3><p>Hai trovato tutte le coppie.</p><div class="row"><button class="btn" onclick="initMatch()">Ancora</button></div></div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="sec" id="sec-quiz">
+    <div class="gh"><h2>Quiz</h2><p>Quale parola corrisponde alla definizione?</p></div>
+    <div class="bar"><i id="qbar"></i></div>
+    <div class="pd" id="qpd"></div>
+    <div class="count" id="qcount"></div>
+    <div id="qplay">
+      <div class="panel"><div class="qlab">Definizione</div><div class="qdef" id="qdef">—</div></div>
+      <div class="opts" id="qopts"></div>
+      <div class="fb" id="qfb"></div>
+      <div class="row"><button class="btn sec hidden" id="qnext" onclick="qIdx++;showQuiz()">Avanti →</button></div>
+    </div>
+    <div class="res hidden" id="qres"><div class="em" id="qem">🏆</div><h3>Risultato</h3><div class="big" id="qsc"></div><p id="qsub"></p>
+      <div class="row"><button class="btn" onclick="initQuiz()">Di nuovo</button><button class="btn sec" onclick="initQuiz(true)">Solo errori</button></div></div>
+  </div>
+
+  <!-- SCRIVI -->
+  <div class="sec" id="sec-fill">
+    <div class="gh"><h2>Scrivi</h2><p>Completa la frase con la parola giusta</p></div>
+    <div class="bar"><i id="fbar"></i></div>
+    <div class="count" id="fcount"></div>
+    <div id="fplay">
+      <div class="panel">
+        <div class="cloze" id="fsent"></div>
+        <div class="fhint" id="fhint"></div>
+        <div class="irow"><input class="inp" id="fin" placeholder="Scrivi la parola…" autocomplete="off" onkeydown="if(event.key==='Enter')checkFill()"><button class="btn" onclick="checkFill()">→</button></div>
+        <div class="fb" id="ffb"></div>
+      </div>
+      <div class="row"><button class="btn sec" id="fskip" onclick="skipFill()">Salta</button><button class="btn sec hidden" id="fnext" onclick="fIdx++;showFill()">Avanti →</button></div>
+    </div>
+    <div class="res hidden" id="fres"><div class="em" id="fem">🌟</div><h3>Finito!</h3><div class="big" id="fsc"></div><p id="fsub"></p><div class="row"><button class="btn" onclick="initFill()">Di nuovo</button></div></div>
+  </div>
+
+  <!-- ALBERO -->
+  <div class="sec" id="sec-tree">
+    <div class="gh"><h2>L'albero di famiglia</h2><p>Per Marco, chi è la persona evidenziata?</p></div>
+    <div class="score"><div><b id="ts">0</b><span>Giuste</span></div><div><b id="tc">1</b><span>Su 10</span></div><div><b id="te">0</b><span>Errori</span></div></div>
+    <div class="tree" id="tree"></div>
+    <div id="tplay">
+      <div class="opts" id="topts"></div>
+      <div class="fb" id="tfb"></div>
+      <div class="row"><button class="btn sec hidden" id="tnext" onclick="tIdx++;showTree()">Avanti →</button></div>
+    </div>
+    <div class="res hidden" id="tres"><div class="em" id="tem">🌳</div><h3>Che famiglia!</h3><div class="big" id="tsc"></div><p id="tsub"></p><div class="row"><button class="btn" onclick="initTree()">Di nuovo</button></div></div>
+  </div>
+
+  <!-- STORIA -->
+  <div class="sec" id="sec-story">
+    <div class="gh"><h2>Rimetti in ordine</h2><p>Tocca gli eventi nell'ordine giusto, dal primo all'ultimo</p></div>
+    <div class="score"><div><b id="ss">0</b><span>Al posto</span></div><div><b id="st">0</b><span>Totale</span></div><div><b id="se">0</b><span>Errori</span></div></div>
+    <div id="splay"><div class="stitle" id="stitle"></div><div class="steps" id="steps"></div><div class="fb" id="sfb"></div>
+      <div class="row"><button class="btn sec" onclick="nextStory()">Un'altra storia →</button></div></div>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+function shuffle(a){ const b=[...a]; for(let i=b.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [b[i],b[j]]=[b[j],b[i]]; } return b; }
+
+/* ===================== VOCAB ===================== */
+const vocab = [
+// ---- FAMIGLIA
+{it:"il nonno",pos:"sost. m.",def:"Il padre di uno dei nostri genitori.",ex:"Mio nonno ha ottant'anni e vive in campagna.",ru:"дедушка",cat:"fam"},
+{it:"il nipote",pos:"sost. m./f.",def:"Il figlio di un figlio; anche il figlio di un fratello o di una sorella.",ex:"I nonni hanno cinque nipoti.",ru:"внук / племянник",cat:"fam"},
+{it:"il fratello",pos:"sost. m.",def:"Il maschio che ha gli stessi genitori.",ex:"Mio fratello ha tre anni più di me.",ru:"брат",cat:"fam"},
+{it:"la sorella",pos:"sost. f.",def:"La femmina che ha gli stessi genitori.",ex:"Mia sorella vive a Torino.",ru:"сестра",cat:"fam"},
+{it:"il figlio unico",pos:"sost. m.",def:"Chi non ha né fratelli né sorelle.",ex:"Sono figlio unico, quindi giocavo sempre da solo.",ru:"единственный ребёнок",cat:"fam"},
+{it:"la mamma",pos:"sost. f.",def:"La madre, come la chiamano i bambini e in famiglia.",ex:"La mamma prepara il pranzo della domenica.",ru:"мама",cat:"fam"},
+{it:"il papà",pos:"sost. m.",def:"Il padre, nel linguaggio di famiglia.",ex:"Il papà mi accompagna a scuola.",ru:"папа",cat:"fam"},
+{it:"la madre",pos:"sost. f.",def:"La donna che ha dei figli; è più formale di «mamma».",ex:"Mia madre fa l'insegnante.",ru:"мать",cat:"fam"},
+{it:"il padre",pos:"sost. m.",def:"L'uomo che ha dei figli; è più formale di «papà».",ex:"Suo padre lavora in banca.",ru:"отец",cat:"fam"},
+{it:"il cugino",pos:"sost. m.",def:"Il figlio di uno zio o di una zia.",ex:"Passo le vacanze con i miei cugini.",ru:"двоюродный брат",cat:"fam"},
+{it:"il genitore",pos:"sost. m.",def:"Il padre o la madre di una persona.",ex:"I genitori di Sara sono separati.",ru:"родитель",cat:"fam"},
+{it:"il marito",pos:"sost. m.",def:"L'uomo sposato, rispetto alla moglie.",ex:"Suo marito lavora in ospedale.",ru:"муж",cat:"fam"},
+{it:"la moglie",pos:"sost. f.",def:"La donna sposata, rispetto al marito.",ex:"Mia moglie è nata a Napoli.",ru:"жена",cat:"fam"},
+{it:"il bambino",pos:"sost. m.",def:"Un figlio piccolo, di pochi anni.",ex:"Il bambino gioca in giardino con il cane.",ru:"ребёнок",cat:"fam"},
+{it:"la coppia",pos:"sost. f.",def:"Due persone legate da una relazione d'amore.",ex:"Siamo una coppia da dieci anni.",ru:"пара",cat:"fam"},
+{it:"la generazione",pos:"sost. f.",def:"Le persone nate negli stessi anni: i figli sono una generazione dopo i genitori.",ex:"Mio nonno e io siamo di due generazioni diverse.",ru:"поколение",cat:"fam"},
+{it:"familiare",pos:"agg. / sost.",def:"Che riguarda la famiglia; come nome, un parente.",ex:"Domenica facciamo una cena familiare.",ru:"семейный / родственник",cat:"fam"},
+{it:"il maschio",pos:"sost. m.",def:"Una persona o un animale di sesso maschile.",ex:"Hanno due figli: un maschio e una femmina.",ru:"лицо мужского пола",cat:"fam"},
+{it:"la femmina",pos:"sost. f.",def:"Una persona o un animale di sesso femminile.",ex:"Hanno un maschio e due femmine.",ru:"лицо женского пола",cat:"fam"},
+{it:"giovane",pos:"agg.",def:"Che ha pochi anni, non ancora adulto.",ex:"È una giovane insegnante di musica.",ru:"молодой",cat:"fam"},
+{it:"anziano/a",pos:"agg. / sost.",def:"Una persona di età avanzata.",ex:"Aiuto sempre i miei vicini anziani.",ru:"пожилой",cat:"fam"},
+{it:"la famiglia di origine",pos:"loc.",def:"La famiglia in cui siamo nati e cresciuti.",ex:"A Natale vado dalla mia famiglia di origine.",ru:"родительская семья",cat:"fam"},
+{it:"la famiglia di fatto",pos:"loc.",def:"Una coppia che vive insieme senza essere sposata.",ex:"Sono una famiglia di fatto da cinque anni.",ru:"семья без официального брака",cat:"fam"},
+{it:"la famiglia allargata",pos:"loc.",def:"Una famiglia grande: con nonni, zii, cugini o i figli di precedenti relazioni.",ex:"A Pasqua la famiglia allargata si riunisce a casa dei nonni.",ru:"расширенная семья",cat:"fam"},
+{it:"la ragazza madre",pos:"loc.",def:"Una donna che cresce un figlio da sola, senza il padre.",ex:"Sua sorella è una ragazza madre.",ru:"мать-одиночка",cat:"fam"},
+{it:"il mammismo",pos:"sost. m.",def:"L'atteggiamento di un uomo adulto troppo legato alla mamma.",ex:"In Italia si parla spesso di mammismo.",ru:"«маменькин сынок» (сильная привязанность к матери)",cat:"fam"},
+{it:"la convivenza",pos:"sost. f.",def:"Il vivere insieme di due persone senza essere sposate.",ex:"Dopo due anni di convivenza si sono sposati.",ru:"совместное проживание",cat:"fam"},
+
+// ---- MATRIMONIO
+{it:"sposare",pos:"v.",def:"Prendere qualcuno come marito o come moglie.",ex:"Marco sposa Giulia a giugno.",ru:"жениться / выходить замуж за",cat:"matr"},
+{it:"sposarsi",pos:"v. rifl.",def:"Fare un matrimonio, diventare marito e moglie.",ex:"Ci sposiamo in primavera.",ru:"пожениться",cat:"matr"},
+{it:"il matrimonio",pos:"sost. m.",def:"L'unione di due persone come marito e moglie, e la festa per questo evento.",ex:"Il matrimonio di mia cugina è sabato prossimo.",ru:"свадьба / брак",cat:"matr"},
+{it:"il fidanzato",pos:"sost. m.",def:"Chi ha una relazione d'amore seria con qualcuno.",ex:"La mia fidanzata studia medicina.",ru:"жених / парень",cat:"matr"},
+{it:"lo sposo",pos:"sost. m.",def:"L'uomo che si sposa, il giorno delle nozze.",ex:"Lo sposo aspetta la sposa all'ingresso.",ru:"жених (на свадьбе)",cat:"matr"},
+{it:"la cerimonia",pos:"sost. f.",def:"Un rito solenne, con un programma preciso e persone invitate.",ex:"La cerimonia dura circa un'ora.",ru:"церемония",cat:"matr"},
+{it:"civile",pos:"agg.",def:"Non religioso: che dipende dallo Stato e non dalla Chiesa.",ex:"Si sono sposati con rito civile.",ru:"гражданский (светский)",cat:"matr"},
+{it:"il comune",pos:"sost. m.",def:"L'ufficio della città dove si fanno documenti e matrimoni civili.",ex:"Ci siamo sposati in comune.",ru:"мэрия / муниципалитет",cat:"matr"},
+{it:"festeggiare",pos:"v.",def:"Celebrare un evento con una festa.",ex:"Festeggiamo l'anniversario con gli amici.",ru:"праздновать",cat:"matr"},
+{it:"invitare",pos:"v.",def:"Chiedere a qualcuno di venire a una festa o a un evento.",ex:"Invitiamo cento persone al matrimonio.",ru:"приглашать",cat:"matr"},
+{it:"l'abito",pos:"sost. m.",def:"Il vestito elegante, anche quello della sposa.",ex:"L'abito della sposa è lungo e bianco.",ru:"наряд / платье",cat:"matr"},
+{it:"il completo",pos:"sost. m.",def:"L'abito da uomo con giacca e pantaloni dello stesso colore.",ex:"Lo sposo ha un completo blu scuro.",ru:"костюм (мужской)",cat:"matr"},
+{it:"noleggiare",pos:"v.",def:"Prendere qualcosa in affitto per poco tempo.",ex:"Noleggio l'abito solo per il giorno delle nozze.",ru:"брать напрокат",cat:"matr"},
+{it:"la lista di nozze",pos:"loc.",def:"L'elenco dei regali che gli sposi chiedono agli invitati.",ex:"Nella lista di nozze abbiamo messo i piatti.",ru:"свадебный список подарков",cat:"matr"},
+{it:"il viaggio di nozze",pos:"loc.",def:"Il viaggio che gli sposi fanno subito dopo il matrimonio.",ex:"Andiamo in viaggio di nozze alle Maldive.",ru:"свадебное путешествие",cat:"matr"},
+{it:"tradizionale",pos:"agg.",def:"Fatto secondo le tradizioni, come si è sempre fatto.",ex:"È un matrimonio tradizionale, in chiesa.",ru:"традиционный",cat:"matr"},
+{it:"romantico/a",pos:"agg.",def:"Pieno di sentimento e di amore.",ex:"Una cena romantica a lume di candela.",ru:"романтичный",cat:"matr"},
+{it:"il diamante",pos:"sost. m.",def:"Una pietra preziosa, trasparente e molto dura.",ex:"Mi ha regalato un anello con un diamante.",ru:"бриллиант",cat:"matr"},
+{it:"la foto",pos:"sost. f.",def:"Un'immagine fatta con la macchina fotografica o con il telefono.",ex:"Facciamo una foto agli sposi!",ru:"фото",cat:"matr"},
+{it:"separato/a",pos:"agg.",def:"Si dice di due persone sposate che non vivono più insieme.",ex:"I miei genitori sono separati.",ru:"в разводе / живущий раздельно",cat:"matr"},
+{it:"separarsi",pos:"v. rifl.",def:"Smettere di vivere insieme come coppia.",ex:"Dopo vent'anni di matrimonio si sono separati.",ru:"расстаться / разъехаться",cat:"matr"},
+{it:"la separazione",pos:"sost. f.",def:"Il momento in cui una coppia smette di vivere insieme.",ex:"La separazione è stata difficile per i figli.",ru:"расставание / раздельное проживание",cat:"matr"},
+
+// ---- VERBI
+{it:"prendersi cura (di)",pos:"v. rifl.",def:"Occuparsi di qualcuno con attenzione e affetto.",ex:"I nonni si prendono cura dei nipoti.",ru:"заботиться (о)",cat:"verbi"},
+{it:"aiutare",pos:"v.",def:"Dare una mano a qualcuno.",ex:"Aiuto mia madre a fare la spesa.",ru:"помогать",cat:"verbi"},
+{it:"ritrovarsi",pos:"v. rifl.",def:"Incontrarsi di nuovo dopo tanto tempo; trovarsi in una situazione.",ex:"Dopo anni ci siamo ritrovati al matrimonio di un amico.",ru:"снова встретиться / оказаться",cat:"verbi"},
+{it:"crescere",pos:"v.",def:"Diventare più grande, svilupparsi.",ex:"Sono cresciuto in un piccolo paese.",ru:"расти",cat:"verbi"},
+{it:"nascere",pos:"v. irr. (sono nato/a)",def:"Venire al mondo.",ex:"Mia figlia è nata a maggio.",ru:"родиться",cat:"verbi"},
+{it:"impedire (-isc-)",pos:"v.",def:"Non permettere, non lasciare fare qualcosa.",ex:"La pioggia ci impedisce di uscire.",ru:"мешать / не позволять",cat:"verbi"},
+{it:"sviluppare",pos:"v.",def:"Far crescere o migliorare una capacità.",ex:"Leggere sviluppa l'immaginazione.",ru:"развивать",cat:"verbi"},
+{it:"aumentare",pos:"v.",def:"Diventare o rendere più grande, più numeroso.",ex:"I prezzi aumentano ogni anno.",ru:"увеличиваться",cat:"verbi"},
+{it:"abbracciare",pos:"v.",def:"Stringere qualcuno tra le braccia.",ex:"Abbraccio forte mia nonna.",ru:"обнимать",cat:"verbi"},
+{it:"voler bene",pos:"loc. v.",def:"Provare affetto per una persona della famiglia o per un amico.",ex:"Voglio bene ai miei nonni.",ru:"любить (родных, друзей)",cat:"verbi"},
+{it:"divertirsi",pos:"v. rifl.",def:"Passare il tempo in modo piacevole.",ex:"Ci siamo divertiti molto alla festa.",ru:"веселиться",cat:"verbi"},
+{it:"piangere",pos:"v. irr. (ho pianto)",def:"Versare lacrime, per dolore o per gioia.",ex:"La sposa piange dalla felicità.",ru:"плакать",cat:"verbi"},
+{it:"arrabbiarsi",pos:"v. rifl.",def:"Provare rabbia, diventare nervosi.",ex:"Mi arrabbio quando aspetto troppo.",ru:"злиться",cat:"verbi"},
+{it:"annoiarsi",pos:"v. rifl.",def:"Provare noia, non sapere cosa fare.",ex:"Mi annoio quando non ho niente da fare.",ru:"скучать",cat:"verbi"},
+{it:"rilassarsi",pos:"v. rifl.",def:"Stare tranquilli e riposare.",ex:"Mi rilasso con un bagno caldo.",ru:"расслабляться",cat:"verbi"},
+{it:"farsi male",pos:"loc. v.",def:"Ferirsi, sentire dolore dopo una caduta o un incidente.",ex:"Il bambino è caduto e si è fatto male.",ru:"ушибиться / пораниться",cat:"verbi"},
+{it:"sbagliarsi",pos:"v. rifl.",def:"Fare un errore, non avere ragione.",ex:"Mi sono sbagliato: la festa è sabato.",ru:"ошибаться",cat:"verbi"},
+{it:"sedersi",pos:"v. rifl. irr. (mi siedo)",def:"Mettersi su una sedia o su un divano.",ex:"Ci sediamo a tavola alle otto.",ru:"садиться",cat:"verbi"},
+{it:"trasferirsi",pos:"v. rifl. (-isc-)",def:"Cambiare città o casa per andare a vivere altrove.",ex:"Mia sorella si è trasferita a Milano per lavoro.",ru:"переезжать",cat:"verbi"},
+{it:"dedicarsi (a)",pos:"v. rifl.",def:"Dare tempo ed energia a un'attività o a una persona.",ex:"Dopo la pensione si dedica al giardino.",ru:"посвящать себя (чему-то)",cat:"verbi"},
+{it:"assistere",pos:"v.",def:"Stare vicino a una persona malata per curarla e aiutarla.",ex:"Assisto mio nonno, che è malato.",ru:"ухаживать (за больным)",cat:"verbi"},
+{it:"cambiare",pos:"v.",def:"Rendere o diventare diverso.",ex:"La vita cambia quando arriva un figlio.",ru:"менять(ся)",cat:"verbi"},
+{it:"truccarsi",pos:"v. rifl.",def:"Mettersi il trucco sul viso.",ex:"Mi trucco sempre prima di una festa.",ru:"краситься",cat:"verbi"},
+{it:"tagliarsi",pos:"v. rifl.",def:"Farsi tagliare (i capelli) oppure ferirsi con qualcosa di tagliente.",ex:"Mi taglio i capelli una volta al mese.",ru:"подстричься / порезаться",cat:"verbi"},
+
+// ---- ASPETTO
+{it:"l'aspetto",pos:"sost. m.",def:"Come una persona appare agli altri.",ex:"Ha un aspetto giovane per la sua età.",ru:"внешность",cat:"asp"},
+{it:"il baffo (i baffi)",pos:"sost. m.",def:"I peli che crescono sopra la bocca di un uomo.",ex:"Mio nonno ha i baffi bianchi.",ru:"усы",cat:"asp"},
+{it:"il capello (i capelli)",pos:"sost. m.",def:"I peli che crescono sulla testa.",ex:"Ha i capelli lunghi e scuri.",ru:"волосы",cat:"asp"},
+{it:"bianco/a",pos:"agg.",def:"Il colore della neve e del latte.",ex:"La sposa porta un abito bianco.",ru:"белый",cat:"asp"},
+{it:"blu",pos:"agg. inv.",def:"Il colore del mare e del cielo di sera.",ex:"Lo sposo indossa un completo blu.",ru:"синий",cat:"asp"},
+{it:"scuro/a",pos:"agg.",def:"Di un colore forte, vicino al nero; poco luminoso.",ex:"Mia sorella ha gli occhi scuri.",ru:"тёмный",cat:"asp"},
+{it:"stupendo/a",pos:"agg.",def:"Bellissimo, magnifico.",ex:"Che giornata stupenda per un matrimonio!",ru:"чудесный",cat:"asp"},
+{it:"emozionato/a",pos:"agg.",def:"Che prova una forte emozione.",ex:"Lo sposo è molto emozionato.",ru:"взволнованный",cat:"asp"},
+
+// ---- SOCIETA
+{it:"la notizia",pos:"sost. f.",def:"Un'informazione su un fatto recente.",ex:"Ho una bella notizia per voi!",ru:"новость",cat:"soc"},
+{it:"il milione",pos:"sost. m.",def:"Mille volte mille: 1.000.000.",ex:"In Italia vivono circa sessanta milioni di persone.",ru:"миллион",cat:"soc"},
+{it:"economicamente",pos:"avv.",def:"Dal punto di vista dei soldi.",ex:"Mia madre ci aiuta economicamente.",ru:"в финансовом плане",cat:"soc"},
+{it:"l'eredità",pos:"sost. f.",def:"I beni (soldi, case) che una persona lascia dopo la morte.",ex:"Ha ricevuto una casa in eredità dai nonni.",ru:"наследство",cat:"soc"},
+{it:"lo schermo",pos:"sost. m.",def:"La parte di un telefono o di un computer dove si vede l'immagine.",ex:"Guardo lo schermo troppe ore al giorno.",ru:"экран",cat:"soc"},
+{it:"l'abuso",pos:"sost. m.",def:"Un uso eccessivo e sbagliato di qualcosa.",ex:"L'abuso di tecnologia fa male ai bambini.",ru:"злоупотребление",cat:"soc"},
+{it:"la tecnologia",pos:"sost. f.",def:"Le macchine e gli strumenti moderni, come computer e smartphone.",ex:"La tecnologia ha cambiato la vita dei giovani.",ru:"технологии",cat:"soc"},
+{it:"l'immaginazione",pos:"sost. f.",def:"La capacità di creare immagini e storie nella mente.",ex:"I bambini hanno molta immaginazione.",ru:"воображение",cat:"soc"},
+{it:"la creatività",pos:"sost. f.",def:"La capacità di inventare cose nuove.",ex:"Disegnare sviluppa la creatività.",ru:"креативность",cat:"soc"},
+{it:"il titolo",pos:"sost. m.",def:"Il nome di un libro, di un film o di un articolo.",ex:"Qual è il titolo di quel film?",ru:"название / заголовок",cat:"soc"},
+{it:"raro/a",pos:"agg.",def:"Che si trova o succede poche volte.",ex:"Oggi è raro avere cinque fratelli.",ru:"редкий",cat:"soc"},
+{it:"la metà",pos:"sost. f.",def:"Una delle due parti uguali di un tutto.",ex:"Metà della classe è di Roma.",ru:"половина",cat:"soc"},
+{it:"numeroso/a",pos:"agg.",def:"Formato da molte persone o cose.",ex:"Hanno una famiglia numerosa.",ru:"многочисленный",cat:"soc"},
+{it:"malato/a",pos:"agg.",def:"Che non sta bene di salute.",ex:"Mia nonna è malata da un anno.",ru:"больной",cat:"soc"},
+{it:"cronico/a",pos:"agg.",def:"Di una malattia che dura molto tempo, spesso tutta la vita.",ex:"Ha una malattia cronica e va spesso dal medico.",ru:"хронический",cat:"soc"},
+{it:"la felicità",pos:"sost. f.",def:"Lo stato di chi è molto contento.",ex:"Per me la felicità è stare con la famiglia.",ru:"счастье",cat:"soc"},
+{it:"il paese",pos:"sost. m.",def:"Un piccolo centro abitato; anche una nazione.",ex:"Vivo in un paese vicino al lago.",ru:"село, городок / страна",cat:"soc"},
+{it:"la professione",pos:"sost. f.",def:"Il lavoro che una persona fa.",ex:"Qual è la tua professione?",ru:"профессия",cat:"soc"},
+{it:"la visita",pos:"sost. f.",def:"L'andare a trovare qualcuno; anche l'incontro con un medico.",ex:"Domani faccio visita ai nonni.",ru:"визит / приём у врача",cat:"soc"},
+{it:"il piatto",pos:"sost. m.",def:"Il contenitore dove si mette il cibo; anche una portata.",ex:"Il mio piatto preferito è la lasagna.",ru:"тарелка / блюдо",cat:"soc"},
+{it:"marocchino/a",pos:"agg.",def:"Che è del Marocco.",ex:"Il marito di Sara è marocchino.",ru:"марокканский",cat:"soc"},
+
+// ---- ESPRESSIONI
+{it:"non ci posso credere!",pos:"esclam.",def:"Si dice quando una notizia ci sorprende molto.",ex:"Hai vinto? Non ci posso credere!",ru:"не могу поверить!",cat:"espr"},
+{it:"abbastanza",pos:"avv.",def:"In quantità sufficiente; piuttosto.",ex:"Siamo abbastanza stanchi dopo la festa.",ru:"довольно / достаточно",cat:"espr"},
+{it:"anche se",pos:"cong.",def:"Nonostante, pur essendo.",ex:"Esco anche se piove.",ru:"хотя / даже если",cat:"espr"},
+{it:"non solo… ma anche",pos:"loc.",def:"Si usa per aggiungere un'informazione in più.",ex:"Non solo studia, ma anche lavora.",ru:"не только… но и",cat:"espr"},
+{it:"per anni",pos:"loc. avv.",def:"Per molto tempo, per tanti anni.",ex:"Ha vissuto all'estero per anni.",ru:"годами",cat:"espr"},
+{it:"cioè",pos:"cong.",def:"Si usa per spiegare meglio quello che si è appena detto.",ex:"Ho un cugino, cioè il figlio di mio zio.",ru:"то есть",cat:"espr"},
+{it:"stesso/a",pos:"agg.",def:"Uguale, identico.",ex:"Io e mia sorella abbiamo la stessa età.",ru:"тот же самый",cat:"espr"},
+{it:"va beh",pos:"loc. colloq.",def:"Espressione informale per accettare una cosa o chiudere un discorso.",ex:"Va beh, pazienza: andiamo domani.",ru:"ладно, ну ладно",cat:"espr"},
+{it:"in media",pos:"loc. avv.",def:"Considerando il valore che sta nel mezzo, la media.",ex:"In media ogni famiglia ha un figlio.",ru:"в среднем",cat:"espr"},
+{it:"più volte",pos:"loc. avv.",def:"Molte volte, in più occasioni.",ex:"Ti ho chiamato più volte!",ru:"несколько раз",cat:"espr"},
+{it:"negli ultimi anni",pos:"loc. avv.",def:"Nel periodo recente, negli anni appena passati.",ex:"Negli ultimi anni le famiglie sono cambiate molto.",ru:"в последние годы",cat:"espr"},
+{it:"chi di voi ha…?",pos:"loc.",def:"Domanda a un gruppo per sapere chi possiede o ha fatto qualcosa.",ex:"Chi di voi ha fratelli o sorelle?",ru:"у кого из вас есть…?",cat:"espr"},
+];
+
+const catMap = { fam:"g-fam", matr:"g-matr", verbi:"g-verbi", asp:"g-asp", soc:"g-soc", espr:"g-espr" };
+
+function renderCards(){
+  Object.values(catMap).forEach(id => $(id).innerHTML='');
+  vocab.forEach(v => {
+    const el = document.createElement('div'); el.className='card'; el.dataset.s='0';
+    el.innerHTML = `
+      <div class="f0"><div class="pos">${v.pos}</div><div class="w">${v.it}</div><div class="hint">tocca per la definizione</div></div>
+      <div class="f1"><div class="w sm">${v.it}</div><div class="def">${v.def}</div><div class="lbl">esempio</div><div class="ex">«${v.ex}»</div></div>
+      <div class="f2"><div class="pos">${v.pos}</div><div class="w sm">${v.it}</div><div class="ru">${v.ru}</div></div>
+      <div class="dots"><i class="act"></i><i></i><i></i></div>`;
+    el.onclick = () => {
+      const n = (parseInt(el.dataset.s)+1)%3; el.dataset.s = n;
+      el.querySelectorAll('.dots i').forEach((d,i)=>{ d.className = i<n?'done':(i===n?'act':''); });
+    };
+    $(catMap[v.cat]).appendChild(el);
+  });
+}
+
+const SECS = ['cards','match','quiz','fill','tree','story'];
+function showSec(n){
+  SECS.forEach(s => $('sec-'+s).classList.toggle('on', s===n));
+  document.querySelectorAll('.tab').forEach((b,i)=> b.classList.toggle('active', SECS[i]===n));
+  if(n==='match') initMatch();
+  if(n==='quiz') initQuiz();
+  if(n==='fill') initFill();
+  if(n==='tree') initTree();
+  if(n==='story') initStory();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ===================== ABBINA ===================== */
+let mSel=null, mScore=0, mErr=0;
+function initMatch(){
+  const pool = shuffle(vocab.filter(v=>v.def.length<80)).slice(0,6);
+  mScore=0; mErr=0; mSel=null;
+  $('ms').textContent=0; $('me').textContent=0; $('mt').textContent=pool.length;
+  $('mres').classList.add('hidden');
+  const L=$('ml'), R=$('mr'); L.innerHTML=''; R.innerHTML='';
+  shuffle(pool).forEach(v=>{ const e=document.createElement('div'); e.className='mi w'; e.textContent=v.it; e.dataset.k=v.it; e.dataset.side='w'; e.onclick=()=>hMatch(e); L.appendChild(e); });
+  shuffle(pool).forEach(v=>{ const e=document.createElement('div'); e.className='mi'; e.textContent=v.def; e.dataset.k=v.it; e.dataset.side='d'; e.onclick=()=>hMatch(e); R.appendChild(e); });
+}
+function hMatch(el){
+  if(el.classList.contains('ok')||el.classList.contains('no')) return;
+  const clear=()=>document.querySelectorAll('.mi').forEach(e=>e.classList.remove('sel'));
+  if(!mSel){ clear(); el.classList.add('sel'); mSel=el; return; }
+  if(el===mSel){ el.classList.remove('sel'); mSel=null; return; }
+  if(el.dataset.side===mSel.dataset.side){ clear(); el.classList.add('sel'); mSel=el; return; }
+  if(el.dataset.k===mSel.dataset.k){
+    el.classList.add('ok'); mSel.classList.add('ok'); clear(); mSel=null; mScore++; $('ms').textContent=mScore;
+    if(mScore===parseInt($('mt').textContent)) setTimeout(()=>$('mres').classList.remove('hidden'),400);
+  } else {
+    el.classList.add('no'); mSel.classList.add('no'); mErr++; $('me').textContent=mErr;
+    const a=el,b=mSel; mSel=null; setTimeout(()=>{ a.classList.remove('no','sel'); b.classList.remove('no','sel'); },650);
+  }
+}
+
+/* ===================== QUIZ ===================== */
+let qItems=[], qIdx=0, qOk=0, qDone=false, qMiss=[];
+function initQuiz(onlyErr=false){
+  $('qres').classList.add('hidden'); $('qplay').classList.remove('hidden');
+  qItems = onlyErr && qMiss.length ? shuffle(qMiss) : shuffle(vocab).slice(0,15);
+  qMiss=[]; qIdx=0; qOk=0;
+  $('qpd').innerHTML = qItems.map(()=>'<i></i>').join('');
+  showQuiz();
+}
+function showQuiz(){
+  if(qIdx>=qItems.length){ return endQuiz(); }
+  const v=qItems[qIdx]; qDone=false;
+  $('qdef').textContent = v.def;
+  $('qfb').textContent=''; $('qfb').className='fb'; $('qnext').classList.add('hidden');
+  $('qcount').textContent = `Domanda ${qIdx+1} di ${qItems.length}`;
+  $('qbar').style.width = (qIdx/qItems.length*100)+'%';
+  [...$('qpd').children].forEach((d,i)=> d.className = i<qIdx?'done':(i===qIdx?'act':''));
+  let pool = shuffle(vocab.filter(x=>x.cat===v.cat && x.it!==v.it));
+  if(pool.length<3) pool = pool.concat(shuffle(vocab.filter(x=>x.cat!==v.cat)));
+  const opts = shuffle([v,...pool.slice(0,3)]);
+  const box=$('qopts'); box.innerHTML='';
+  opts.forEach(o=>{
+    const b=document.createElement('button'); b.className='opt'; b.textContent=o.it;
+    b.onclick=()=>{
+      if(qDone) return; qDone=true;
+      if(o.it===v.it){ b.classList.add('ok'); qOk++; $('qfb').textContent='✓ Giusto!'; $('qfb').className='fb good'; }
+      else { b.classList.add('no'); qMiss.push(v); [...box.children].forEach(x=>{ if(x.textContent===v.it) x.classList.add('ok'); }); $('qfb').textContent='Risposta: '+v.it; $('qfb').className='fb bad'; }
+      $('qnext').classList.remove('hidden');
+    };
+    box.appendChild(b);
+  });
+}
+function endQuiz(){
+  $('qplay').classList.add('hidden'); $('qres').classList.remove('hidden');
+  const p=Math.round(qOk/qItems.length*100);
+  $('qsc').textContent=`${qOk}/${qItems.length}`; $('qsub').textContent=`${p}% di risposte corrette`;
+  $('qem').textContent = p>=80?'🏆':(p>=50?'👍':'📖'); $('qbar').style.width='100%';
+}
+
+/* ===================== SCRIVI ===================== */
+const cloze = [
+ ["Mio ___ ha ottant'anni e vive in campagna.","nonno"],
+ ["I miei ___ sono separati da dieci anni.","genitori"],
+ ["Non ho fratelli né sorelle: sono ___ unico.","figlio"],
+ ["Il figlio di mio zio è mio ___.","cugino"],
+ ["Marco e Giulia si ___ in primavera.","sposano"],
+ ["Gli sposi partono per il ___ di nozze a Parigi.","viaggio"],
+ ["Abbiamo messo i piatti nella ___ di nozze.","lista"],
+ ["I nonni si ___ cura dei nipoti ogni pomeriggio.","prendono"],
+ ["La sposa piange perché è molto ___.","emozionata"],
+ ["Dopo il lavoro mi ___ con un bagno caldo.","rilasso"],
+ ["Il bambino è caduto e si è fatto ___.","male"],
+ ["Mi sono ___: la festa è sabato, non domenica.","sbagliato"],
+ ["Non solo studia, ma ___ lavora.","anche"],
+ ["Esco ___ se piove.","anche"],
+ ["Ho un cugino, ___ il figlio di mio zio.","cioè"],
+ ["Io e mia sorella abbiamo la ___ età.","stessa"],
+ ["Hai vinto alla lotteria? Non ci posso ___!","credere"],
+ ["Ci siamo sposati in ___, con una cerimonia civile.","comune"],
+ ["Lo sposo porta un ___ blu scuro.","completo"],
+ ["Mia madre ci aiuta ___ ogni mese.","economicamente"],
+ ["Ho una bella ___ per voi: aspetto un bambino!","notizia"],
+ ["I miei nonni hanno i capelli ___.","bianchi"],
+ ["Dopo vent'anni di matrimonio si sono ___.","separati"],
+ ["Mia sorella si è ___ a Milano per lavoro.","trasferita"],
+ ["Ti ho chiamato più ___, ma non rispondevi!","volte"],
+ ["Il ___ del film è molto lungo.","titolo"],
+];
+let fIdx=0, fOk=0, fItems=[];
+function initFill(){
+  fItems=shuffle(cloze); fIdx=0; fOk=0;
+  $('fres').classList.add('hidden'); $('fplay').classList.remove('hidden'); showFill();
+}
+function showFill(){
+  if(fIdx>=fItems.length) return endFill();
+  const [s,a]=fItems[fIdx];
+  $('fsent').innerHTML = s.replace('___','<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>');
+  $('fhint').textContent = `Indizio: inizia con «${a[0].toUpperCase()}» · ${a.replace(/\s/g,'').length} lettere`;
+  const i=$('fin'); i.value=''; i.className='inp'; i.disabled=false;
+  $('ffb').textContent=''; $('ffb').className='fb';
+  $('fcount').textContent=`Frase ${fIdx+1} di ${fItems.length}`; $('fbar').style.width=(fIdx/fItems.length*100)+'%';
+  $('fskip').classList.remove('hidden'); $('fnext').classList.add('hidden');
+  setTimeout(()=>i.focus(),60);
+}
+const strip = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+const norm = s => s.toLowerCase().trim().replace(/[!?.,;:]/g,'').replace(/\s+/g,' ');
+function checkFill(){
+  const [s,a]=fItems[fIdx]; const raw=$('fin').value; if(!raw.trim()) return;
+  const v=norm(raw), answers=a.split('/').map(norm);
+  const exact=answers.includes(v), loose=answers.map(strip).includes(strip(v));
+  const i=$('fin'); i.disabled=true;
+  if(exact){ fOk++; i.classList.add('ok'); $('ffb').textContent='✓ Giusto!'; $('ffb').className='fb good'; }
+  else if(loose){ fOk++; i.classList.add('ok'); $('ffb').textContent='✓ Quasi — attenzione all\'accento: '+a; $('ffb').className='fb good'; }
+  else { i.classList.add('no'); $('ffb').textContent='✗ Risposta: '+a; $('ffb').className='fb bad'; }
+  $('fskip').classList.add('hidden'); $('fnext').classList.remove('hidden');
+}
+function skipFill(){
+  const [s,a]=fItems[fIdx]; $('fin').disabled=true; $('ffb').textContent='Risposta: '+a; $('ffb').className='fb bad';
+  $('fskip').classList.add('hidden'); $('fnext').classList.remove('hidden');
+}
+function endFill(){
+  $('fplay').classList.add('hidden'); $('fres').classList.remove('hidden');
+  const p=Math.round(fOk/fItems.length*100);
+  $('fsc').textContent=`${fOk}/${fItems.length}`; $('fsub').textContent=`${p}% di risposte corrette`;
+  $('fem').textContent = p>=80?'🌟':(p>=50?'📝':'📖'); $('fbar').style.width='100%';
+}
+
+/* ===================== ALBERO ===================== */
+const TREE = [
+ {k:'nonnaP',w:'nonna',e:'👵'},{k:'nonnoP',w:'nonno',e:'👴'},{k:'nonnaM',w:'nonna',e:'👵'},{k:'nonnoM',w:'nonno',e:'👴'},
+ {k:'zio',w:'zio',e:'👨‍🦱'},{k:'padre',w:'padre',e:'👨'},{k:'madre',w:'madre',e:'👩'},{k:'zia',w:'zia',e:'👩‍🦰'},
+ {k:'cugino',w:'cugino',e:'🧒'},{k:'fratello',w:'fratello',e:'👦'},{k:'marco',w:null,e:'🧑',ref:true},{k:'sorella',w:'sorella',e:'👧'},
+];
+const TW = ['nonno','nonna','padre','madre','zio','zia','fratello','sorella','cugino'];
+const tn = k => TREE.find(n=>n.k===k);
+const nodeHTML = k => { const n=tn(k); return `<div class="tnode ${n.ref?'ref':''}" id="tn-${k}"><div class="tav">${n.e}</div><div class="tlab" id="tl-${k}">${n.ref?'Marco':'?'}</div></div>`; };
+const bond = '<div class="tbond">⚭</div>';
+function buildTree(){
+  $('tree').innerHTML = `
+   <div class="tcap">I nonni</div>
+   <div class="trow"><div class="tgrp">${nodeHTML('nonnaP')}${bond}${nodeHTML('nonnoP')}</div><div class="tgrp">${nodeHTML('nonnaM')}${bond}${nodeHTML('nonnoM')}</div></div>
+   <div class="tcap">I genitori e gli zii</div>
+   <div class="trow">${nodeHTML('zio')}<div class="tgrp">${nodeHTML('padre')}${bond}${nodeHTML('madre')}</div>${nodeHTML('zia')}</div>
+   <div class="tcap">I fratelli e i cugini</div>
+   <div class="trow">${nodeHTML('cugino')}${nodeHTML('fratello')}${nodeHTML('marco')}${nodeHTML('sorella')}</div>`;
+}
+let tQ=[], tIdx=0, tOk=0, tErr=0, tDone=false;
+function initTree(){
+  buildTree(); tQ = shuffle(TREE.filter(n=>!n.ref)).slice(0,10); tIdx=0; tOk=0; tErr=0;
+  $('tres').classList.add('hidden'); $('tplay').classList.remove('hidden'); $('tree').classList.remove('hidden');
+  showTree();
+}
+function showTree(){
+  if(tIdx>=tQ.length) return endTree();
+  const n=tQ[tIdx]; tDone=false;
+  document.querySelectorAll('.tnode').forEach(e=>e.classList.remove('target'));
+  $('tn-'+n.k).classList.add('target');
+  $('tc').textContent=tIdx+1; $('ts').textContent=tOk; $('te').textContent=tErr;
+  $('tfb').textContent=''; $('tfb').className='fb'; $('tnext').classList.add('hidden');
+  const opts = shuffle([n.w,...shuffle(TW.filter(w=>w!==n.w)).slice(0,3)]);
+  const box=$('topts'); box.innerHTML='';
+  opts.forEach(w=>{
+    const b=document.createElement('button'); b.className='opt'; b.textContent=w;
+    b.onclick=()=>{
+      if(tDone) return; tDone=true;
+      if(w===n.w){ b.classList.add('ok'); tOk++; $('tfb').textContent='✓ Giusto!'; $('tfb').className='fb good'; }
+      else { b.classList.add('no'); tErr++; [...box.children].forEach(x=>{ if(x.textContent===n.w) x.classList.add('ok'); }); $('tfb').textContent='Per Marco è: '+n.w; $('tfb').className='fb bad'; }
+      const node=$('tn-'+n.k); node.classList.add('revealed'); $('tl-'+n.k).textContent=n.w;
+      $('ts').textContent=tOk; $('te').textContent=tErr; $('tnext').classList.remove('hidden');
+    };
+    box.appendChild(b);
+  });
+}
+function endTree(){
+  $('tplay').classList.add('hidden'); $('tres').classList.remove('hidden');
+  const p=Math.round(tOk/tQ.length*100);
+  $('tsc').textContent=`${tOk}/${tQ.length}`; $('tsub').textContent=`${p}% di risposte corrette`;
+  $('tem').textContent = p>=80?'🌳':(p>=50?'👍':'📖');
+}
+
+/* ===================== STORIA ===================== */
+const stories = [
+ { title:"Il matrimonio di Giulia e Marco", steps:[
+   "Giulia e Marco si conoscono a una festa.",
+   "Diventano fidanzati e vanno a vivere insieme.",
+   "Decidono di sposarsi e preparano la lista di nozze.",
+   "Invitano parenti e amici alla cerimonia.",
+   "Si sposano in comune e festeggiano con tutta la famiglia.",
+   "Partono per il viaggio di nozze."
+ ]},
+ { title:"La vita di Karim", steps:[
+   "Karim nasce a Casablanca, in Marocco.",
+   "Cresce con i genitori, i nonni e due fratelli.",
+   "Da giovane si trasferisce in Italia per studiare.",
+   "Conosce Sara e diventano fidanzati.",
+   "Dopo due anni si sposano con una cerimonia civile.",
+   "Nasce il loro primo bambino: Karim diventa papà."
+ ]},
+];
+let sI=-1, sNext=0, sOk=0, sErr=0, sOrder=[];
+function initStory(){ sI=-1; nextStory(); }
+function nextStory(){
+  sI=(sI+1)%stories.length; const st=stories[sI];
+  sNext=0; sOk=0; sErr=0;
+  $('stitle').textContent=st.title; $('st').textContent=st.steps.length; $('ss').textContent=0; $('se').textContent=0;
+  $('sfb').textContent=''; $('sfb').className='fb';
+  const box=$('steps'); box.innerHTML='';
+  shuffle(st.steps.map((t,i)=>({t,i}))).forEach(o=>{
+    const d=document.createElement('div'); d.className='step'; d.innerHTML=`<div class="n">?</div><div>${o.t}</div>`;
+    d.onclick=()=>{
+      if(d.classList.contains('ok')) return;
+      if(o.i===sNext){
+        d.classList.add('ok'); d.querySelector('.n').textContent=o.i+1; sNext++; sOk++; $('ss').textContent=sOk;
+        if(sNext===st.steps.length){ $('sfb').textContent='🎉 Storia completa! Ora raccontala a voce.'; $('sfb').className='fb good'; }
+      } else {
+        d.classList.add('no'); sErr++; $('se').textContent=sErr; setTimeout(()=>d.classList.remove('no'),600);
+      }
+    };
+    box.appendChild(d);
+  });
+}
+
+renderCards();
+</script>
+</body>
+</html>
