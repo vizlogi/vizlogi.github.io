@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>100 слов для первого месяца в Италии</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#E7E4DA;
+  --card:#F4F2EC;
+  --ink:#241F1A;
+  --ink-soft:#5E574E;
+  --rule:#C3BCAC;
+  --stamp:#5D3A96;
+  --stamp-soft:#EBE2F7;
+  --ok:#2C6A4E;
+  --no:#B3382C;
+  --radius:4px;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+:root:not([data-theme="light"]){
+  @media (prefers-color-scheme: dark){
+    --paper:#1A1815;
+    --card:#241F1A;
+    --ink:#EDE8DE;
+    --ink-soft:#A49C8F;
+    --rule:#443D34;
+    --stamp:#B99BE8;
+    --stamp-soft:#2E2340;
+    --ok:#6CC79A;
+    --no:#E8897C;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#1A1815;--card:#241F1A;--ink:#EDE8DE;--ink-soft:#A49C8F;--rule:#443D34;
+  --stamp:#B99BE8;--stamp-soft:#2E2340;--ok:#6CC79A;--no:#E8897C;color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:Archivo,"Helvetica Neue",Arial,sans-serif;
+  font-size:17px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:620px;margin:0 auto;padding:22px 18px 64px}
+
+/* ---------- topbar + CTA ---------- */
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
+.social{display:flex;gap:6px;align-items:center}
+.social a{
+  display:flex;align-items:center;justify-content:center;
+  width:36px;height:36px;border:1px solid var(--rule);border-radius:999px;
+  color:var(--ink-soft);text-decoration:none;
+}
+.social a:hover{border-color:var(--stamp);color:var(--stamp);background:var(--stamp-soft)}
+.social svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.7;
+  stroke-linecap:round;stroke-linejoin:round}
+.links{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 18px;margin-bottom:14px}
+.links a{color:var(--ink-soft);text-decoration:none;font-size:14px;
+  border-bottom:1px solid var(--rule);padding-bottom:2px}
+.links a:hover{color:var(--stamp);border-color:var(--stamp)}
+@media (max-width:400px){
+  .cta{padding:8px 12px;font-size:13px}
+  .social a{width:33px;height:33px}
+}
+.cta{
+  display:inline-block;text-decoration:none;font:inherit;font-weight:600;
+  background:var(--stamp);color:#fff;border:1px solid var(--stamp);
+  border-radius:999px;padding:8px 15px;font-size:14px;line-height:1.2;
+}
+.cta:hover{filter:brightness(1.08)}
+.cta-block{
+  margin-top:34px;background:var(--card);border:1px solid var(--rule);
+  border-radius:var(--radius);padding:22px 20px;text-align:center;
+}
+.cta-block h2{font-size:21px;font-weight:700;letter-spacing:-.015em;margin:0 0 8px}
+.cta-block p{margin:0 0 16px;color:var(--ink-soft);font-size:15px;max-width:42ch;
+  margin-left:auto;margin-right:auto}
+.cta-block .cta{padding:12px 24px;font-size:16px}
+
+/* ---------- header ---------- */
+header{margin-bottom:22px}
+h1{
+  font-size:clamp(28px,7.2vw,40px);line-height:1.04;font-weight:800;
+  letter-spacing:-.022em;margin:0 0 10px;max-width:14ch;
+}
+.sub{margin:0;color:var(--ink-soft);font-size:15px;max-width:46ch}
+
+/* ---------- punch card progress ---------- */
+.punch{margin:20px 0 6px;display:grid;grid-template-columns:repeat(25,1fr);gap:3px}
+.punch i{display:block;aspect-ratio:1;border:1px solid var(--rule);border-radius:1px}
+.punch i.on{background:var(--stamp);border-color:var(--stamp)}
+.count{display:flex;justify-content:space-between;align-items:baseline;
+  font-size:13px;color:var(--ink-soft);font-variant-numeric:tabular-nums}
+.count b{color:var(--ink);font-weight:600}
+.count button{
+  background:none;border:none;color:var(--ink-soft);font:inherit;font-size:13px;
+  text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:4px 0;
+}
+.count button:hover{color:var(--no)}
+
+/* ---------- tabs ---------- */
+nav{display:flex;gap:0;margin:22px 0 16px;border:1px solid var(--rule);border-radius:var(--radius);overflow:hidden}
+nav button{
+  flex:1;background:var(--card);border:none;border-right:1px solid var(--rule);
+  font:inherit;font-size:15px;font-weight:500;color:var(--ink-soft);
+  padding:11px 6px;cursor:pointer;
+}
+nav button:last-child{border-right:none}
+nav button[aria-selected="true"]{background:var(--stamp);color:#fff;font-weight:600}
+
+/* ---------- filter ---------- */
+.filter{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
+.filter button{
+  background:transparent;border:1px solid var(--rule);border-radius:999px;
+  font:inherit;font-size:13px;color:var(--ink-soft);padding:5px 11px;cursor:pointer;
+}
+.filter button[aria-pressed="true"]{background:var(--stamp-soft);border-color:var(--stamp);color:var(--stamp);font-weight:600}
+
+/* ---------- ticket card ---------- */
+.ticket{
+  position:relative;background:var(--card);border:1px solid var(--rule);
+  border-radius:var(--radius);padding:30px 22px 22px;text-align:center;
+}
+.ticket::before{
+  content:"";position:absolute;left:0;right:0;top:-1px;height:7px;
+  background-image:radial-gradient(circle at 5px 0, var(--paper) 4px, transparent 4.5px);
+  background-size:12px 7px;background-repeat:repeat-x;
+}
+.tagline{font-size:12px;color:var(--ink-soft);font-variant-numeric:tabular-nums;margin-bottom:18px}
+.word{font-size:clamp(30px,8.4vw,42px);font-weight:800;letter-spacing:-.02em;line-height:1.1;margin:0}
+.answer{min-height:96px;display:flex;flex-direction:column;justify-content:center;gap:8px;margin-top:18px}
+.ru{font-size:21px;font-weight:600;margin:0}
+.ex{font-size:15px;color:var(--ink-soft);margin:0;font-style:italic}
+.exru{font-size:14px;color:var(--ink-soft);margin:0}
+.hint{color:var(--ink-soft);font-size:15px;margin:0}
+
+.row{display:flex;gap:9px;margin-top:18px}
+.row button{
+  flex:1;font:inherit;font-size:15px;font-weight:600;padding:13px 8px;
+  border-radius:var(--radius);border:1px solid var(--rule);background:var(--card);
+  color:var(--ink);cursor:pointer;
+}
+.btn-main{background:var(--stamp);border-color:var(--stamp);color:#fff}
+.btn-ok{border-color:var(--ok);color:var(--ok)}
+.btn-no{border-color:var(--no);color:var(--no)}
+
+/* ---------- quiz ---------- */
+.opts{display:grid;gap:9px;margin-top:20px}
+.opts button{
+  font:inherit;font-size:16px;text-align:left;padding:13px 15px;cursor:pointer;
+  background:var(--card);border:1px solid var(--rule);border-radius:var(--radius);color:var(--ink);
+}
+.opts button.right{border-color:var(--ok);background:var(--card);color:var(--ok);font-weight:600}
+.opts button.wrong{border-color:var(--no);color:var(--no);text-decoration:line-through}
+.score{text-align:center;font-size:13px;color:var(--ink-soft);margin-top:16px;font-variant-numeric:tabular-nums}
+
+/* ---------- list ---------- */
+.search{
+  width:100%;font:inherit;font-size:16px;padding:11px 13px;margin-bottom:14px;
+  background:var(--card);border:1px solid var(--rule);border-radius:var(--radius);color:var(--ink);
+}
+.search::placeholder{color:var(--ink-soft)}
+ul.list{list-style:none;margin:0;padding:0;border-top:1px solid var(--rule)}
+ul.list li{display:flex;align-items:baseline;gap:12px;padding:11px 2px;border-bottom:1px solid var(--rule)}
+ul.list .it{font-weight:600;min-width:38%}
+ul.list .tr{color:var(--ink-soft);font-size:15px;flex:1}
+.empty{color:var(--ink-soft);padding:24px 2px;text-align:center}
+
+footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--rule);
+  font-size:13px;color:var(--ink-soft);text-align:center}
+
+button:focus-visible,input:focus-visible{outline:2px solid var(--stamp);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media (max-width:380px){.punch{grid-template-columns:repeat(20,1fr)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="topbar">
+  <div class="social">
+    <a href="https://www.threads.com/@vai.in.italia" target="_blank" rel="noopener" title="Threads" aria-label="Threads"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M16 12v1.5a2.5 2.5 0 0 0 5 0V12a9 9 0 1 0-3.6 7.2"/></svg></a>
+    <a href="https://t.me/mamma_mia_italiano" target="_blank" rel="noopener" title="Telegram" aria-label="Telegram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 4 3 11l5 2 2 6 3-4 5 4z"/><path d="M8 13l10-7-7 9"/></svg></a>
+    <a href="https://dolceitalian.tilda.ws/" target="_blank" rel="noopener" title="Сайт" aria-label="Сайт"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.7 3.8 9S14.5 18.4 12 21c-2.5-2.6-3.8-5.7-3.8-9S9.5 5.6 12 3z"/></svg></a>
+  </div>
+  <a class="cta" href="https://docs.google.com/forms/d/e/1FAIpQLSfIMXAPzNEew5AaTqRTHeh6bUJyIugqH17EL1LDegWbCyB2Qw/viewform" target="_blank" rel="noopener">Записаться на занятие</a>
+</div>
+
+<header>
+  <h1>100 слов для первого месяца в Италии</h1>
+  <p class="sub">То, что тебе скажут на кассе, у врача, в комуне и в подъезде. Без «яблоко, стол, кошка».</p>
+
+  <div class="punch" id="punch" aria-hidden="true"></div>
+  <div class="count">
+    <span><b id="known">0</b> из 100 выучено</span>
+    <button id="reset" type="button">Сбросить прогресс</button>
+  </div>
+</header>
+
+<nav role="tablist" aria-label="Режим">
+  <button role="tab" id="t-cards" aria-selected="true" aria-controls="p-cards">Карточки</button>
+  <button role="tab" id="t-quiz" aria-selected="false" aria-controls="p-quiz">Проверка</button>
+  <button role="tab" id="t-list" aria-selected="false" aria-controls="p-list">Список</button>
+</nav>
+
+<div class="filter" id="filter"></div>
+
+<!-- CARDS -->
+<section id="p-cards" role="tabpanel" aria-labelledby="t-cards">
+  <div class="ticket">
+    <div class="tagline" id="c-tag">—</div>
+    <p class="word" id="c-word">—</p>
+    <div class="answer" id="c-answer">
+      <p class="hint">Вспомни перевод и открой карточку.</p>
+    </div>
+  </div>
+  <div class="row" id="c-row">
+    <button class="btn-main" id="c-show" type="button">Показать перевод</button>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section id="p-quiz" role="tabpanel" aria-labelledby="t-quiz" hidden>
+  <div class="ticket">
+    <div class="tagline" id="q-tag">—</div>
+    <p class="word" id="q-word">—</p>
+  </div>
+  <div class="opts" id="q-opts"></div>
+  <p class="score" id="q-score">Верно 0 из 0</p>
+</section>
+
+<!-- LIST -->
+<section id="p-list" role="tabpanel" aria-labelledby="t-list" hidden>
+  <input class="search" id="search" type="search" placeholder="Найти слово или перевод" autocomplete="off">
+  <ul class="list" id="list"></ul>
+</section>
+
+<section class="cta-block">
+  <h2>Выучил сто слов — а дальше?</h2>
+  <p>Слова в карточках и слова вслух живому человеку — разные навыки. Я преподаю итальянский и сам живу в Италии: беру тот язык, который слышу вокруг, и вывожу его тебе в речь.</p>
+  <a class="cta" href="https://docs.google.com/forms/d/e/1FAIpQLSfIMXAPzNEew5AaTqRTHeh6bUJyIugqH17EL1LDegWbCyB2Qw/viewform" target="_blank" rel="noopener">Записаться на занятие</a>
+</section>
+
+<div class="links">
+  <a href="https://www.threads.com/@vai.in.italia" target="_blank" rel="noopener">Threads</a>
+  <a href="https://t.me/mamma_mia_italiano" target="_blank" rel="noopener">Телеграм-канал</a>
+  <a href="https://dolceitalian.tilda.ws/" target="_blank" rel="noopener">Сайт</a>
+</div>
+
+<footer>Прогресс сохраняется в этом браузере. Карточки и проверка берут слова из выбранной категории.</footer>
+</div>
+
+<script>
+const DATA = [
+ ["documento","документ, удостоверение личности","Mi mostra un documento, per favore?","Покажите документ, пожалуйста.","Бумаги"],
+ ["modulo","бланк, форма","Deve compilare questo modulo.","Вам нужно заполнить этот бланк.","Бумаги"],
+ ["sportello","окошко в учреждении","Vada allo sportello numero tre.","Идите к третьему окошку.","Бумаги"],
+ ["appuntamento","запись, назначенная встреча","Ho un appuntamento alle dieci.","У меня запись на десять.","Бумаги"],
+ ["ricevuta","квитанция, расписка","Conservi la ricevuta.","Сохраните квитанцию.","Бумаги"],
+ ["scadenza","срок истечения","Qual è la data di scadenza?","Какая дата окончания срока?","Бумаги"],
+ ["rinnovo","продление","Devo fare il rinnovo del permesso.","Мне нужно продлить разрешение.","Бумаги"],
+ ["pratica","дело, заявка","La sua pratica è in lavorazione.","Ваше дело в обработке.","Бумаги"],
+ ["marca da bollo","гербовая марка","Serve una marca da bollo da 16 euro.","Нужна гербовая марка на 16 евро.","Бумаги"],
+ ["codice fiscale","налоговый код","Mi dice il codice fiscale?","Продиктуете налоговый код?","Бумаги"],
+ ["residenza","прописка, место жительства","Ho fatto la residenza il mese scorso.","Я оформил прописку в прошлом месяце.","Бумаги"],
+ ["tessera sanitaria","медицинская карта","Porti la tessera sanitaria.","Возьмите медицинскую карту.","Бумаги"],
+ ["firma","подпись","Manca la firma qui.","Здесь не хватает подписи.","Бумаги"],
+ ["compilare","заполнить (бланк)","Compili il modulo in stampatello.","Заполните бланк печатными буквами.","Бумаги"],
+ ["autocertificazione","самодекларация вместо справки","Basta un'autocertificazione.","Достаточно самодекларации.","Бумаги"],
+
+ ["scontrino","чек","Vuole lo scontrino?","Чек нужен?","Магазин"],
+ ["cassa","касса","Pago alla cassa.","Я плачу на кассе.","Магазин"],
+ ["contanti","наличные","Posso pagare in contanti?","Можно заплатить наличными?","Магазин"],
+ ["resto","сдача","Ecco il resto.","Вот сдача.","Магазин"],
+ ["sconto","скидка","C'è uno sconto del venti per cento.","Скидка двадцать процентов.","Магазин"],
+ ["offerta","акция, спецпредложение","Questo è in offerta.","Это по акции.","Магазин"],
+ ["sacchetto","пакет","Le serve un sacchetto?","Вам нужен пакет?","Магазин"],
+ ["carrello","тележка","Prendi un carrello all'ingresso.","Возьми тележку на входе.","Магазин"],
+ ["bilancia","весы","Devi pesare la frutta sulla bilancia.","Фрукты нужно взвесить на весах.","Магазин"],
+ ["confezione","упаковка","Una confezione da sei.","Упаковка из шести штук.","Магазин"],
+ ["saldi","сезонные распродажи","I saldi iniziano a gennaio.","Распродажи начинаются в январе.","Магазин"],
+ ["prezzo","цена","Il prezzo è sull'etichetta.","Цена на этикетке.","Магазин"],
+ ["bancomat","карта и банкомат","Accettate il bancomat?","Картой принимаете?","Магазин"],
+ ["tessera","карта (клубная, проездная)","Ha la tessera del supermercato?","У вас есть карта магазина?","Магазин"],
+ ["ritirare","забрать (заказ, документ)","Devo ritirare un pacco.","Мне нужно забрать посылку.","Магазин"],
+
+ ["affitto","аренда, арендная плата","L'affitto si paga entro il cinque.","Аренда платится до пятого числа.","Жильё"],
+ ["cauzione","залог","La cauzione è di due mensilità.","Залог — две месячные платы.","Жильё"],
+ ["contratto","договор","Il contratto è registrato?","Договор зарегистрирован?","Жильё"],
+ ["bolletta","счёт за коммуналку","È arrivata la bolletta del gas.","Пришёл счёт за газ.","Жильё"],
+ ["spese condominiali","расходы на содержание дома","Le spese condominiali sono escluse.","Расходы на дом не включены.","Жильё"],
+ ["caldaia","котёл отопления","La caldaia non funziona.","Котёл не работает.","Жильё"],
+ ["contatore","счётчик","Il contatore è sul pianerottolo.","Счётчик на лестничной площадке.","Жильё"],
+ ["interruttore","выключатель","L'interruttore è dietro la porta.","Выключатель за дверью.","Жильё"],
+ ["presa","розетка","Non c'è una presa in camera.","В комнате нет розетки.","Жильё"],
+ ["rubinetto","кран","Il rubinetto perde.","Кран подтекает.","Жильё"],
+ ["perdita","протечка, утечка","C'è una perdita d'acqua.","Протечка воды.","Жильё"],
+ ["serratura","замок","Ho cambiato la serratura.","Я поменял замок.","Жильё"],
+ ["citofono","домофон","Ti citofono quando arrivo.","Позвоню в домофон, когда приеду.","Жильё"],
+ ["tapparella","рольставня","La tapparella è bloccata.","Рольставню заклинило.","Жильё"],
+ ["inquilino","жилец, арендатор","Sono il nuovo inquilino.","Я новый жилец.","Жильё"],
+ ["guasto","поломка; сломан","L'ascensore è guasto.","Лифт сломан.","Жильё"],
+
+ ["visita","приём у врача","Ho prenotato una visita.","Я записался на приём.","Здоровье"],
+ ["ricetta","рецепт на лекарство","Serve la ricetta per questo.","На это нужен рецепт.","Здоровье"],
+ ["impegnativa","направление от врача","Porti l'impegnativa del medico.","Возьмите направление от врача.","Здоровье"],
+ ["pronto soccorso","приёмный покой","Siamo andati al pronto soccorso.","Мы поехали в приёмный покой.","Здоровье"],
+ ["medico di base","семейный врач","Il mio medico di base riceve oggi.","Мой семейный врач принимает сегодня.","Здоровье"],
+ ["febbre","температура, жар","Ho la febbre da ieri.","У меня температура со вчера.","Здоровье"],
+ ["dolore","боль","Ho un dolore alla schiena.","У меня болит спина.","Здоровье"],
+ ["pastiglia","таблетка","Una pastiglia ogni otto ore.","По таблетке каждые восемь часов.","Здоровье"],
+ ["da banco","без рецепта","È un farmaco da banco.","Это лекарство без рецепта.","Здоровье"],
+ ["analisi","анализы","Devo fare le analisi del sangue.","Мне нужно сдать анализ крови.","Здоровье"],
+ ["ambulatorio","кабинет врача, поликлиника","L'ambulatorio apre alle otto.","Кабинет открывается в восемь.","Здоровье"],
+ ["urgente","срочный","È una cosa urgente.","Это срочное дело.","Здоровье"],
+
+ ["biglietto","билет","Il biglietto si compra in tabaccheria.","Билет покупают в табачном киоске.","Транспорт"],
+ ["convalidare","пробить, прокомпостировать билет","Ricordati di convalidare il biglietto.","Не забудь пробить билет.","Транспорт"],
+ ["binario","путь, платформа","Il treno parte dal binario sei.","Поезд отправляется с шестого пути.","Транспорт"],
+ ["ritardo","опоздание, задержка","Il treno è in ritardo di venti minuti.","Поезд опаздывает на двадцать минут.","Транспорт"],
+ ["sciopero","забастовка","Domani c'è sciopero dei treni.","Завтра забастовка на железной дороге.","Транспорт"],
+ ["coincidenza","пересадка, стыковка","Ho perso la coincidenza.","Я не успел на пересадку.","Транспорт"],
+ ["fermata","остановка","Scendo alla prossima fermata.","Я выхожу на следующей остановке.","Транспорт"],
+ ["abbonamento","абонемент, проездной","Ho l'abbonamento mensile.","У меня месячный проездной.","Транспорт"],
+ ["multa","штраф","Ho preso una multa.","Я получил штраф.","Транспорт"],
+ ["pedaggio","плата за автостраду","Il pedaggio si paga all'uscita.","За автостраду платят на выезде.","Транспорт"],
+ ["parcheggio","парковка","Il parcheggio è a pagamento.","Парковка платная.","Транспорт"],
+
+ ["conto","счёт в ресторане","Il conto, per favore.","Счёт, пожалуйста.","Еда"],
+ ["coperto","плата за место и хлеб","Il coperto è due euro.","Плата за место — два евро.","Еда"],
+ ["al banco","у стойки","Il caffè al banco costa meno.","Кофе у стойки стоит дешевле.","Еда"],
+ ["primo","первое блюдо (паста, рис)","Come primo prendo una pasta.","На первое возьму пасту.","Еда"],
+ ["secondo","второе блюдо (мясо, рыба)","Come secondo prendo il pesce.","На второе возьму рыбу.","Еда"],
+ ["contorno","гарнир","Che contorni avete?","Какие у вас гарниры?","Еда"],
+ ["prenotare","забронировать","Vorrei prenotare un tavolo.","Я бы хотел забронировать столик.","Еда"],
+ ["da asporto","навынос","Una pizza da asporto.","Одну пиццу навынос.","Еда"],
+ ["frizzante","газированная","Acqua naturale o frizzante?","Вода без газа или с газом?","Еда"],
+ ["assaggiare","попробовать на вкус","Vuole assaggiare?","Хотите попробовать?","Еда"],
+ ["ordinare","заказать","Avete già ordinato?","Вы уже заказали?","Еда"],
+
+ ["salve","здравствуйте (нейтрально)","Salve, posso chiederle una cosa?","Здравствуйте, можно вас спросить?","Общение"],
+ ["permesso","можно войти? разрешите","Permesso, posso passare?","Разрешите, можно пройти?","Общение"],
+ ["prego","пожалуйста; прошу; слушаю","Prego, si accomodi.","Прошу, присаживайтесь.","Общение"],
+ ["scusi","извините (на «вы»)","Scusi, dov'è la stazione?","Извините, где вокзал?","Общение"],
+ ["mi dica","слушаю вас","Buongiorno, mi dica.","Здравствуйте, слушаю вас.","Общение"],
+ ["volentieri","с удовольствием","Un caffè? Volentieri!","Кофе? С удовольствием!","Общение"],
+ ["magari","вот бы; может быть","Magari ci vediamo domani.","Может, увидимся завтра.","Общение"],
+ ["figurati","да не за что; брось","Grazie mille! Figurati.","Большое спасибо! Да брось.","Общение"],
+ ["mi raccomando","смотри мне, обязательно","Mi raccomando, chiamami!","Обязательно позвони мне!","Общение"],
+ ["ci sentiamo","созвонимся, спишемся","Ci sentiamo domani.","Созвонимся завтра.","Общение"],
+ ["vicino di casa","сосед","Il mio vicino di casa è gentile.","Мой сосед приветливый.","Общение"],
+ ["disponibile","доступный, свободный","La stanza è ancora disponibile?","Комната ещё свободна?","Общение"],
+ ["gentile","любезный, приветливый","Molto gentile, grazie.","Очень любезно, спасибо.","Общение"],
+ ["aspettare","ждать","Aspetti un attimo, per favore.","Подождите минутку, пожалуйста.","Общение"],
+ ["chiedere","спрашивать, просить","Volevo chiederle una cosa.","Я хотел вас кое о чём спросить.","Общение"],
+ ["provare","пробовать; примерять","Posso provare questa maglia?","Можно примерить эту кофту?","Общение"],
+ ["consegnare","доставить, вручить","Il pacco arriva domani.","Посылку доставят завтра.","Общение"],
+ ["disdire","расторгнуть, отменить","Voglio disdire il contratto.","Я хочу расторгнуть договор.","Общение"],
+ ["timbrare","проштамповать, отметить","Bisogna timbrare il biglietto.","Билет нужно прокомпостировать.","Общение"],
+ ["coda","очередь","C'era una coda lunghissima.","Была огромная очередь.","Общение"]
+];
+
+const CATS = ["Все", ...Array.from(new Set(DATA.map(d => d[4])))];
+const KEY = "it100-known-v1";
+
+let known = new Set();
+try {
+  const raw = localStorage.getItem(KEY);
+  if (raw) known = new Set(JSON.parse(raw));
+} catch (e) { /* storage unavailable — работаем без сохранения */ }
+
+function save(){
+  try { localStorage.setItem(KEY, JSON.stringify([...known])); } catch(e){}
+}
+
+let cat = "Все";
+let pool = [], ci = 0, revealed = false;
+let qRight = 0, qTotal = 0, qLocked = false, qWord = null;
+
+const $ = id => document.getElementById(id);
+
+/* ---------- progress ---------- */
+function drawPunch(){
+  const p = $("punch");
+  if (!p.children.length){
+    p.innerHTML = DATA.map(() => "<i></i>").join("");
+  }
+  [...p.children].forEach((el, i) => {
+    el.className = known.has(DATA[i][0]) ? "on" : "";
+  });
+  $("known").textContent = known.size;
+}
+
+/* ---------- filter ---------- */
+function drawFilter(){
+  $("filter").innerHTML = CATS.map(c =>
+    `<button type="button" data-cat="${c}" aria-pressed="${c === cat}">${c}</button>`
+  ).join("");
+}
+
+function buildPool(){
+  pool = DATA.filter(d => cat === "Все" || d[4] === cat);
+  for (let i = pool.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+  ci = 0;
+}
+
+/* ---------- cards ---------- */
+function drawCard(){
+  if (!pool.length) buildPool();
+  if (ci >= pool.length){ buildPool(); }
+  const w = pool[ci];
+  revealed = false;
+  $("c-tag").textContent = `${w[4]} · ${ci + 1} из ${pool.length}`;
+  $("c-word").textContent = w[0];
+  $("c-answer").innerHTML = `<p class="hint">Вспомни перевод и открой карточку.</p>`;
+  $("c-row").innerHTML = `<button class="btn-main" id="c-show" type="button">Показать перевод</button>`;
+  $("c-show").onclick = reveal;
+}
+
+function reveal(){
+  const w = pool[ci];
+  revealed = true;
+  $("c-answer").innerHTML =
+    `<p class="ru">${w[1]}</p><p class="ex">${w[2]}</p><p class="exru">${w[3]}</p>`;
+  $("c-row").innerHTML =
+    `<button class="btn-no" id="c-again" type="button">Ещё раз</button>
+     <button class="btn-ok" id="c-got" type="button">Знаю</button>`;
+  $("c-again").onclick = () => { known.delete(w[0]); save(); drawPunch(); next(); };
+  $("c-got").onclick   = () => { known.add(w[0]);    save(); drawPunch(); next(); };
+}
+
+function next(){ ci++; drawCard(); }
+
+/* ---------- quiz ---------- */
+function drawQuiz(){
+  const src = DATA.filter(d => cat === "Все" || d[4] === cat);
+  qWord = src[Math.floor(Math.random() * src.length)];
+  qLocked = false;
+  $("q-tag").textContent = qWord[4];
+  $("q-word").textContent = qWord[0];
+
+  const wrong = DATA.filter(d => d[0] !== qWord[0]);
+  const picks = [];
+  while (picks.length < 3 && wrong.length){
+    const c = wrong.splice(Math.floor(Math.random() * wrong.length), 1)[0];
+    if (!picks.includes(c[1])) picks.push(c[1]);
+  }
+  const opts = [qWord[1], ...picks].sort(() => Math.random() - 0.5);
+
+  $("q-opts").innerHTML = opts.map(o =>
+    `<button type="button" data-v="${o.replace(/"/g, "&quot;")}">${o}</button>`
+  ).join("");
+}
+
+$("q-opts").addEventListener("click", e => {
+  const b = e.target.closest("button");
+  if (!b || qLocked) return;
+  qLocked = true;
+  qTotal++;
+  const right = b.dataset.v === qWord[1];
+  if (right){
+    qRight++;
+    b.classList.add("right");
+    known.add(qWord[0]);
+  } else {
+    b.classList.add("wrong");
+    known.delete(qWord[0]);
+    [...$("q-opts").children].forEach(x => {
+      if (x.dataset.v === qWord[1]) x.classList.add("right");
+    });
+  }
+  save(); drawPunch();
+  $("q-score").textContent = `Верно ${qRight} из ${qTotal}`;
+  setTimeout(drawQuiz, right ? 650 : 1500);
+});
+
+/* ---------- list ---------- */
+function drawList(){
+  const q = $("search").value.trim().toLowerCase();
+  const rows = DATA
+    .filter(d => cat === "Все" || d[4] === cat)
+    .filter(d => !q || d[0].toLowerCase().includes(q) || d[1].toLowerCase().includes(q));
+  $("list").innerHTML = rows.length
+    ? rows.map(d =>
+        `<li><span class="it">${d[0]}</span><span class="tr">${d[1]}</span></li>`
+      ).join("")
+    : `<li class="empty">Ничего не нашлось</li>`;
+}
+$("search").addEventListener("input", drawList);
+
+/* ---------- tabs ---------- */
+const TABS = [["t-cards","p-cards"],["t-quiz","p-quiz"],["t-list","p-list"]];
+TABS.forEach(([t, p]) => {
+  $(t).addEventListener("click", () => {
+    TABS.forEach(([t2, p2]) => {
+      $(t2).setAttribute("aria-selected", t2 === t);
+      $(p2).hidden = p2 !== p;
+    });
+    if (p === "p-quiz") drawQuiz();
+    if (p === "p-list") drawList();
+  });
+});
+
+$("filter").addEventListener("click", e => {
+  const b = e.target.closest("[data-cat]");
+  if (!b) return;
+  cat = b.dataset.cat;
+  drawFilter();
+  buildPool(); drawCard();
+  if (!$("p-quiz").hidden) drawQuiz();
+  if (!$("p-list").hidden) drawList();
+});
+
+$("reset").onclick = () => {
+  known.clear(); save(); drawPunch();
+  qRight = 0; qTotal = 0;
+  $("q-score").textContent = "Верно 0 из 0";
+};
+
+drawFilter();
+drawPunch();
+buildPool();
+drawCard();
+</script>
+</body>
+</html>
