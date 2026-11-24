@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Italiano A2 — Lezione 1 · In giro per negozi</title>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,600;1,6..96,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f6f3ec; --paper:#fffefa; --ink:#1d2a2e; --ink2:#52615f; --ink3:#9aa6a3;
+  --green:#1f7a5a; --green-soft:#d9efe6; --pink:#d6336c; --pink-soft:#fbdde8;
+  --gold:#b98a2e; --gold-soft:#f4e8c8; --line:#dad6c8; --red:#c0392b; --red-soft:#f8dcd8;
+  --shadow:0 1px 0 #dad6c8, 0 10px 22px rgba(29,42,46,.08);
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:'Outfit',sans-serif; color:var(--ink); min-height:100vh; overflow-x:hidden;
+  background-color:var(--bg);
+  background-image:repeating-linear-gradient(90deg, rgba(29,42,46,.04) 0 1px, transparent 1px 22px); }
+.wrapper { max-width:880px; margin:0 auto; padding:34px 16px 70px; }
+
+header { text-align:center; margin-bottom:34px; }
+.eyebrow { font-size:.72rem; font-weight:600; letter-spacing:.24em; text-transform:uppercase; color:var(--pink); margin-bottom:10px; }
+header h1 { font-family:'Bodoni Moda',serif; font-weight:600; font-size:clamp(2.4rem,7.5vw,3.8rem); line-height:1.02; }
+header .sub { font-family:'Bodoni Moda',serif; font-style:italic; color:var(--green); font-size:1.12rem; margin-top:8px; }
+header .orn { margin-top:14px; display:flex; justify-content:center; gap:8px; }
+header .orn i { width:26px; height:6px; border-radius:3px; display:block; }
+
+.tabs { display:flex; gap:6px; justify-content:center; flex-wrap:wrap; margin-bottom:34px; }
+.tab { padding:9px 18px; border:1.5px solid var(--ink); background:transparent; border-radius:2px; font-family:'Outfit',sans-serif;
+  font-size:.8rem; font-weight:500; letter-spacing:.06em; text-transform:uppercase; color:var(--ink); cursor:pointer; transition:all .16s; }
+.tab:hover { background:var(--gold-soft); }
+.tab.active { background:var(--ink); color:var(--paper); }
+
+.sec { display:none; } .sec.on { display:block; }
+.cat { display:flex; align-items:center; gap:12px; margin:38px 0 26px; font-family:'Bodoni Moda',serif; font-style:italic; font-size:1.05rem; color:var(--green); }
+.cat::after { content:''; flex:1; height:1px; background:var(--line); }
+
+/* CARDS = cartellini */
+.grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(215px,1fr)); gap:30px 16px; }
+.card { background:var(--paper); border:1px solid var(--line); border-radius:14px 14px 4px 4px; padding:38px 16px 22px; cursor:pointer; position:relative;
+  box-shadow:var(--shadow); transition:transform .18s, border-color .18s; user-select:none; min-height:150px; }
+.card::before { content:''; position:absolute; top:11px; left:50%; width:14px; height:14px; margin-left:-7px; border-radius:50%; border:2px solid var(--line); background:var(--bg); }
+.card::after { content:''; position:absolute; top:-14px; left:50%; width:1.5px; height:30px; background:var(--gold); transform-origin:bottom; transform:rotate(16deg); opacity:.7; }
+.card:hover { transform:translateY(-4px); }
+.card[data-s="1"] { border-color:var(--pink); }
+.card[data-s="2"] { border-color:var(--green); }
+.dots { position:absolute; bottom:8px; right:10px; display:flex; gap:4px; }
+.dots i { width:5px; height:5px; border-radius:50%; background:var(--line); display:block; }
+.dots i.act { background:var(--pink); } .dots i.done { background:var(--green); }
+.f0,.f1,.f2 { display:none; flex-direction:column; gap:7px; }
+.card[data-s="0"] .f0, .card[data-s="1"] .f1, .card[data-s="2"] .f2 { display:flex; }
+.pos { font-size:.66rem; color:var(--ink3); letter-spacing:.06em; font-style:italic; }
+.w { font-family:'Bodoni Moda',serif; font-weight:600; font-size:1.3rem; line-height:1.2; }
+.w.sm { font-size:1.05rem; }
+.hint { font-size:.7rem; color:var(--ink3); margin-top:4px; }
+.def { font-size:.84rem; color:var(--ink2); line-height:1.5; }
+.ex { font-size:.84rem; color:var(--pink); font-style:italic; line-height:1.45; }
+.lbl { font-size:.6rem; letter-spacing:.16em; text-transform:uppercase; color:var(--gold); font-weight:600; }
+.ru { font-family:'Bodoni Moda',serif; font-size:1.15rem; color:var(--green); font-weight:600; line-height:1.3; }
+
+/* GAME COMMON */
+.gh { text-align:center; margin-bottom:22px; }
+.gh h2 { font-family:'Bodoni Moda',serif; font-weight:600; font-size:1.8rem; }
+.gh p { color:var(--ink2); font-size:.88rem; margin-top:4px; }
+.score { display:flex; justify-content:space-around; background:var(--paper); border:1px solid var(--line); border-radius:4px; padding:13px; margin-bottom:16px; box-shadow:var(--shadow); }
+.score b { display:block; font-family:'Bodoni Moda',serif; font-size:1.9rem; color:var(--pink); font-weight:600; text-align:center; line-height:1.1; }
+.score span { font-size:.66rem; text-transform:uppercase; letter-spacing:.14em; color:var(--ink2); display:block; text-align:center; }
+.btn { display:inline-block; padding:10px 24px; background:var(--green); color:#fff; border:1.5px solid var(--green); border-radius:2px; font-family:'Outfit',sans-serif; font-size:.82rem; font-weight:500; letter-spacing:.06em; text-transform:uppercase; cursor:pointer; transition:all .16s; }
+.btn:hover { background:#17614a; }
+.btn.sec { background:transparent; color:var(--ink); border-color:var(--ink); }
+.btn.sec:hover { background:var(--ink); color:var(--paper); }
+.row { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:16px; }
+.bar { height:4px; background:var(--line); border-radius:9px; margin-bottom:20px; overflow:hidden; }
+.bar i { display:block; height:100%; background:var(--pink); width:0; transition:width .35s; }
+.count { text-align:center; font-size:.78rem; color:var(--ink3); margin-bottom:12px; letter-spacing:.06em; }
+.fb { text-align:center; font-weight:600; font-size:.92rem; min-height:24px; margin-top:10px; }
+.fb.good { color:var(--green); } .fb.bad { color:var(--red); }
+.panel { background:var(--paper); border:1px solid var(--line); border-radius:4px; padding:26px 22px; box-shadow:var(--shadow); margin-bottom:16px; }
+.hidden { display:none !important; }
+.res { text-align:center; padding:44px 20px; }
+.res .em { font-size:3.2rem; }
+.res h3 { font-family:'Bodoni Moda',serif; font-size:2rem; font-weight:600; margin:8px 0; }
+.res .big { font-family:'Bodoni Moda',serif; font-size:3.4rem; color:var(--gold); font-weight:600; line-height:1; }
+.res p { color:var(--ink2); margin-top:8px; }
+
+/* MATCH */
+.mboard { display:grid; grid-template-columns:1fr 1.5fr; gap:10px; }
+.mcol { display:flex; flex-direction:column; gap:8px; }
+.mi { background:var(--paper); border:1.5px solid var(--line); border-radius:3px; padding:11px 12px; cursor:pointer; font-size:.84rem; line-height:1.4; color:var(--ink2); transition:all .15s; display:flex; align-items:center; min-height:50px; }
+.mi.w { font-family:'Bodoni Moda',serif; font-weight:600; font-size:1rem; color:var(--ink); justify-content:center; text-align:center; }
+.mi:hover:not(.ok):not(.no) { border-color:var(--gold); }
+.mi.sel { border-color:var(--pink); background:var(--pink-soft); }
+.mi.ok { border-color:var(--green); background:var(--green-soft); color:var(--green); cursor:default; }
+.mi.no { border-color:var(--red); background:var(--red-soft); animation:shake .4s; }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+
+/* QUIZ */
+.qdef { font-family:'Bodoni Moda',serif; font-style:italic; font-size:clamp(1.15rem,3.6vw,1.5rem); line-height:1.5; text-align:center; }
+.qlab { text-align:center; font-size:.68rem; letter-spacing:.18em; text-transform:uppercase; color:var(--ink3); margin-bottom:12px; }
+.opts { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.opt { padding:13px 10px; background:var(--paper); border:1.5px solid var(--line); border-radius:3px; font-family:'Bodoni Moda',serif; font-weight:600; font-size:1rem; cursor:pointer; color:var(--ink); transition:all .15s; }
+.opt:hover:not(.ok):not(.no) { border-color:var(--gold); }
+.opt.ok { border-color:var(--green); background:var(--green-soft); color:var(--green); }
+.opt.no { border-color:var(--red); background:var(--red-soft); color:var(--red); }
+.pd { display:flex; gap:5px; justify-content:center; flex-wrap:wrap; margin-bottom:16px; }
+.pd i { width:8px; height:8px; border-radius:50%; background:var(--line); display:block; transition:all .2s; }
+.pd i.done { background:var(--green); } .pd i.act { background:var(--pink); transform:scale(1.35); }
+
+/* FILL */
+.cloze { font-family:'Bodoni Moda',serif; font-size:1.25rem; line-height:1.7; margin-bottom:6px; }
+.cloze u { display:inline-block; min-width:90px; border-bottom:2px solid var(--pink); text-decoration:none; }
+.fhint { font-size:.78rem; color:var(--ink3); margin-bottom:14px; font-style:italic; }
+.irow { display:flex; gap:10px; flex-wrap:wrap; }
+.inp { flex:1; min-width:160px; padding:11px 14px; border:1.5px solid var(--line); border-radius:3px; font-family:'Bodoni Moda',serif; font-size:1.1rem; background:var(--bg); color:var(--ink); outline:none; }
+.inp:focus { border-color:var(--pink); background:var(--paper); }
+.inp.ok { border-color:var(--green); background:var(--green-soft); } .inp.no { border-color:var(--red); background:var(--red-soft); }
+
+/* SHOP */
+.cust { display:flex; gap:14px; align-items:center; background:var(--paper); border:1px solid var(--line); border-radius:4px; padding:16px 18px; box-shadow:var(--shadow); margin-bottom:16px; }
+.cust .av { font-size:2.4rem; }
+.cust .say { font-family:'Bodoni Moda',serif; font-style:italic; font-size:clamp(1.05rem,3.2vw,1.35rem); line-height:1.45; }
+.cust .who { font-size:.62rem; letter-spacing:.16em; text-transform:uppercase; color:var(--gold); font-weight:600; margin-bottom:3px; font-style:normal; font-family:'Outfit',sans-serif; }
+.pgrid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.prod { background:var(--paper); border:1.5px solid var(--line); border-radius:4px; padding:14px 12px 12px; cursor:pointer; text-align:center; transition:all .16s; box-shadow:var(--shadow); }
+.prod:hover:not(.locked) { border-color:var(--gold); transform:translateY(-2px); }
+.prod .pe { font-size:2.6rem; line-height:1.1; }
+.swatch { height:54px; border-radius:3px; margin:8px 0 6px; border:1px solid rgba(0,0,0,.12); display:flex; align-items:center; justify-content:center; overflow:hidden; font-size:.95rem; letter-spacing:.22em; line-height:1.2; text-align:center; }
+.pm { font-size:.74rem; color:var(--ink3); letter-spacing:.04em; }
+.pdesc { font-size:.8rem; color:var(--ink2); margin-top:6px; min-height:2.4em; font-style:italic; display:none; }
+.prod.locked { cursor:default; }
+.prod.locked .pdesc { display:block; }
+.prod.ok { border-color:var(--green); background:var(--green-soft); }
+.prod.no { border-color:var(--red); background:var(--red-soft); animation:shake .4s; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <div class="eyebrow">Adulti · A2 · Lezione 1</div>
+    <h1>In giro per negozi</h1>
+    <div class="sub">Vestiti, colori, acquisti e consigli</div>
+    <div class="orn"><i style="background:var(--green)"></i><i style="background:var(--pink)"></i><i style="background:var(--gold)"></i></div>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" onclick="showSec('cards')">Parole</button>
+    <button class="tab" onclick="showSec('match')">Abbina</button>
+    <button class="tab" onclick="showSec('quiz')">Quiz</button>
+    <button class="tab" onclick="showSec('fill')">Scrivi</button>
+    <button class="tab" onclick="showSec('shop')">In negozio</button>
+  </div>
+
+  <div class="sec on" id="sec-cards">
+    <div class="cat">Vestiti e accessori</div><div class="grid" id="g-capi"></div>
+    <div class="cat">Colori e fantasie</div><div class="grid" id="g-col"></div>
+    <div class="cat">Tessuti e modelli</div><div class="grid" id="g-tess"></div>
+    <div class="cat">Com'è?</div><div class="grid" id="g-agg"></div>
+    <div class="cat">Negozi e acquisti</div><div class="grid" id="g-neg"></div>
+    <div class="cat">Verbi</div><div class="grid" id="g-verbi"></div>
+    <div class="cat">Espressioni utili</div><div class="grid" id="g-espr"></div>
+    <p style="text-align:center;color:var(--ink3);font-size:.78rem;margin-top:30px;font-style:italic;">1° tocco → definizione ed esempio · 2° tocco → traduzione · 3° tocco → di nuovo la parola</p>
+  </div>
+
+  <div class="sec" id="sec-match">
+    <div class="gh"><h2>Abbina</h2><p>Collega ogni parola alla sua definizione</p></div>
+    <div class="score"><div><b id="ms">0</b><span>Coppie</span></div><div><b id="mt">0</b><span>Totale</span></div><div><b id="me">0</b><span>Errori</span></div></div>
+    <div class="mboard"><div class="mcol" id="ml"></div><div class="mcol" id="mr"></div></div>
+    <div class="row"><button class="btn" onclick="initMatch()">Nuovo giro</button></div>
+    <div class="res hidden" id="mres"><div class="em">🎉</div><h3>Bravissimo!</h3><p>Hai trovato tutte le coppie.</p><div class="row"><button class="btn" onclick="initMatch()">Ancora</button></div></div>
+  </div>
+
+  <div class="sec" id="sec-quiz">
+    <div class="gh"><h2>Quiz</h2><p>Quale parola corrisponde alla definizione?</p></div>
+    <div class="bar"><i id="qbar"></i></div>
+    <div class="pd" id="qpd"></div>
+    <div class="count" id="qcount"></div>
+    <div id="qplay">
+      <div class="panel"><div class="qlab">Definizione</div><div class="qdef" id="qdef">—</div></div>
+      <div class="opts" id="qopts"></div>
+      <div class="fb" id="qfb"></div>
+      <div class="row"><button class="btn sec hidden" id="qnext" onclick="qIdx++;showQuiz()">Avanti →</button></div>
+    </div>
+    <div class="res hidden" id="qres"><div class="em" id="qem">🏆</div><h3>Risultato</h3><div class="big" id="qsc"></div><p id="qsub"></p>
+      <div class="row"><button class="btn" onclick="initQuiz()">Di nuovo</button><button class="btn sec" onclick="initQuiz(true)">Solo errori</button></div></div>
+  </div>
+
+  <div class="sec" id="sec-fill">
+    <div class="gh"><h2>Scrivi</h2><p>Completa la frase con la parola giusta</p></div>
+    <div class="bar"><i id="fbar"></i></div>
+    <div class="count" id="fcount"></div>
+    <div id="fplay">
+      <div class="panel">
+        <div class="cloze" id="fsent"></div>
+        <div class="fhint" id="fhint"></div>
+        <div class="irow"><input class="inp" id="fin" placeholder="Scrivi la parola…" autocomplete="off" onkeydown="if(event.key==='Enter')checkFill()"><button class="btn" onclick="checkFill()">→</button></div>
+        <div class="fb" id="ffb"></div>
+      </div>
+      <div class="row"><button class="btn sec" id="fskip" onclick="skipFill()">Salta</button><button class="btn sec hidden" id="fnext" onclick="fIdx++;showFill()">Avanti →</button></div>
+    </div>
+    <div class="res hidden" id="fres"><div class="em" id="fem">🌟</div><h3>Finito!</h3><div class="big" id="fsc"></div><p id="fsub"></p><div class="row"><button class="btn" onclick="initFill()">Di nuovo</button></div></div>
+  </div>
+
+  <div class="sec" id="sec-shop">
+    <div class="gh"><h2>In negozio</h2><p>Ascolta il cliente e scegli l'articolo giusto: attenzione a colore, fantasia e materiale!</p></div>
+    <div class="score"><div><b id="hs">0</b><span>Giuste</span></div><div><b id="hc">1</b><span>Su 10</span></div><div><b id="he">0</b><span>Errori</span></div></div>
+    <div id="hplay">
+      <div class="cust"><div class="av">🧑‍💼</div><div><div class="who">Il cliente cerca</div><div class="say" id="hsay">—</div></div></div>
+      <div class="pgrid" id="hgrid"></div>
+      <div class="fb" id="hfb"></div>
+      <div class="row"><button class="btn sec hidden" id="hnext" onclick="hIdx++;showShop()">Avanti →</button></div>
+    </div>
+    <div class="res hidden" id="hres"><div class="em" id="hem">🛍️</div><h3>Ottimo commesso!</h3><div class="big" id="hsc"></div><p id="hsub"></p><div class="row"><button class="btn" onclick="initShop()">Di nuovo</button></div></div>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+function shuffle(a){ const b=[...a]; for(let i=b.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [b[i],b[j]]=[b[j],b[i]]; } return b; }
+const pick = a => a[Math.floor(Math.random()*a.length)];
+
+/* ===================== VOCAB ===================== */
+const vocab = [
+// ---- VESTITI E ACCESSORI
+{it:"la gonna",pos:"sost. f.",def:"Un capo da donna che copre dalla vita in giù, senza gambe.",ex:"Per la festa porto una gonna lunga.",ru:"юбка",cat:"capi"},
+{it:"la maglietta",pos:"sost. f.",def:"Un capo leggero di cotone, con le maniche corte.",ex:"D'estate porto solo una maglietta.",ru:"футболка",cat:"capi"},
+{it:"la giacca",pos:"sost. f.",def:"Un capo che si mette sopra la camicia o la maglietta.",ex:"Per il lavoro metto una giacca blu.",ru:"пиджак / куртка",cat:"capi"},
+{it:"i pantaloni",pos:"sost. m. pl.",def:"Il capo con due gambe, da uomo e da donna.",ex:"Questi pantaloni sono troppo lunghi.",ru:"брюки",cat:"capi"},
+{it:"la camicia",pos:"sost. f.",def:"Un capo con colletto e bottoni, spesso elegante.",ex:"Lui porta una camicia bianca.",ru:"рубашка / блузка",cat:"capi"},
+{it:"la cravatta",pos:"sost. f.",def:"Una striscia di stoffa che gli uomini mettono al collo.",ex:"Per il colloquio metto la cravatta.",ru:"галстук",cat:"capi"},
+{it:"il vestito",pos:"sost. m.",def:"Un capo da donna intero, con corpetto e gonna insieme.",ex:"Ha un vestito rosso a fiori.",ru:"платье / одежда",cat:"capi"},
+{it:"l'abito",pos:"sost. m.",def:"Un vestito elegante, da uomo o da donna.",ex:"Per il matrimonio ho un abito scuro.",ru:"костюм / наряд",cat:"capi"},
+{it:"il capo d'abbigliamento",pos:"loc.",def:"Un singolo vestito o accessorio che si indossa.",ex:"Una camicia è un capo d'abbigliamento.",ru:"предмет одежды",cat:"capi"},
+{it:"l'indumento",pos:"sost. m.",def:"Qualsiasi cosa che si indossa per coprire il corpo.",ex:"Gli indumenti sono nell'armadio.",ru:"предмет одежды",cat:"capi"},
+{it:"l'abbigliamento",pos:"sost. m.",def:"L'insieme dei vestiti e degli accessori.",ex:"Il negozio di abbigliamento apre alle dieci.",ru:"одежда (в целом)",cat:"capi"},
+{it:"il cappotto",pos:"sost. m.",def:"Un capo lungo e pesante che si porta in inverno.",ex:"Fuori fa freddo: metto il cappotto.",ru:"пальто",cat:"capi"},
+{it:"il maglione",pos:"sost. m.",def:"Un capo di lana a maniche lunghe, per il freddo.",ex:"Questo maglione è caldissimo.",ru:"свитер",cat:"capi"},
+{it:"il giubbotto",pos:"sost. m.",def:"Una giacca corta e sportiva.",ex:"Il giubbotto di pelle va molto di moda.",ru:"короткая куртка",cat:"capi"},
+{it:"la giacca a vento",pos:"loc.",def:"Una giacca leggera che protegge dal vento e dalla pioggia.",ex:"Per la montagna metto la giacca a vento.",ru:"ветровка",cat:"capi"},
+{it:"la pelliccia",pos:"sost. f.",def:"Un cappotto fatto con la pelle di animali con il pelo.",ex:"Mia nonna ha una pelliccia molto vecchia.",ru:"шуба",cat:"capi"},
+{it:"la scarpa",pos:"sost. f.",def:"Quello che si mette ai piedi per camminare.",ex:"Queste scarpe sono nuove.",ru:"туфля / обувь",cat:"capi"},
+{it:"il tacco",pos:"sost. m.",def:"La parte rialzata della scarpa, dietro.",ex:"Non porto tacchi alti: sono scomodi.",ru:"каблук",cat:"capi"},
+{it:"lo stivale",pos:"sost. m.",def:"Una scarpa alta che copre anche la gamba.",ex:"In inverno porto gli stivali.",ru:"сапог",cat:"capi"},
+{it:"il sandalo",pos:"sost. m.",def:"Una scarpa aperta, per l'estate.",ex:"D'estate cammino sempre in sandali.",ru:"сандалия",cat:"capi"},
+{it:"lo scarpone",pos:"sost. m.",def:"Una scarpa pesante e forte, per la montagna.",ex:"Per camminare sulla neve servono gli scarponi.",ru:"горный ботинок",cat:"capi"},
+{it:"il calzino",pos:"sost. m.",def:"Quello che si mette al piede, dentro la scarpa.",ex:"Ho bisogno di calzini di lana.",ru:"носок",cat:"capi"},
+{it:"i pantaloncini",pos:"sost. m. pl.",def:"Pantaloni molto corti, per l'estate o per lo sport.",ex:"Gioco a calcio in pantaloncini.",ru:"шорты",cat:"capi"},
+{it:"il costume da bagno",pos:"loc.",def:"Il capo che si usa al mare e in piscina.",ex:"Ho dimenticato il costume da bagno!",ru:"купальник / плавки",cat:"capi"},
+{it:"l'accappatoio",pos:"sost. m.",def:"Una grande veste morbida da mettere dopo il bagno.",ex:"Dopo la doccia metto l'accappatoio.",ru:"банный халат",cat:"capi"},
+{it:"la tuta da sci",pos:"loc.",def:"Il vestito caldo e impermeabile per sciare.",ex:"Per la settimana bianca compro una tuta da sci.",ru:"лыжный костюм",cat:"capi"},
+{it:"la fascetta",pos:"sost. f.",def:"Una striscia elastica per tenere i capelli o coprire le orecchie.",ex:"Mi serve una fascetta per correre al freddo.",ru:"повязка / ободок",cat:"capi"},
+{it:"la sciarpa",pos:"sost. f.",def:"Una lunga striscia di stoffa che si mette intorno al collo.",ex:"In inverno porto una sciarpa di lana.",ru:"шарф",cat:"capi"},
+{it:"il cappello",pos:"sost. m.",def:"Un accessorio che si mette sulla testa.",ex:"Il cappello mi protegge dal sole.",ru:"шапка / шляпа",cat:"capi"},
+{it:"la cintura",pos:"sost. f.",def:"Una striscia che si mette intorno alla vita.",ex:"Questi pantaloni hanno bisogno di una cintura.",ru:"ремень",cat:"capi"},
+{it:"la borsa",pos:"sost. f.",def:"Un oggetto per portare con sé le proprie cose.",ex:"Nella borsa ho il telefono e le chiavi.",ru:"сумка",cat:"capi"},
+{it:"gli occhiali (da sole)",pos:"sost. m. pl.",def:"Occhiali scuri che proteggono gli occhi dal sole.",ex:"Al mare porto sempre gli occhiali da sole.",ru:"(солнцезащитные) очки",cat:"capi"},
+{it:"il paio",pos:"sost. m. (pl. le paia)",def:"Due cose uguali che si usano insieme.",ex:"Ho comprato un paio di scarpe nere.",ru:"пара",cat:"capi"},
+{it:"l'anello",pos:"sost. m.",def:"Un gioiello che si porta al dito.",ex:"Mi ha regalato un anello d'oro.",ru:"кольцо",cat:"capi"},
+{it:"il braccialetto",pos:"sost. m.",def:"Un gioiello che si porta al polso.",ex:"Porto sempre un braccialetto d'argento.",ru:"браслет",cat:"capi"},
+{it:"l'orecchino",pos:"sost. m.",def:"Un gioiello che si porta all'orecchio.",ex:"Questi orecchini sono troppo appariscenti.",ru:"серьга",cat:"capi"},
+{it:"la pietra",pos:"sost. f.",def:"Un materiale duro; la pietra preziosa si usa nei gioielli.",ex:"L'anello ha una pietra azzurra.",ru:"камень",cat:"capi"},
+
+// ---- COLORI E FANTASIE
+{it:"il colore",pos:"sost. m.",def:"Quello che vediamo negli oggetti: rosso, blu, verde…",ex:"Qual è il tuo colore preferito?",ru:"цвет",cat:"col"},
+{it:"blu",pos:"agg. inv.",def:"Il colore del mare quando è profondo.",ex:"Ho un vestito blu.",ru:"синий",cat:"col"},
+{it:"rosso/a",pos:"agg.",def:"Il colore del pomodoro e del sangue.",ex:"Le sue scarpe rosse sono bellissime.",ru:"красный",cat:"col"},
+{it:"grigio/a",pos:"agg.",def:"Il colore delle nuvole e del cemento.",ex:"Mi piace il cappotto grigio.",ru:"серый",cat:"col"},
+{it:"azzurro/a",pos:"agg.",def:"Il colore del cielo quando fa bel tempo.",ex:"Ha una camicia azzurra.",ru:"голубой",cat:"col"},
+{it:"celeste",pos:"agg.",def:"Un azzurro molto chiaro, come il cielo sereno.",ex:"La maglietta celeste è per il bambino.",ru:"светло-голубой",cat:"col"},
+{it:"bianco/a",pos:"agg.",def:"Il colore della neve e del latte.",ex:"La camicia bianca va con tutto.",ru:"белый",cat:"col"},
+{it:"rosa",pos:"agg. inv.",def:"Un colore tra il rosso e il bianco.",ex:"Mia sorella adora il rosa.",ru:"розовый",cat:"col"},
+{it:"nero/a",pos:"agg.",def:"Il colore della notte; il contrario del bianco.",ex:"Un vestito nero è sempre elegante.",ru:"чёрный",cat:"col"},
+{it:"scuro/a",pos:"agg.",def:"Di un colore forte, poco luminoso.",ex:"Preferisco i colori scuri.",ru:"тёмный",cat:"col"},
+{it:"verde",pos:"agg.",def:"Il colore dell'erba.",ex:"Ho comprato una borsa verde.",ru:"зелёный",cat:"col"},
+{it:"marrone",pos:"agg. inv.",def:"Il colore del cioccolato e della terra.",ex:"Gli stivali marroni sono di pelle.",ru:"коричневый",cat:"col"},
+{it:"beige",pos:"agg. inv.",def:"Un colore chiaro, tra il bianco e il marrone.",ex:"Il cappotto beige è molto classico.",ru:"бежевый",cat:"col"},
+{it:"viola",pos:"agg. inv.",def:"Il colore dei fiori di lavanda.",ex:"Porta una sciarpa viola.",ru:"фиолетовый",cat:"col"},
+{it:"arancione",pos:"agg.",def:"Il colore dell'arancia.",ex:"Il giubbotto arancione si vede da lontano.",ru:"оранжевый",cat:"col"},
+{it:"giallo/a",pos:"agg.",def:"Il colore del sole e del limone.",ex:"Una maglietta gialla è molto allegra.",ru:"жёлтый",cat:"col"},
+{it:"a righe",pos:"loc. agg.",def:"Con linee dritte di colori diversi.",ex:"Ho una camicia a righe blu e bianche.",ru:"в полоску",cat:"col"},
+{it:"a quadri",pos:"loc. agg.",def:"Con quadrati di due colori che si ripetono.",ex:"La gonna a quadri è molto di moda.",ru:"в клетку",cat:"col"},
+{it:"a pallini",pos:"loc. agg.",def:"Con tanti piccoli cerchi colorati.",ex:"Il vestito a pallini è molto allegro.",ru:"в горошек",cat:"col"},
+{it:"a pois",pos:"loc. agg.",def:"Lo stesso di «a pallini», con una parola di origine francese.",ex:"Mi piace la sciarpa a pois.",ru:"в горошек",cat:"col"},
+{it:"a tinta unita",pos:"loc. agg.",def:"Di un solo colore, senza disegni.",ex:"Preferisco le camicie a tinta unita.",ru:"однотонный",cat:"col"},
+{it:"a fiori",pos:"loc. agg.",def:"Con disegni di fiori.",ex:"Il vestito a fiori è perfetto per la primavera.",ru:"в цветочек",cat:"col"},
+{it:"l'oro",pos:"sost. m.",def:"Il metallo giallo e prezioso dei gioielli.",ex:"L'anello è d'oro.",ru:"золото",cat:"col"},
+{it:"l'argento",pos:"sost. m.",def:"Il metallo grigio chiaro e prezioso.",ex:"Gli orecchini sono d'argento.",ru:"серебро",cat:"col"},
+
+// ---- TESSUTI E MODELLI
+{it:"la pelle",pos:"sost. f.",def:"Il materiale che si ottiene dagli animali, per scarpe e borse.",ex:"Questa borsa è di pelle vera.",ru:"кожа",cat:"tess"},
+{it:"la lana",pos:"sost. f.",def:"Il materiale caldo che si ottiene dalle pecore.",ex:"Il maglione è di lana.",ru:"шерсть",cat:"tess"},
+{it:"la seta",pos:"sost. f.",def:"Un tessuto morbido, lucido e prezioso.",ex:"La camicia di seta costa molto.",ru:"шёлк",cat:"tess"},
+{it:"il cotone",pos:"sost. m.",def:"Un tessuto naturale, fresco e morbido.",ex:"Le magliette di cotone sono comode.",ru:"хлопок",cat:"tess"},
+{it:"il lino",pos:"sost. m.",def:"Un tessuto naturale, leggero e fresco, per l'estate.",ex:"D'estate porto pantaloni di lino.",ru:"лён",cat:"tess"},
+{it:"sintetico/a",pos:"agg.",def:"Fatto in laboratorio, non naturale.",ex:"Il materiale è sintetico.",ru:"синтетический",cat:"tess"},
+{it:"il materiale",pos:"sost. m.",def:"Quello con cui è fatto un oggetto.",ex:"Di che materiale è questa giacca?",ru:"материал",cat:"tess"},
+{it:"a V",pos:"loc. agg.",def:"Con la scollatura a forma di V.",ex:"Mi piace il maglione a V.",ru:"с V-образным вырезом",cat:"tess"},
+{it:"a collo alto",pos:"loc. agg.",def:"Con un collo che copre tutto il collo.",ex:"Il maglione a collo alto è caldo.",ru:"с высоким горлом",cat:"tess"},
+{it:"il girocollo",pos:"sost. m.",def:"Una scollatura rotonda, vicina al collo.",ex:"Preferisco i maglioni a girocollo.",ru:"круглый вырез",cat:"tess"},
+{it:"a maniche lunghe",pos:"loc. agg.",def:"Con le maniche fino al polso.",ex:"In inverno porto camicie a maniche lunghe.",ru:"с длинными рукавами",cat:"tess"},
+{it:"a maniche corte",pos:"loc. agg.",def:"Con le maniche sopra il gomito.",ex:"D'estate metto magliette a maniche corte.",ru:"с короткими рукавами",cat:"tess"},
+{it:"da ginnastica",pos:"loc. agg.",def:"Adatto per fare sport e movimento.",ex:"Metto le scarpe da ginnastica per correre.",ru:"спортивный",cat:"tess"},
+{it:"la taglia",pos:"sost. f.",def:"La misura di un vestito.",ex:"Che taglia porti? — La quarantadue.",ru:"размер",cat:"tess"},
+{it:"l'etichetta",pos:"sost. f.",def:"Il cartellino attaccato al vestito, con prezzo e informazioni.",ex:"Sull'etichetta c'è il materiale.",ru:"этикетка / бирка",cat:"tess"},
+{it:"lo stile",pos:"sost. m.",def:"Il modo personale di vestirsi o di fare le cose.",ex:"Ha uno stile molto elegante.",ru:"стиль",cat:"tess"},
+{it:"il tipo",pos:"sost. m.",def:"La categoria o il genere di una cosa.",ex:"Che tipo di scarpe cerchi?",ru:"тип / вид",cat:"tess"},
+{it:"il modello",pos:"sost. m.",def:"Una forma particolare di un prodotto.",ex:"Questo modello è molto giovanile.",ru:"модель",cat:"tess"},
+{it:"la qualità",pos:"sost. f.",def:"Il livello di bontà di un prodotto.",ex:"La qualità della lana è ottima.",ru:"качество",cat:"tess"},
+{it:"la collezione",pos:"sost. f.",def:"L'insieme dei vestiti di una stagione di un marchio.",ex:"La nuova collezione è bellissima.",ru:"коллекция",cat:"tess"},
+
+// ---- COM'E'
+{it:"corto/a",pos:"agg.",def:"Di poca lunghezza.",ex:"La gonna è troppo corta.",ru:"короткий",cat:"agg"},
+{it:"lungo/a",pos:"agg.",def:"Di molta lunghezza.",ex:"Mi piace il vestito lungo.",ru:"длинный",cat:"agg"},
+{it:"basso/a",pos:"agg.",def:"Di poca altezza.",ex:"Porto scarpe con il tacco basso.",ru:"низкий",cat:"agg"},
+{it:"alto/a",pos:"agg.",def:"Di molta altezza.",ex:"Il tacco alto è scomodo.",ru:"высокий",cat:"agg"},
+{it:"elegante",pos:"agg.",def:"Raffinato, adatto a occasioni importanti.",ex:"Stasera vado a cena in un ristorante elegante.",ru:"элегантный",cat:"agg"},
+{it:"semplice",pos:"agg.",def:"Senza troppi dettagli.",ex:"Preferisco un modello semplice.",ru:"простой",cat:"agg"},
+{it:"appariscente",pos:"agg.",def:"Che attira molto l'attenzione; molto vistoso.",ex:"Il rosso è un colore appariscente.",ru:"броский",cat:"agg"},
+{it:"classico/a",pos:"agg.",def:"Che non passa mai di moda.",ex:"Il blazer blu è un capo classico.",ru:"классический",cat:"agg"},
+{it:"sportivo/a",pos:"agg.",def:"Comodo e adatto allo sport.",ex:"Ha uno stile sportivo.",ru:"спортивный",cat:"agg"},
+{it:"giovanile",pos:"agg.",def:"Adatto ai giovani, moderno e vivace.",ex:"Cerco un modello giovanile.",ru:"молодёжный",cat:"agg"},
+{it:"originale",pos:"agg.",def:"Diverso da tutti gli altri.",ex:"Questa borsa è molto originale.",ru:"оригинальный",cat:"agg"},
+{it:"pratico/a",pos:"agg.",def:"Facile da usare, utile.",ex:"Gli stivali di gomma sono pratici.",ru:"практичный",cat:"agg"},
+{it:"moderno/a",pos:"agg.",def:"Del nostro tempo, non antico.",ex:"Il negozio ha uno stile moderno.",ru:"современный",cat:"agg"},
+{it:"allegro/a",pos:"agg.",def:"Felice e vivace, anche nei colori.",ex:"Un vestito giallo è molto allegro.",ru:"весёлый",cat:"agg"},
+{it:"vivace",pos:"agg.",def:"Pieno di energia o di colori forti.",ex:"Mi piacciono i colori vivaci.",ru:"яркий / живой",cat:"agg"},
+{it:"comodo/a",pos:"agg.",def:"Che dà una sensazione piacevole, senza fastidio.",ex:"Queste scarpe sono molto comode.",ru:"удобный",cat:"agg"},
+{it:"scomodo/a",pos:"agg.",def:"Che dà fastidio, non è comodo.",ex:"I tacchi alti sono scomodi.",ru:"неудобный",cat:"agg"},
+{it:"largo/a",pos:"agg.",def:"Non stretto; con molto spazio.",ex:"Questi pantaloni sono troppo larghi.",ru:"широкий",cat:"agg"},
+{it:"stringere",pos:"v. irr.",def:"Se un vestito è piccolo, non lascia spazio: ti stringe.",ex:"Questa gonna mi stringe in vita.",ru:"быть тесным / сжимать",cat:"agg"},
+{it:"pesante",pos:"agg.",def:"Che pesa molto o è molto caldo.",ex:"Il cappotto è troppo pesante.",ru:"тяжёлый",cat:"agg"},
+{it:"leggero/a",pos:"agg.",def:"Che pesa poco.",ex:"Il lino è un tessuto leggero.",ru:"лёгкий",cat:"agg"},
+{it:"carino/a",pos:"agg.",def:"Grazioso, piacevole da vedere.",ex:"Che bella borsa, è carinissima!",ru:"симпатичный",cat:"agg"},
+{it:"stupendo/a",pos:"agg.",def:"Bellissimo, magnifico.",ex:"Il tuo vestito è stupendo!",ru:"великолепный",cat:"agg"},
+{it:"costoso/a",pos:"agg.",def:"Che costa molto.",ex:"Quel cappotto è molto costoso.",ru:"дорогой",cat:"agg"},
+{it:"economico/a",pos:"agg.",def:"Che costa poco.",ex:"Cerco una giacca economica.",ru:"недорогой",cat:"agg"},
+{it:"misterioso/a",pos:"agg.",def:"Che ha un segreto, che non si capisce subito.",ex:"È un regalo misterioso: non so chi l'ha mandato.",ru:"загадочный",cat:"agg"},
+{it:"sostenibile",pos:"agg.",def:"Che rispetta l'ambiente.",ex:"Compro solo abbigliamento sostenibile.",ru:"экологичный",cat:"agg"},
+{it:"biologico/a",pos:"agg.",def:"Prodotto senza sostanze chimiche.",ex:"Il cotone biologico è più caro.",ru:"органический",cat:"agg"},
+{it:"usato/a",pos:"agg.",def:"Già utilizzato da un'altra persona.",ex:"Al mercatino compro vestiti usati.",ru:"б/у",cat:"agg"},
+{it:"migliore",pos:"agg.",def:"Più buono di tutti gli altri.",ex:"Questo è il negozio migliore della città.",ru:"лучший",cat:"agg"},
+{it:"ultimo/a",pos:"agg.",def:"Quello che viene alla fine.",ex:"È l'ultimo paio rimasto.",ru:"последний",cat:"agg"},
+{it:"lontano/a",pos:"agg.",def:"A grande distanza da noi.",ex:"Il centro commerciale è lontano.",ru:"далёкий",cat:"agg"},
+{it:"esperto/a",pos:"agg.",def:"Che conosce molto bene un argomento.",ex:"La commessa è molto esperta.",ru:"опытный",cat:"agg"},
+
+// ---- NEGOZI E ACQUISTI
+{it:"il centro commerciale",pos:"loc.",def:"Un grande edificio con tanti negozi.",ex:"Il sabato andiamo al centro commerciale.",ru:"торговый центр",cat:"neg"},
+{it:"il camerino",pos:"sost. m.",def:"La piccola stanza dove si provano i vestiti.",ex:"Dov'è il camerino, per favore?",ru:"примерочная",cat:"neg"},
+{it:"lo scontrino",pos:"sost. m.",def:"Il foglietto che si riceve dopo aver pagato.",ex:"Conserva lo scontrino, se vuoi cambiare.",ru:"кассовый чек",cat:"neg"},
+{it:"lo sconto",pos:"sost. m.",def:"Una riduzione del prezzo.",ex:"Oggi c'è il trenta per cento di sconto.",ru:"скидка",cat:"neg"},
+{it:"il resto",pos:"sost. m.",def:"I soldi che si restituiscono dopo il pagamento.",ex:"Tenga pure il resto.",ru:"сдача",cat:"neg"},
+{it:"la profumeria",pos:"sost. f.",def:"Il negozio dove si comprano profumi e trucchi.",ex:"Compro il profumo in profumeria.",ru:"парфюмерный магазин",cat:"neg"},
+{it:"il parrucchiere",pos:"sost. m.",def:"Chi taglia e sistema i capelli.",ex:"Domani vado dal parrucchiere.",ru:"парикмахер",cat:"neg"},
+{it:"il barbiere",pos:"sost. m.",def:"Chi taglia i capelli e la barba agli uomini.",ex:"Il barbiere mi ha sistemato la barba.",ru:"барбер",cat:"neg"},
+{it:"il meccanico",pos:"sost. m.",def:"Chi ripara le automobili.",ex:"Il meccanico ha riparato la macchina.",ru:"механик",cat:"neg"},
+{it:"la cartoleria",pos:"sost. f.",def:"Il negozio dove si comprano quaderni e penne.",ex:"In cartoleria compro un quaderno.",ru:"канцелярский магазин",cat:"neg"},
+{it:"la gioielleria",pos:"sost. f.",def:"Il negozio dove si vendono anelli e collane.",ex:"In gioielleria ho visto un anello stupendo.",ru:"ювелирный магазин",cat:"neg"},
+{it:"il mercatino",pos:"sost. m.",def:"Un piccolo mercato dove si vendono cose usate.",ex:"Al mercatino ho trovato una giacca bellissima.",ru:"блошиный рынок",cat:"neg"},
+{it:"il gruppo d'acquisto",pos:"loc.",def:"Persone che comprano insieme prodotti locali.",ex:"Facciamo parte di un gruppo d'acquisto.",ru:"закупочная группа",cat:"neg"},
+{it:"gli alimentari",pos:"sost. m. pl.",def:"Il negozio dove si compra da mangiare.",ex:"Vado agli alimentari a comprare il latte.",ru:"продуктовый магазин",cat:"neg"},
+{it:"l'acquisto",pos:"sost. m.",def:"Quello che si compra.",ex:"Questo è stato un ottimo acquisto.",ru:"покупка",cat:"neg"},
+{it:"l'articolo",pos:"sost. m.",def:"Un oggetto in vendita.",ex:"Questo articolo è in offerta.",ru:"товар / изделие",cat:"neg"},
+{it:"la merce",pos:"sost. f.",def:"Tutto quello che un negozio vende.",ex:"La nuova merce arriva ogni lunedì.",ru:"товар",cat:"neg"},
+{it:"la provenienza",pos:"sost. f.",def:"Il luogo da cui viene un prodotto.",ex:"Controlla la provenienza sull'etichetta.",ru:"происхождение",cat:"neg"},
+{it:"il regalo",pos:"sost. m.",def:"Quello che si dà a qualcuno per fargli un piacere.",ex:"Ho comprato un regalo per mia madre.",ru:"подарок",cat:"neg"},
+{it:"il biglietto",pos:"sost. m.",def:"Il foglio per entrare in un posto o per viaggiare.",ex:"Compro due biglietti per il cinema.",ru:"билет",cat:"neg"},
+{it:"il quaderno",pos:"sost. m.",def:"Un libro con le pagine bianche, per scrivere.",ex:"Mi serve un quaderno a quadri.",ru:"тетрадь",cat:"neg"},
+{it:"il profumo",pos:"sost. m.",def:"Un liquido con un buon odore.",ex:"Gli ho regalato un profumo.",ru:"духи",cat:"neg"},
+{it:"la medicina",pos:"sost. f.",def:"Quello che si prende quando si sta male.",ex:"Compro la medicina in farmacia.",ru:"лекарство",cat:"neg"},
+{it:"elettronico/a",pos:"agg.",def:"Che funziona con l'elettricità.",ex:"Cerco un negozio di articoli elettronici.",ru:"электронный",cat:"neg"},
+{it:"il mobile",pos:"sost. m.",def:"Un oggetto grande di casa, come l'armadio o il tavolo.",ex:"Abbiamo comprato un mobile antico.",ru:"предмет мебели",cat:"neg"},
+{it:"l'oggetto",pos:"sost. m.",def:"Una cosa che si può toccare.",ex:"Nel mercatino ci sono molti oggetti strani.",ru:"предмет / вещь",cat:"neg"},
+{it:"la classe",pos:"sost. f.",def:"Il gruppo di studenti; anche la categoria di un biglietto.",ex:"Viaggio in seconda classe.",ru:"класс",cat:"neg"},
+{it:"la settimana bianca",pos:"loc.",def:"Una vacanza sulla neve, di solito di sette giorni.",ex:"A febbraio andiamo in settimana bianca.",ru:"неделя на лыжах",cat:"neg"},
+{it:"la pianta",pos:"sost. f.",def:"Un essere vivo verde, con radici e foglie.",ex:"La pianta ha bisogno d'acqua.",ru:"растение",cat:"neg"},
+{it:"l'intervista",pos:"sost. f.",def:"Una serie di domande fatte a una persona.",ex:"Ho letto un'intervista a una stilista.",ru:"интервью",cat:"neg"},
+{it:"l'avarizia",pos:"sost. f.",def:"Il difetto di chi non vuole spendere soldi.",ex:"Per avarizia non compra mai niente.",ru:"скупость",cat:"neg"},
+{it:"la fiducia",pos:"sost. f.",def:"La sicurezza che una persona è onesta.",ex:"Ho fiducia in quel negoziante.",ru:"доверие",cat:"neg"},
+
+// ---- VERBI
+{it:"indossare",pos:"v.",def:"Avere addosso un vestito o un accessorio.",ex:"Oggi indosso un cappotto nuovo.",ru:"носить / надевать",cat:"verbi"},
+{it:"dimenticare",pos:"v.",def:"Non ricordare una cosa.",ex:"Ho dimenticato la borsa al ristorante.",ru:"забывать",cat:"verbi"},
+{it:"abbinare",pos:"v.",def:"Mettere insieme due cose che stanno bene.",ex:"Abbino la giacca blu ai pantaloni grigi.",ru:"сочетать",cat:"verbi"},
+{it:"andare di moda",pos:"loc. v.",def:"Essere popolare in questo momento.",ex:"Le gonne lunghe vanno di moda.",ru:"быть в моде",cat:"verbi"},
+{it:"piacere",pos:"v. irr.",def:"Dare una sensazione piacevole.",ex:"Mi piace questa camicia.",ru:"нравиться",cat:"verbi"},
+{it:"riuscire",pos:"v. irr.",def:"Avere successo in quello che si fa.",ex:"Non riesco a trovare la mia taglia.",ru:"удаваться / суметь",cat:"verbi"},
+{it:"evitare",pos:"v.",def:"Cercare di non fare o di non incontrare.",ex:"Evito i negozi la domenica.",ru:"избегать",cat:"verbi"},
+{it:"sostenere",pos:"v. irr.",def:"Dare aiuto a qualcuno o a qualcosa.",ex:"Sostengo i piccoli negozi locali.",ru:"поддерживать",cat:"verbi"},
+{it:"chiacchierare",pos:"v.",def:"Parlare in modo informale e piacevole.",ex:"Chiacchieriamo davanti a un caffè.",ru:"болтать",cat:"verbi"},
+{it:"toccare",pos:"v.",def:"Mettere la mano su qualcosa.",ex:"Posso toccare il tessuto?",ru:"трогать",cat:"verbi"},
+{it:"provare",pos:"v.",def:"Mettere un vestito per vedere come sta; anche fare un tentativo.",ex:"Posso provare questa giacca?",ru:"примерять / пробовать",cat:"verbi"},
+{it:"partecipare",pos:"v.",def:"Prendere parte a qualcosa.",ex:"Partecipo a un gruppo d'acquisto.",ru:"участвовать",cat:"verbi"},
+{it:"scambiare",pos:"v.",def:"Dare una cosa e riceverne un'altra.",ex:"Scambiamo i vestiti con gli amici.",ru:"обменивать",cat:"verbi"},
+{it:"mettere",pos:"v. irr.",def:"Mettere addosso un vestito, oppure in un posto.",ex:"Metto il cappotto e esco.",ru:"надевать / класть",cat:"verbi"},
+{it:"adorare",pos:"v.",def:"Amare moltissimo.",ex:"Adoro le scarpe rosse.",ru:"обожать",cat:"verbi"},
+{it:"scrivere",pos:"v. irr.",def:"Fare le lettere con una penna o con la tastiera.",ex:"Scrivo il prezzo sull'etichetta.",ru:"писать",cat:"verbi"},
+{it:"crepare",pos:"v.",def:"In modo informale: rompersi o morire; «crepare di caldo» = soffrire molto.",ex:"Con questo cappotto io crepo di caldo!",ru:"лопнуть / (разг.) помереть",cat:"verbi"},
+{it:"indicare",pos:"v.",def:"Mostrare qualcosa con il dito o con le parole.",ex:"Può indicare il prezzo?",ru:"указывать",cat:"verbi"},
+{it:"chiedere",pos:"v. irr.",def:"Fare una domanda o una richiesta.",ex:"Chiedo il prezzo alla commessa.",ru:"спрашивать / просить",cat:"verbi"},
+{it:"servire",pos:"v.",def:"Essere utile o necessario.",ex:"Che taglia ti serve?",ru:"быть нужным",cat:"verbi"},
+{it:"comprare",pos:"v.",def:"Prendere qualcosa dando dei soldi.",ex:"Compro una borsa nuova.",ru:"покупать",cat:"verbi"},
+{it:"spendere",pos:"v. irr.",def:"Dare soldi per comprare qualcosa.",ex:"Ho speso troppo per queste scarpe.",ru:"тратить",cat:"verbi"},
+{it:"riparare",pos:"v.",def:"Aggiustare qualcosa che non funziona.",ex:"Faccio riparare le scarpe dal calzolaio.",ru:"чинить",cat:"verbi"},
+
+// ---- ESPRESSIONI
+{it:"in giro",pos:"loc. avv.",def:"Qua e là, senza una meta precisa.",ex:"Cammino in giro per i negozi.",ru:"по городу / вокруг",cat:"espr"},
+{it:"sempre",pos:"avv.",def:"Tutti i giorni; in ogni momento.",ex:"Porto sempre una sciarpa.",ru:"всегда",cat:"espr"},
+{it:"mai",pos:"avv.",def:"In nessun momento.",ex:"Non porto mai i tacchi.",ru:"никогда",cat:"espr"},
+{it:"forse",pos:"avv.",def:"Quando una cosa non è sicura.",ex:"Forse compro questa giacca.",ru:"может быть",cat:"espr"},
+{it:"quasi",pos:"avv.",def:"Non del tutto; circa.",ex:"È quasi mezzogiorno.",ru:"почти",cat:"espr"},
+{it:"insieme",pos:"avv.",def:"Con altre persone o con altre cose.",ex:"Andiamo insieme al mercatino.",ru:"вместе",cat:"espr"},
+{it:"raramente",pos:"avv.",def:"Molto poche volte.",ex:"Raramente metto la cravatta.",ru:"редко",cat:"espr"},
+{it:"spesso",pos:"avv.",def:"Molte volte.",ex:"Vado spesso in centro.",ru:"часто",cat:"espr"},
+{it:"volentieri",pos:"avv.",def:"Con piacere.",ex:"Vieni con noi? — Sì, volentieri!",ru:"охотно",cat:"espr"},
+{it:"insomma",pos:"avv.",def:"In breve, per concludere il discorso.",ex:"Insomma, mi piace molto.",ru:"в общем",cat:"espr"},
+{it:"cento per cento",pos:"loc.",def:"Completamente, al massimo.",ex:"È lana cento per cento.",ru:"на сто процентов",cat:"espr"},
+{it:"effettivamente",pos:"avv.",def:"In realtà, davvero.",ex:"Effettivamente è molto caro.",ru:"действительно",cat:"espr"},
+{it:"ultimamente",pos:"avv.",def:"Negli ultimi tempi.",ex:"Ultimamente compro meno vestiti.",ru:"в последнее время",cat:"espr"},
+{it:"che ne dici di…?",pos:"loc.",def:"Si usa per fare una proposta o chiedere un parere.",ex:"Che ne dici di questa camicia?",ru:"как тебе…? / а что насчёт…?",cat:"espr"},
+{it:"l'opinione",pos:"sost. f.",def:"Quello che pensiamo di qualcosa.",ex:"Qual è la tua opinione?",ru:"мнение",cat:"espr"},
+{it:"la compagnia",pos:"sost. f.",def:"La presenza di altre persone vicino a noi.",ex:"Mi piace fare shopping in compagnia.",ru:"компания",cat:"espr"},
+{it:"l'incontro",pos:"sost. m.",def:"Il trovarsi di due o più persone.",ex:"Domani c'è un incontro con gli amici.",ru:"встреча",cat:"espr"},
+{it:"la gente",pos:"sost. f.",def:"Le persone in generale.",ex:"C'è molta gente al mercato.",ru:"люди",cat:"espr"},
+{it:"i genitori",pos:"sost. m. pl.",def:"Il padre e la madre di una persona.",ex:"I miei genitori vivono a Roma.",ru:"родители",cat:"espr"},
+];
+
+const catMap = { capi:"g-capi", col:"g-col", tess:"g-tess", agg:"g-agg", neg:"g-neg", verbi:"g-verbi", espr:"g-espr" };
+
+function renderCards(){
+  Object.values(catMap).forEach(id => $(id).innerHTML='');
+  vocab.forEach(v => {
+    const el = document.createElement('div'); el.className='card'; el.dataset.s='0';
+    el.innerHTML = `
+      <div class="f0"><div class="pos">${v.pos}</div><div class="w">${v.it}</div><div class="hint">tocca per la definizione</div></div>
+      <div class="f1"><div class="w sm">${v.it}</div><div class="def">${v.def}</div><div class="lbl">esempio</div><div class="ex">«${v.ex}»</div></div>
+      <div class="f2"><div class="pos">${v.pos}</div><div class="w sm">${v.it}</div><div class="ru">${v.ru}</div></div>
+      <div class="dots"><i class="act"></i><i></i><i></i></div>`;
+    el.onclick = () => {
+      const n = (parseInt(el.dataset.s)+1)%3; el.dataset.s = n;
+      el.querySelectorAll('.dots i').forEach((d,i)=>{ d.className = i<n?'done':(i===n?'act':''); });
+    };
+    $(catMap[v.cat]).appendChild(el);
+  });
+}
+
+const SECS = ['cards','match','quiz','fill','shop'];
+function showSec(n){
+  SECS.forEach(s => $('sec-'+s).classList.toggle('on', s===n));
+  document.querySelectorAll('.tab').forEach((b,i)=> b.classList.toggle('active', SECS[i]===n));
+  if(n==='match') initMatch();
+  if(n==='quiz') initQuiz();
+  if(n==='fill') initFill();
+  if(n==='shop') initShop();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ===================== ABBINA ===================== */
+let mSel=null, mScore=0, mErr=0;
+function initMatch(){
+  const pool = shuffle(vocab.filter(v=>v.def.length<70)).slice(0,6);
+  mScore=0; mErr=0; mSel=null;
+  $('ms').textContent=0; $('me').textContent=0; $('mt').textContent=pool.length;
+  $('mres').classList.add('hidden');
+  const L=$('ml'), R=$('mr'); L.innerHTML=''; R.innerHTML='';
+  shuffle(pool).forEach(v=>{ const e=document.createElement('div'); e.className='mi w'; e.textContent=v.it; e.dataset.k=v.it; e.dataset.side='w'; e.onclick=()=>hMatch(e); L.appendChild(e); });
+  shuffle(pool).forEach(v=>{ const e=document.createElement('div'); e.className='mi'; e.textContent=v.def; e.dataset.k=v.it; e.dataset.side='d'; e.onclick=()=>hMatch(e); R.appendChild(e); });
+}
+function hMatch(el){
+  if(el.classList.contains('ok')||el.classList.contains('no')) return;
+  const clear=()=>document.querySelectorAll('.mi').forEach(e=>e.classList.remove('sel'));
+  if(!mSel){ clear(); el.classList.add('sel'); mSel=el; return; }
+  if(el===mSel){ el.classList.remove('sel'); mSel=null; return; }
+  if(el.dataset.side===mSel.dataset.side){ clear(); el.classList.add('sel'); mSel=el; return; }
+  if(el.dataset.k===mSel.dataset.k){
+    el.classList.add('ok'); mSel.classList.add('ok'); clear(); mSel=null; mScore++; $('ms').textContent=mScore;
+    if(mScore===parseInt($('mt').textContent)) setTimeout(()=>$('mres').classList.remove('hidden'),400);
+  } else {
+    el.classList.add('no'); mSel.classList.add('no'); mErr++; $('me').textContent=mErr;
+    const a=el,b=mSel; mSel=null; setTimeout(()=>{ a.classList.remove('no','sel'); b.classList.remove('no','sel'); },650);
+  }
+}
+
+/* ===================== QUIZ ===================== */
+let qItems=[], qIdx=0, qOk=0, qDone=false, qMiss=[];
+function initQuiz(onlyErr=false){
+  $('qres').classList.add('hidden'); $('qplay').classList.remove('hidden');
+  qItems = onlyErr && qMiss.length ? shuffle(qMiss) : shuffle(vocab).slice(0,15);
+  qMiss=[]; qIdx=0; qOk=0;
+  $('qpd').innerHTML = qItems.map(()=>'<i></i>').join('');
+  showQuiz();
+}
+function showQuiz(){
+  if(qIdx>=qItems.length){ return endQuiz(); }
+  const v=qItems[qIdx]; qDone=false;
+  $('qdef').textContent = v.def;
+  $('qfb').textContent=''; $('qfb').className='fb'; $('qnext').classList.add('hidden');
+  $('qcount').textContent = `Domanda ${qIdx+1} di ${qItems.length}`;
+  $('qbar').style.width = (qIdx/qItems.length*100)+'%';
+  [...$('qpd').children].forEach((d,i)=> d.className = i<qIdx?'done':(i===qIdx?'act':''));
+  let pool = shuffle(vocab.filter(x=>x.cat===v.cat && x.it!==v.it));
+  if(pool.length<3) pool = pool.concat(shuffle(vocab.filter(x=>x.cat!==v.cat)));
+  const opts = shuffle([v,...pool.slice(0,3)]);
+  const box=$('qopts'); box.innerHTML='';
+  opts.forEach(o=>{
+    const b=document.createElement('button'); b.className='opt'; b.textContent=o.it;
+    b.onclick=()=>{
+      if(qDone) return; qDone=true;
+      if(o.it===v.it){ b.classList.add('ok'); qOk++; $('qfb').textContent='✓ Giusto!'; $('qfb').className='fb good'; }
+      else { b.classList.add('no'); qMiss.push(v); [...box.children].forEach(x=>{ if(x.textContent===v.it) x.classList.add('ok'); }); $('qfb').textContent='Risposta: '+v.it; $('qfb').className='fb bad'; }
+      $('qnext').classList.remove('hidden');
+    };
+    box.appendChild(b);
+  });
+}
+function endQuiz(){
+  $('qplay').classList.add('hidden'); $('qres').classList.remove('hidden');
+  const p=Math.round(qOk/qItems.length*100);
+  $('qsc').textContent=`${qOk}/${qItems.length}`; $('qsub').textContent=`${p}% di risposte corrette`;
+  $('qem').textContent = p>=80?'🏆':(p>=50?'👍':'📖'); $('qbar').style.width='100%';
+}
+
+/* ===================== SCRIVI ===================== */
+const cloze = [
+ ["Oggi indosso una ___ lunga e una camicia bianca.","gonna"],
+ ["Per il colloquio metto la giacca e la ___.","cravatta"],
+ ["In inverno porto sempre una ___ di lana intorno al collo.","sciarpa"],
+ ["Fuori fa molto freddo: metto il ___ pesante.","cappotto"],
+ ["Questa maglietta è troppo piccola: ha bisogno di una ___ più grande.","taglia"],
+ ["Posso provare questi pantaloni in ___?","camerino"],
+ ["Conserva lo ___: se non ti piace puoi cambiarlo.","scontrino"],
+ ["Questa giacca costa troppo: c'è uno ___?","sconto"],
+ ["Il maglione è di ___: viene dalle pecore ed è molto caldo.","lana"],
+ ["D'estate preferisco i vestiti di ___ perché è un tessuto fresco.","lino/cotone"],
+ ["Questa camicia è a ___ blu e bianche.","righe"],
+ ["Il vestito a ___ rosa è molto allegro.","pois/pallini"],
+ ["Il vestito a ___ è perfetto per la primavera.","fiori"],
+ ["Le scarpe da ___ sono comode per correre.","ginnastica"],
+ ["Il rosso è un colore molto ___: tutti lo guardano.","appariscente"],
+ ["Non porto i tacchi alti perché sono ___.","scomodi"],
+ ["Questo cappotto è troppo ___: fa troppo caldo.","pesante"],
+ ["Preferisco un modello ___, senza troppi dettagli.","semplice"],
+ ["Queste scarpe sono molto ___: posso camminare tutto il giorno.","comode"],
+ ["Compro il pane e il latte al negozio di ___.","alimentari"],
+ ["Domani vado dal ___ a tagliare i capelli.","parrucchiere"],
+ ["Al ___ ho trovato una giacca usata bellissima.","mercatino"],
+ ["Mi ha regalato un ___ d'oro da mettere al dito.","anello"],
+ ["Vado ___ in discoteca: solo due volte all'anno.","raramente"],
+ ["Mangio ___ la pizza: sono andato in pizzeria tre volte questa settimana.","spesso"],
+ ["Vieni con noi al centro commerciale? — Sì, ___!","volentieri"],
+ ["Il nero è ___ elegante: va bene con tutto.","sempre"],
+ ["Questa borsa è di ___ vera, non sintetica.","pelle"],
+ ["Che ne ___ di questa gonna a quadri?","dici"],
+ ["Per la settimana bianca ho ___ molti soldi in abbigliamento.","speso"],
+ ["Il blu si ___ bene con il grigio.","abbina"],
+ ["Mi piace molto: ___ la compro!","forse/quasi"],
+];
+let fIdx=0, fOk=0, fItems=[];
+function initFill(){
+  fItems=shuffle(cloze); fIdx=0; fOk=0;
+  $('fres').classList.add('hidden'); $('fplay').classList.remove('hidden'); showFill();
+}
+function showFill(){
+  if(fIdx>=fItems.length) return endFill();
+  const [s,a]=fItems[fIdx]; const first=a.split('/')[0];
+  $('fsent').innerHTML = s.replace('___','<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>');
+  $('fhint').textContent = `Indizio: inizia con «${first[0].toUpperCase()}» · ${first.replace(/\s/g,'').length} lettere`;
+  const i=$('fin'); i.value=''; i.className='inp'; i.disabled=false;
+  $('ffb').textContent=''; $('ffb').className='fb';
+  $('fcount').textContent=`Frase ${fIdx+1} di ${fItems.length}`; $('fbar').style.width=(fIdx/fItems.length*100)+'%';
+  $('fskip').classList.remove('hidden'); $('fnext').classList.add('hidden');
+  setTimeout(()=>i.focus(),60);
+}
+const strip = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+const norm = s => s.toLowerCase().trim().replace(/[!?.,;:]/g,'').replace(/\s+/g,' ');
+function checkFill(){
+  const [s,a]=fItems[fIdx]; const raw=$('fin').value; if(!raw.trim()) return;
+  const v=norm(raw), answers=a.split('/').map(norm);
+  const exact=answers.includes(v), loose=answers.map(strip).includes(strip(v));
+  const i=$('fin'); i.disabled=true;
+  if(exact){ fOk++; i.classList.add('ok'); $('ffb').textContent='✓ Giusto!'; $('ffb').className='fb good'; }
+  else if(loose){ fOk++; i.classList.add('ok'); $('ffb').textContent='✓ Quasi — attenzione all\'accento: '+a; $('ffb').className='fb good'; }
+  else { i.classList.add('no'); $('ffb').textContent='✗ Risposta: '+a.replace('/',' / '); $('ffb').className='fb bad'; }
+  $('fskip').classList.add('hidden'); $('fnext').classList.remove('hidden');
+}
+function skipFill(){
+  const [s,a]=fItems[fIdx]; $('fin').disabled=true; $('ffb').textContent='Risposta: '+a.replace('/',' / '); $('ffb').className='fb bad';
+  $('fskip').classList.add('hidden'); $('fnext').classList.remove('hidden');
+}
+function endFill(){
+  $('fplay').classList.add('hidden'); $('fres').classList.remove('hidden');
+  const p=Math.round(fOk/fItems.length*100);
+  $('fsc').textContent=`${fOk}/${fItems.length}`; $('fsub').textContent=`${p}% di risposte corrette`;
+  $('fem').textContent = p>=80?'🌟':(p>=50?'📝':'📖'); $('fbar').style.width='100%';
+}
+
+/* ===================== IN NEGOZIO ===================== */
+const GARM = [
+ {n:'maglietta',art:'una',g:'f',pl:false,e:'👕',mats:['cotone','lino']},
+ {n:'camicia',art:'una',g:'f',pl:false,e:'👔',mats:['cotone','lino','seta']},
+ {n:'giacca',art:'una',g:'f',pl:false,e:'🧥',mats:['lana','pelle','cotone']},
+ {n:'sciarpa',art:'una',g:'f',pl:false,e:'🧣',mats:['lana','seta','cotone']},
+ {n:'borsa',art:'una',g:'f',pl:false,e:'👜',mats:['pelle','cotone']},
+ {n:'vestito',art:'un',g:'m',pl:false,e:'👗',mats:['seta','cotone','lino','lana']},
+ {n:'pantaloni',art:'dei',g:'m',pl:true,e:'👖',mats:['cotone','lino','lana']},
+];
+const mk=(m,f,mp,fp)=>({m,f,mp,fp});
+const COLORS = [
+ {id:'rosso',hex:'#d63a3a',o:'rgba(255,255,255,.8)',...mk('rosso','rossa','rossi','rosse')},
+ {id:'blu',hex:'#1b3a8a',o:'rgba(255,255,255,.8)',...mk('blu','blu','blu','blu')},
+ {id:'azzurro',hex:'#59a7e0',o:'rgba(255,255,255,.85)',...mk('azzurro','azzurra','azzurri','azzurre')},
+ {id:'verde',hex:'#2f8f5b',o:'rgba(255,255,255,.8)',...mk('verde','verde','verdi','verdi')},
+ {id:'giallo',hex:'#f2cb2e',o:'rgba(0,0,0,.35)',...mk('giallo','gialla','gialli','gialle')},
+ {id:'nero',hex:'#1f1f23',o:'rgba(255,255,255,.75)',...mk('nero','nera','neri','nere')},
+ {id:'bianco',hex:'#fbfaf6',o:'rgba(0,0,0,.35)',...mk('bianco','bianca','bianchi','bianche')},
+ {id:'grigio',hex:'#8d9599',o:'rgba(255,255,255,.8)',...mk('grigio','grigia','grigi','grigie')},
+ {id:'rosa',hex:'#f4a6c0',o:'rgba(0,0,0,.3)',...mk('rosa','rosa','rosa','rosa')},
+ {id:'arancione',hex:'#f08a24',o:'rgba(255,255,255,.8)',...mk('arancione','arancione','arancioni','arancioni')},
+ {id:'marrone',hex:'#7a4b2a',o:'rgba(255,255,255,.75)',...mk('marrone','marrone','marroni','marroni')},
+ {id:'viola',hex:'#7a3fa0',o:'rgba(255,255,255,.8)',...mk('viola','viola','viola','viola')},
+ {id:'beige',hex:'#e3d2b4',o:'rgba(0,0,0,.3)',...mk('beige','beige','beige','beige')},
+];
+const PATS = [
+ {id:'unita', phrases:['a tinta unita'], css:o=>'none'},
+ {id:'righe', phrases:['a righe'], css:o=>`repeating-linear-gradient(90deg, transparent 0 9px, ${o} 9px 13px)`},
+ {id:'quadri', phrases:['a quadri'], css:o=>`repeating-linear-gradient(90deg, transparent 0 11px, ${o} 11px 14px), repeating-linear-gradient(0deg, transparent 0 11px, ${o} 11px 14px)`},
+ {id:'pallini', phrases:['a pallini','a pois'], css:o=>`radial-gradient(circle, ${o} 0 3.2px, transparent 3.7px)`, size:'14px 14px'},
+ {id:'fiori', phrases:['a fiori'], css:o=>'none', flower:true},
+];
+const MAT_LBL = {cotone:'di cotone', lino:'di lino', lana:'di lana', seta:'di seta', pelle:'di pelle'};
+const key = P => [P.g.n,P.col.id,P.pat.id,P.mat].join('|');
+const cform = (c,g)=> g.pl ? (g.g==='m'?c.mp:c.fp) : (g.g==='m'?c.m:c.f);
+function describe(P, withPhrase){ return `${P.g.art} ${P.g.n} ${cform(P.col,P.g)} ${withPhrase||P.pat.phrases[0]} ${MAT_LBL[P.mat]}`; }
+
+function variant(P, useMat){
+  const D = {...P};
+  const attrs = shuffle(['g','col','pat'].concat(useMat?['mat']:[]));
+  const n = Math.random()<.5 ? 1 : 2;
+  attrs.slice(0,n).forEach(a=>{
+    if(a==='g'){ const o=GARM.filter(x=>x.n!==P.g.n && (!useMat || x.mats.includes(D.mat))); if(o.length) D.g=pick(o); }
+    if(a==='col') D.col=pick(COLORS.filter(x=>x.id!==P.col.id));
+    if(a==='pat') D.pat=pick(PATS.filter(x=>x.id!==P.pat.id));
+    if(a==='mat'){ const o=D.g.mats.filter(m=>m!==P.mat); if(o.length) D.mat=pick(o); }
+  });
+  if(!D.g.mats.includes(D.mat)) D.mat=pick(D.g.mats);
+  return D;
+}
+function sameMentioned(A,B,useMat){ return A.g.n===B.g.n && A.col.id===B.col.id && A.pat.id===B.pat.id && (!useMat || A.mat===B.mat); }
+
+let hIdx=0, hOk=0, hErr=0, hDone=false;
+function initShop(){ hIdx=0; hOk=0; hErr=0; $('hres').classList.add('hidden'); $('hplay').classList.remove('hidden'); showShop(); }
+function showShop(){
+  if(hIdx>=10) return endShop();
+  hDone=false;
+  const g=pick(GARM), col=pick(COLORS), pat=pick(PATS), mat=pick(g.mats);
+  const P={g,col,pat,mat}, useMat=Math.random()<.5;
+  const phrase=pick(pat.phrases);
+  const prods=[P]; let tries=0;
+  while(prods.length<4 && tries<80){
+    tries++; const D=variant(P,useMat);
+    if(sameMentioned(D,P,useMat)) continue;
+    if(prods.some(x=>key(x)===key(D))) continue;
+    prods.push(D);
+  }
+  const say = `Cerco ${g.art} ${g.n} ${cform(col,g)} ${phrase}${useMat?' '+MAT_LBL[mat]:''}.`;
+  $('hsay').textContent = '«'+say+'»';
+  $('hc').textContent=hIdx+1; $('hs').textContent=hOk; $('he').textContent=hErr;
+  $('hfb').textContent=''; $('hfb').className='fb'; $('hnext').classList.add('hidden');
+  const grid=$('hgrid'); grid.innerHTML='';
+  shuffle(prods).forEach(X=>{
+    const d=document.createElement('div'); d.className='prod';
+    const o=X.col.o, p=X.pat;
+    const css = `background-color:${X.col.hex};background-image:${p.css(o)};${p.size?'background-size:'+p.size+';':''}color:${o};`;
+    d.innerHTML = `<div class="pe">${X.g.e}</div><div class="swatch" style="${css}">${p.flower?'✿ ✿ ✿ ✿<br>✿ ✿ ✿':''}</div><div class="pm">${MAT_LBL[X.mat]}</div><div class="pdesc">${describe(X, X.pat.phrases[0])}</div>`;
+    d.onclick=()=>{
+      if(hDone) return; hDone=true;
+      grid.querySelectorAll('.prod').forEach(x=>x.classList.add('locked'));
+      if(X===P){ d.classList.add('ok'); hOk++; $('hfb').textContent='✓ Giusto!'; $('hfb').className='fb good'; }
+      else { d.classList.add('no'); hErr++; const idx=[...grid.children].findIndex(c=>c.dataset.ok==='1'); grid.querySelectorAll('.prod').forEach(c=>{ if(c.dataset.ok==='1') c.classList.add('ok'); }); $('hfb').textContent='Non proprio: quello giusto è '+describe(P,phrase)+'.'; $('hfb').className='fb bad'; }
+      $('hs').textContent=hOk; $('he').textContent=hErr; $('hnext').classList.remove('hidden');
+    };
+    if(X===P) d.dataset.ok='1';
+    grid.appendChild(d);
+  });
+}
+function endShop(){
+  $('hplay').classList.add('hidden'); $('hres').classList.remove('hidden');
+  const p=Math.round(hOk/10*100);
+  $('hsc').textContent=`${hOk}/10`; $('hsub').textContent=`${p}% di risposte corrette`;
+  $('hem').textContent = p>=80?'🛍️':(p>=50?'👍':'📖');
+}
+
+renderCards();
+</script>
+</body>
+</html>
